@@ -73,6 +73,22 @@ jobs:
               }' \
           $DISCORD_WEBHOOK_URL
 
+      - name: Setup Node.js
+        if: success()
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install dependencies
+        if: success()
+        run: npm ci
+
+      - name: Run semantic-release
+        if: success()
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npx semantic-release
+
       - name: Send Discord Notification on Failure with Embed
         if: failure()
         env:
