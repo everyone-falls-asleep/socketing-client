@@ -1,0 +1,33 @@
+# .editorconfig 설정 파일 시작
+root = true
+
+# 기본 설정: 모든 파일에 적용
+[*]
+indent_style = space       # 들여쓰기 스타일: space 또는 tab
+indent_size = 2            # 들여쓰기 크기 (space의 경우 공백 수)
+tab_width = 2              # 탭 너비
+end_of_line = lf           # 줄바꿈 스타일: lf (Unix) 또는 crlf (Windows)
+charset = utf-8            # 파일 인코딩: utf-8
+trim_trailing_whitespace = true  # 각 줄의 끝부분 공백 제거
+insert_final_newline = true      # 파일 끝에 새 줄 추가
+
+# TypeScript 파일 설정
+[*.ts, *.tsx]
+indent_size = 2            # TypeScript에서는 공백 2칸 들여쓰기
+
+# JSON 파일
+[*.json]
+indent_size = 2            # JSON 파일 들여쓰기 크기
+
+# CSS/SCSS 파일
+[*.css, *.scss]
+indent_size = 2            # CSS에서 공백 2칸 들여쓰기
+
+# Markdown 파일
+[*.md]
+trim_trailing_whitespace = false # Markdown에서 줄 끝 공백 유지
+indent_size = 2                  # Markdown 들여쓰기 크기
+
+# YAML 파일
+[*.yml, *.yaml]
+indent_size = 2            # YAML 파일 들여쓰기
