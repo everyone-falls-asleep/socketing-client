@@ -11,8 +11,8 @@ const StyledTitle = styled.h1<{ textAlign?: string }>`
   margin: 1rem 0;
   text-align: ${(props) => props.textAlign || "left"};
 `;
-const Title = ({ children }: TitleProps) => {
-  return <StyledTitle>{children}</StyledTitle>;
+const Title = ({ children, textAlign = "left" }: TitleProps) => {
+  return <StyledTitle style={{ textAlign }}>{children}</StyledTitle>;
 };
 
 interface SubtitleProps {
@@ -26,8 +26,8 @@ const StyledSubtitle = styled.h3<{ textAlign?: string }>`
   margin: 0.5rem 0;
   text-align: ${(props) => props.textAlign || "left"};
 `;
-const Subtitle = ({ children }: SubtitleProps) => {
-  return <StyledSubtitle>{children}</StyledSubtitle>;
+const Subtitle = ({ children, textAlign = "left" }: SubtitleProps) => {
+  return <StyledSubtitle style={{ textAlign }}>{children}</StyledSubtitle>;
 };
 
 interface BoldTextProps {
