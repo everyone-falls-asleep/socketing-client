@@ -8,8 +8,8 @@ interface ImageProps {
   className?: string;
   style?: React.CSSProperties;
   variant?: "default" | "circle" | "rounded";
-  width?: number;
-  height?: number;
+  width?: string;
+  height?: string;
 }
 
 const StyledImage = styled.img<ImageProps>`
