@@ -1,7 +1,11 @@
 import ReservationOverviewTemplate from "../templates/reservation-overview/ReservationOverviewTemplate";
 import Header from "../templates/header/Header";
 
-const ReservationConfirmationPage = () => {
+interface ReservConfirmProps {
+  title: string;
+}
+
+const ReservationConfirmationPage = ({ title }: ReservConfirmProps) => {
   const reservation = {
     eventName: "콜드플레이 내한공연",
     dateTime: "2024/12/01 19:00 PM",
@@ -13,7 +17,7 @@ const ReservationConfirmationPage = () => {
     <>
       <Header></Header>
       <ReservationOverviewTemplate
-        title="예매가 완료되었습니다."
+        title={title}
         reservation={reservation}
       ></ReservationOverviewTemplate>
     </>
