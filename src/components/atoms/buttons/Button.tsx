@@ -6,6 +6,7 @@ interface ButtonProps {
   bgColor?: string;
   onClick?: () => void;
   children: React.ReactNode; // 모든 종류의 React자식 요소를 포함하는 타입
+  className?: string;
 }
 
 const StyledButton = styled.button<ButtonProps>`
@@ -34,6 +35,7 @@ const Button = (props: ButtonProps) => {
       onClick={props.onClick}
       bgColor={props.bgColor}
       color={props.color}
+      className={props.className}
     >
       {props.children}
     </StyledButton>
