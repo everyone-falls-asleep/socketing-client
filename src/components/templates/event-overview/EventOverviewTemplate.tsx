@@ -1,6 +1,6 @@
-import EventList from "../../../organisms/event-lists/EventList";
-import Container from "../../../layout/Container";
-import { Title } from "../../../atoms/title/Title";
+import EventList from "../../organisms/event-lists/EventList";
+import Container from "../../layout/Container";
+import { Title } from "../../atoms/title/Title";
 
 interface Event {
   image: string;
