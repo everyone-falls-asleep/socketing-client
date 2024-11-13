@@ -56,8 +56,6 @@ const SeatContainer: React.FC = () => {
           <p>X: {selectedSeat.x}</p>
           <p>Y: {selectedSeat.y}</p>
           <Button
-            color="green"
-            bgColor="whilte"
             onClick={() => {
               // TODO: 좌석정보 넘겨서 예매 페이지로
             }}

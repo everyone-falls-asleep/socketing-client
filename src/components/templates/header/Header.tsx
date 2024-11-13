@@ -51,9 +51,8 @@ const Header = ({ className, style }: HeaderProps) => {
         </Menu>
         <UserAccountGroup className="flex justify-end items-center w-4/12 h-full p-3">
           <UserAccountGroupWrapper className="flex justify-end items-center gap-1 w-full h-full">
-            <Button bgColor="brown">공연 등록</Button>
+            <Button>공연 등록</Button>
             <Button
-              bgColor="orange"
               onClick={() => {
                 navigate("/login");
               }}
@@ -61,7 +60,6 @@ const Header = ({ className, style }: HeaderProps) => {
               로그인
             </Button>
             <Button
-              bgColor="orange"
               onClick={() => {
                 navigate("/join");
               }}
