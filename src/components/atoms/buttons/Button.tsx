@@ -1,44 +1,48 @@
-import styled from "@emotion/styled";
-import React from "react";
+import { ButtonHTMLAttributes } from "react";
 
-interface ButtonProps {
-  color?: string;
-  bgColor?: string;
-  onClick?: () => void;
-  children: React.ReactNode; // 모든 종류의 React자식 요소를 포함하는 타입
-  className?: string;
+interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+  variant?: "primary" | "secondary";
+  size?: "sm" | "md" | "lg";
 }
 
-const StyledButton = styled.button<ButtonProps>`
-  /* width: 200px;
-  height: 40px; */
-  padding: 10px 20px;
-  border: none;
-  border-radius: 5px;
-  font-size: 16px;
-  font-weight: bold;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  color: ${(props) => props.color || "black"};
-  background-color: ${(props) => props.bgColor || "gray"};
+const Button = ({
+  children,
+  variant = "primary",
+  size = "md",
+  className = "",
+  ...props
+}: ButtonProps) => {
+  const getVariantClasses = (variant: ButtonProps["variant"]) => {
+    switch (variant) {
+      case "primary":
+        return "bg-blue-600 text-white hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2";
+      case "secondary":
+        return "bg-gray-200 text-gray-900 hover:bg-gray-300 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2";
+      default:
+        return "bg-blue-600 text-white hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2";
+    }
+  };
 
-  &:hover {
-    background-color: rgba(0, 0, 0, 0.4);
-  }
-`;
+  const getSizeClasses = (size: ButtonProps["size"]) => {
+    switch (size) {
+      case "sm":
+        return "px-3 py-2 text-sm";
+      case "lg":
+        return "px-5 py-3 text-lg";
+      default:
+        return "px-4 py-2.5 text-base";
+    }
+  };
 
-const Button = (props: ButtonProps) => {
   return (
-    <StyledButton
-      onClick={props.onClick}
-      bgColor={props.bgColor}
-      color={props.color}
-      className={props.className}
+    <button
+      className={`rounded-lg font-medium transition-colors duration-200 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed ${getVariantClasses(
+        variant
+      )} ${getSizeClasses(size)} ${className}`}
+      {...props}
     >
-      {props.children}
-    </StyledButton>
+      {children}
+    </button>
   );
 };
 
