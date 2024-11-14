@@ -1,25 +1,26 @@
+import React from "react"
 import Input from "../../atoms/inputs/Input";
 import { LabeledInputProps } from "../../../types/components/common";
 import Font from "../../atoms/fonts/Font";
 
-const LabeledInput = ({
+const LabeledInput = React.forwardRef<HTMLInputElement, LabeledInputProps>(({
   label,
   placeholder,
-  value,
-  onChange,
   width,
-}: LabeledInputProps) => {
+  ...props
+}, ref) => {
   return (
     <div>
       <Font className="text-left">{label}</Font>
       <Input
+      ref={ref}
         placeholder={placeholder}
-        value={value}
-        onChange={onChange}
         width={width}
+        {...props}
       ></Input>
     </div>
   );
-};
+}
+);
 
 export default LabeledInput;

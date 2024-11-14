@@ -13,8 +13,6 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   placeholder?: string;
-  value?: string;
-  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   type?: string;
   className?: string;
 }
