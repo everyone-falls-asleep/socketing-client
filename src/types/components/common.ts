@@ -1,4 +1,9 @@
-import { ButtonHTMLAttributes, HTMLAttributes, ImgHTMLAttributes } from "react";
+import {
+  ButtonHTMLAttributes,
+  HTMLAttributes,
+  ImgHTMLAttributes,
+  InputHTMLAttributes,
+} from "react";
 export type ColorType = "primary" | "secondary" | "dark" | "white";
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -6,12 +11,16 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   size?: "sm" | "md" | "lg";
 }
 
-export interface InputProps {
+export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   placeholder?: string;
-  value: string;
+  value?: string;
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   type?: string;
   className?: string;
+}
+
+export interface LabeledInputProps extends InputProps {
+  label?: string;
 }
 
 export interface FontProps extends HTMLAttributes<HTMLHeadingElement> {
