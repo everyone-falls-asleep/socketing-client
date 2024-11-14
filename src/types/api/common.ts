@@ -1,4 +1,4 @@
-export interface ApiResponse {
+export interface ApiErrorResponse {
   code: number;
   message: string;
   details?: [
@@ -7,4 +7,10 @@ export interface ApiResponse {
       message: string;
     },
   ];
+}
+
+export interface ApiResponse<T> {
+  code: number;
+  message: string;
+  data: T;
 }
