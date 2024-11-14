@@ -1,9 +1,4 @@
-import { ButtonHTMLAttributes } from "react";
-
-interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: "primary" | "secondary" | "dark" | "white";
-  size?: "sm" | "md" | "lg";
-}
+import { ButtonProps } from "../../../types/components/common";
 
 const Button = ({
   children,
