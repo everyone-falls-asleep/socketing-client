@@ -1,5 +1,6 @@
 import { BoldText } from "../../atoms/title/Title";
-import Input, { InputProps } from "../../atoms/input/Input";
+import Input from "../../atoms/inputs/Input";
+import { InputProps } from "../../../types/components/common";
 
 export interface LabeledInputProps extends InputProps {
   label: string;
@@ -10,7 +11,7 @@ const LabeledInput = ({
   placeholder,
   value,
   onChange,
-  width,
+  className,
 }: LabeledInputProps) => {
   return (
     <div>
@@ -19,7 +20,7 @@ const LabeledInput = ({
         placeholder={placeholder}
         value={value}
         onChange={onChange}
-        width={width}
+        className={className}
       ></Input>
     </div>
   );
