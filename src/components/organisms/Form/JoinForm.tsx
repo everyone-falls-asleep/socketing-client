@@ -11,8 +11,12 @@ import { ApiErrorResponse } from "../../../types/api/common";
 import { AxiosError } from "axios";
 
 const JoinForm = () => {
-
-  const { register, handleSubmit, setError, formState: { errors } } = useForm<LoginData>();
+  const {
+    register,
+    handleSubmit,
+    setError,
+    formState: { errors },
+  } = useForm<LoginData>();
 
   const mutation = useMutation<
     RegisterResponse,
@@ -31,24 +35,27 @@ const JoinForm = () => {
         const code = error.response.data.code;
         if (code === 5) {
           const field = error.response.data.details?.[0].field;
-          const message = field === 'email'
-            ? '이메일 형식이 올바르지 않습니다.'
-            : '비밀번호는 6글자 이상이어야 합니다.';
-          
+          const message =
+            field === "email"
+              ? "이메일 형식이 올바르지 않습니다."
+              : "비밀번호는 6글자 이상이어야 합니다.";
+
           if (field) {
-            setError(field as keyof LoginData, { type: 'manual', message });
+            setError(field as keyof LoginData, { type: "manual", message });
           }
         } else if (code === 1) {
-          setError('email', { type: 'manual', message: '이미 가입된 사용자입니다.' });
+          setError("email", {
+            type: "manual",
+            message: "이미 가입된 사용자입니다.",
+          });
         } else {
-          alert('회원가입에 실패하였습니다.');
+          alert("회원가입에 실패하였습니다.");
         }
       }
     },
   });
 
-  const onSubmit = (data: LoginData) => {
-    console.log(data);
+  const onSubmit = (data: LoginData): void => {
     mutation.mutate(data);
   };
 
@@ -56,21 +63,25 @@ const JoinForm = () => {
     <div>
       <SubTitle>회원가입</SubTitle>
       <Container width="400px">
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={(e) => void handleSubmit(onSubmit)(e)}>
           <LabeledInput
-            {...register('email')}
+            {...register("email")}
             placeholder="이메일을 입력해주세요"
             label="EMAIL"
           />
-          {errors.email && <span style={{ color: 'red' }}>{errors.email.message}</span>}
+          {errors.email && (
+            <span style={{ color: "red" }}>{errors.email.message}</span>
+          )}
           <br />
           <LabeledInput
-            {...register('password')}
+            {...register("password")}
             placeholder="비밀번호를 입력해주세요"
             label="PASSWORD"
             type="password"
           />
-          {errors.password && <span style={{ color: 'red' }}>{errors.password.message}</span>}
+          {errors.password && (
+            <span style={{ color: "red" }}>{errors.password.message}</span>
+          )}
           <br />
           <Button type="submit">회원가입</Button>
         </form>
