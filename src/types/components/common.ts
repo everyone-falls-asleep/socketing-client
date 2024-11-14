@@ -1,4 +1,4 @@
-import { ButtonHTMLAttributes, HTMLAttributes } from "react";
+import { ButtonHTMLAttributes, HTMLAttributes, ImgHTMLAttributes } from "react";
 export type ColorType = "primary" | "secondary" | "dark" | "white";
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -36,4 +36,8 @@ export interface FontProps extends HTMLAttributes<HTMLHeadingElement> {
 export interface TitleProps extends HTMLAttributes<HTMLHeadingElement> {
   children?: string | React.ReactNode;
   color?: ColorType;
+}
+
+export interface ImageProps extends ImgHTMLAttributes<HTMLImageElement> {
+  variant?: "default" | "circle" | "rounded";
 }
