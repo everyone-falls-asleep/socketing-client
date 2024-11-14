@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Subtitle from "../../atoms/titles/subtitle/SubTitle";
 import Container from "../../layout/Container";
-import Input from "../../atoms/input/Input";
+import Input from "../../atoms/inputs/Input";
 import Button from "../../atoms/buttons/Button";
 
 const LoginForm = () => {

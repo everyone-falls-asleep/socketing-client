@@ -2,7 +2,7 @@ import { useState } from "react";
 import Subtitle from "../../atoms/titles/subtitle/SubTitle";
 import Container from "../../layout/Container";
 import Button from "../../atoms/buttons/Button";
-import Input from "../../atoms/input/Input";
+import Input from "../../atoms/inputs/Input";
 
 const JoinForm = () => {
   const [nickname, setNickname] = useState("");
