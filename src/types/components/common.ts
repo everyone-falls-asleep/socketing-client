@@ -32,3 +32,8 @@ export interface FontProps extends HTMLAttributes<HTMLHeadingElement> {
     | "font-bold"
     | "font-extrabold";
 }
+
+export interface TitleProps extends HTMLAttributes<HTMLHeadingElement> {
+  children?: string | React.ReactNode;
+  color?: ColorType;
+}

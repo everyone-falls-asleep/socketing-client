@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { Subtitle } from "../../atoms/title/Title";
+import Subtitle from "../../atoms/titles/subtitle/SubTitle";
 import Container from "../../layout/Container";
-import LabeledInput from "../../molecules/labeled-input/LabeledInput";
 import Button from "../../atoms/buttons/Button";
+import Input from "../../atoms/input/Input";
 
 const JoinForm = () => {
   const [nickname, setNickname] = useState("");
@@ -11,27 +11,24 @@ const JoinForm = () => {
 
   return (
     <div>
-      <Subtitle textAlign="center">회원가입</Subtitle>
+      <Subtitle>회원가입</Subtitle>
       <Container width="400px">
-        <LabeledInput
+        <Input
           value={nickname}
           onChange={(e) => setNickname(e.target.value)}
           placeholder="닉네임을 입력해주세요"
-          label="NICKNAME"
         />
         <br />
-        <LabeledInput
+        <Input
           value={id}
           onChange={(e) => setId(e.target.value)}
           placeholder="아이디를 입력해주세요"
-          label="ID"
         />
         <br />
-        <LabeledInput
+        <Input
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           placeholder="비밀번호를 입력해주세요"
-          label="PASSWORD"
           type="password"
         />
         <br />

@@ -1,6 +1,6 @@
 import EventList from "../../organisms/event-lists/EventList";
 import Container from "../../layout/Container";
-import { Title } from "../../atoms/title/Title";
+import Title from "../../atoms/titles/title/Title";
 import { Event } from "../../../types/api/event";
 
 const MOCK_EVENTS: Event[] = [

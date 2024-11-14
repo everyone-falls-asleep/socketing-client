@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { Subtitle } from "../../atoms/title/Title";
+import Subtitle from "../../atoms/titles/subtitle/SubTitle";
 import Container from "../../layout/Container";
-import LabeledInput from "../../molecules/labeled-input/LabeledInput";
+import Input from "../../atoms/input/Input";
 import Button from "../../atoms/buttons/Button";
 
 const LoginForm = () => {
@@ -10,20 +10,18 @@ const LoginForm = () => {
 
   return (
     <div>
-      <Subtitle textAlign="center">로그인</Subtitle>
+      <Subtitle>로그인</Subtitle>
       <Container width="400px">
-        <LabeledInput
+        <Input
           value={id}
           onChange={(e) => setId(e.target.value)} // onChange로 상태 업데이트
           placeholder="아이디를 입력해주세요"
-          label="ID"
         />
         <br />
-        <LabeledInput
+        <Input
           value={password}
           onChange={(e) => setPassword(e.target.value)} // onChange로 상태 업데이트
           placeholder="비밀번호를 입력해주세요"
-          label="PASSWORD"
           type="password" // 비밀번호 입력 타입
         />
         <br />

@@ -1,5 +1,5 @@
 import ReservationInfo from "../../organisms/reservation-infos/ReservationInfo";
-import { Title } from "../../atoms/title/Title";
+import Title from "../../atoms/titles/title/Title";
 import Container from "../../layout/Container";
 
 interface Reservation {

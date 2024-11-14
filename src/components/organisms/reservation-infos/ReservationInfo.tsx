@@ -1,5 +1,6 @@
 import Container from "../../layout/Container";
-import { Subtitle, BoldText } from "../../atoms/title/Title";
+import Title from "../../atoms/titles/title/Title";
+import Font from "../../atoms/fonts/Font";
 
 interface ReservationInfoProps {
   eventName: string;
@@ -16,12 +17,12 @@ const ReservationInfo = ({
 }: ReservationInfoProps) => {
   return (
     <Container width="600px">
-      <Subtitle>{eventName}</Subtitle>
-      <BoldText textAlign="center">{dateTime}</BoldText>
+      <Title>{eventName}</Title>
+      <Font>{dateTime}</Font>
       <br />
-      <BoldText textAlign="center">{place}</BoldText>
+      <Font>{place}</Font>
       <br />
-      <BoldText textAlign="center">{seatInfo}</BoldText>
+      <Font>{seatInfo}</Font>
     </Container>
   );
 };
