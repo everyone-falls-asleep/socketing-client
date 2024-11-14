@@ -12,13 +12,18 @@ export default meta;
 
 type Story = StoryObj<StoryProps>;
 
-export const Primary: Story = {
+export const Default: Story = {
   args: {
-    variant: "primary",
-    size: "md",
-    className: "",
+    children: "Test",
   },
-  render: (args) => {
-    return <Button {...args}>Test</Button>;
+  render: ({ children }) => {
+    return (
+      <>
+        <Button variant="primary">{children}</Button>
+        <Button variant="secondary">{children}</Button>
+        <Button variant="white">{children}</Button>
+        <Button variant="dark">{children}</Button>
+      </>
+    );
   },
 };

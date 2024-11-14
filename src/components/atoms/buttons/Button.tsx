@@ -1,13 +1,13 @@
 import { ButtonHTMLAttributes } from "react";
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: "primary" | "secondary";
+  variant?: "primary" | "secondary" | "dark" | "white";
   size?: "sm" | "md" | "lg";
 }
 
 const Button = ({
   children,
-  variant = "primary",
+  variant,
   size = "md",
   className = "",
   ...props
@@ -15,11 +15,15 @@ const Button = ({
   const getVariantClasses = (variant: ButtonProps["variant"]) => {
     switch (variant) {
       case "primary":
-        return "bg-blue-600 text-white hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2";
+        return "bg-rose-400 text-white hover:bg-rose-500 focus:ring-4 focus:ring-rose-200 focus:ring-offset-0";
       case "secondary":
-        return "bg-gray-200 text-gray-900 hover:bg-gray-300 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2";
+        return "bg-gray-300 text-gray-900 hover:bg-gray-400 focus:ring-4 focus:ring-gray-200 focus:ring-offset-0";
+      case "dark":
+        return "bg-black text-white hover:bg-gray-800 focus:ring-4 focus:ring-gray-400 focus:ring-offset-0";
+      case "white":
+        return "bg-white border-2 border-rose-400 text-black focus:ring-4 focus:ring-rose-200 focus:ring-offset-0";
       default:
-        return "bg-blue-600 text-white hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2";
+        return "bg-rose-400 text-white hover:bg-rose-500 focus:ring-4 focus:ring-rose-200 focus:ring-offset-0";
     }
   };
 
@@ -35,14 +39,16 @@ const Button = ({
   };
 
   return (
-    <button
-      className={`rounded-lg font-medium transition-colors duration-200 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed ${getVariantClasses(
-        variant
-      )} ${getSizeClasses(size)} ${className}`}
-      {...props}
-    >
-      {children}
-    </button>
+    <>
+      <button
+        className={`m-2 rounded-lg font-bold transition-colors duration-200 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed ${getVariantClasses(
+          variant
+        )} ${getSizeClasses(size)} ${className}`}
+        {...props}
+      >
+        {children}
+      </button>
+    </>
   );
 };
 
