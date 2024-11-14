@@ -1,25 +1,26 @@
 import Image from "../../atoms/images/Image";
+import { Event } from "../../../types/api/event";
 
 interface EventCardProps {
-  image: string;
-  title: string;
-  onClick?: () => void; // 클릭 시 실행될 함수 정의
+  event: Event;
+  onClick?: () => void;
 }
 
-const EventCard = ({ image, title, onClick }: EventCardProps) => {
+const EventCard = ({ event, onClick }: EventCardProps) => {
+  const { thumbnail, title, date, place } = event;
+
   return (
     <div
+      className="rounded-lg shadow-md overflow-hidden cursor-pointer hover:shadow-lg transition-shadow"
       onClick={onClick}
-      className="group relative overflow-hidden rounded-lg transition-all duration-300 hover:shadow-xl"
     >
-      <div className="relative h-32 w-full overflow-hidden">
-        <Image src={image} alt={title} variant="rounded" />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-      </div>
-      <div className="absolute bottom-0 w-full p-4">
-        <h3 className="text-lg font-bold text-white opacity-0 transition-all duration-300 group-hover:opacity-100">
-          {title}
-        </h3>
+      <Image src={thumbnail} alt={title} />
+      <div className="p-4">
+        <h3 className="text-lg font-semibold mb-2">{title}</h3>
+        <div className="space-y-1 text-sm text-gray-600">
+          <p>일시: {date[0]}</p>
+          <p>장소: {place}</p>
+        </div>
       </div>
     </div>
   );

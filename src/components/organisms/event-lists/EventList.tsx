@@ -1,11 +1,7 @@
 import EventCard from "../../molecules/event-card/EventCard";
 import Grid from "../../layout/Grid";
 import { useNavigate } from "react-router-dom";
-
-interface Event {
-  image: string;
-  title: string;
-}
+import { Event } from "../../../types/api/event";
 
 interface EventListProps {
   events: Event[];
@@ -14,18 +10,17 @@ interface EventListProps {
 const EventList = ({ events }: EventListProps) => {
   const navigate = useNavigate();
 
+  const onClickHandler = (eventId: string) => {
+    navigate(`/reservation/${eventId}`);
+  };
   return (
     <Grid orientation="vertical">
-      {events.map((event, index) => (
-        <div key={index} className="w-full sm:w-1/2 md:w-1/3">
-          <EventCard
-            image={event.image}
-            title={event.title}
-            onClick={() => {
-              navigate("/reservation");
-            }}
-          />
-        </div>
+      {events.map((event) => (
+        <EventCard
+          key={event._id}
+          event={event}
+          onClick={() => onClickHandler(event._id)}
+        />
       ))}
     </Grid>
   );
