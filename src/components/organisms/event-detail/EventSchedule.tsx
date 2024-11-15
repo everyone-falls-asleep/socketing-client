@@ -14,7 +14,9 @@ const EventSchedule = ({ events }: EventProps) => {
   const [validDates] = useState<Set<string>>(
     new Set(
       events.flatMap((event) =>
-        event.date.map((dateStr) => new Date(dateStr).toDateString())
+        event.eventDates.map((eventDate) =>
+          new Date(eventDate.date).toDateString()
+        )
       )
     )
   );
@@ -26,13 +28,13 @@ const EventSchedule = ({ events }: EventProps) => {
 
   // Filter events based on selected dates
   const filteredSchedules = events.filter((event) =>
-    event.date.some((dateStr) => {
-      const eventDate = new Date(dateStr);
+    event.eventDates.some((eventDate) => {
+      const eventDateObj = new Date(eventDate.date);
       return selectedDates.some(
         (selectedDate) =>
-          selectedDate.getDate() === eventDate.getDate() &&
-          selectedDate.getMonth() === eventDate.getMonth() &&
-          selectedDate.getFullYear() === eventDate.getFullYear()
+          selectedDate.getDate() === eventDateObj.getDate() &&
+          selectedDate.getMonth() === eventDateObj.getMonth() &&
+          selectedDate.getFullYear() === eventDateObj.getFullYear()
       );
     })
   );

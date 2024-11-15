@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { Event } from "../../../types/api/event";
-import ScheduleCard from "./scheduleCard";
+import ScheduleCard from "./ScheduleCard";
 
 interface ScheduleListProps {
   schedules: Event[];
@@ -16,12 +16,12 @@ const ScheduleList = ({ schedules }: ScheduleListProps) => {
   return (
     <div className="schedule-container flex flex-col gap-2">
       {schedules.map((schedule) => {
-        return schedule.date.map((dateStr, index) => (
+        return schedule.eventDates.map((eventDate, index) => (
           <ScheduleCard
-            key={`${schedule.event_id}-${index}`}
+            key={`${schedule.id}-${index}`} // 수정된 부분: schedule.id 사용
             schedule={schedule}
-            dateStr={dateStr}
-            onClick={() => handleScheduleClick(schedule.event_id)}
+            dateStr={eventDate.date} // 수정된 부분: eventDate.date 사용
+            onClick={() => handleScheduleClick(schedule.id)} // 수정된 부분: schedule.id 사용
           />
         ));
       })}

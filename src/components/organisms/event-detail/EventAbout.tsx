@@ -13,7 +13,7 @@ const EventAbout = ({ events }: EventProps) => {
         <h2 className="text-2xl font-bold bg-white">공연 소개</h2>
       </div>
       <div id="event-about" className="content-container bg-slate-400">
-        <div key={event.event_id} className="event-details p-2 flex">
+        <div key={event.id} className="event-details p-2 flex">
           <div className="h-full flex justify-center w-1/2">
             <img
               src={event.thumbnail}
@@ -29,14 +29,13 @@ const EventAbout = ({ events }: EventProps) => {
             <p className="text-gray-600 text-lg">
               연령 제한: {event.age_limit}세 이상
             </p>
-            <p className="text-gray-600 text-lg">가격: {event.price}원</p>
 
             <div className="mt-4">
               <h3 className="text-xl font-semibold">공연 일정</h3>
               <ul className="list-disc pl-6">
-                {event.date.map((schedule, index) => (
-                  <li key={index} className="text-gray-600 text-lg">
-                    {new Date(schedule).toLocaleString()}
+                {event.eventDates.map((schedule) => (
+                  <li key={schedule.id} className="text-gray-600 text-lg">
+                    {new Date(schedule.date).toLocaleString()}
                   </li>
                 ))}
               </ul>
