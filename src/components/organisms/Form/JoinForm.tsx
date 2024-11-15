@@ -7,6 +7,7 @@ import { sendRegisterRequest } from "../../../api/authentication/authApi";
 import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { LoginData, RegisterResponse } from "../../../types/api/user";
+import { JoinConfirmData } from "../../../types/form/user";
 import { ApiErrorResponse } from "../../../types/api/common";
 import { AxiosError } from "axios";
 import { ToastContainer, toast } from "react-toastify";
@@ -17,8 +18,9 @@ const JoinForm = () => {
     register,
     handleSubmit,
     setError,
+    watch,
     formState: { errors },
-  } = useForm<LoginData>();
+  } = useForm<JoinConfirmData>();
 
   const mutation = useMutation<
     RegisterResponse,
@@ -57,9 +59,14 @@ const JoinForm = () => {
     },
   });
 
-  const onSubmit = (data: LoginData): void => {
-    mutation.mutate(data);
+  const onSubmit = (data: JoinConfirmData) => {
+    mutation.mutate({
+      email: data.email,
+      password: data.password,
+    });
   };
+
+  const password = watch("password");
 
   return (
     <div>
@@ -83,6 +90,21 @@ const JoinForm = () => {
           />
           {errors.password && (
             <span style={{ color: "red" }}>{errors.password.message}</span>
+          )}
+          <br />
+          <LabeledInput
+            {...register("passwordConfirm", {
+              validate: (value) =>
+                value === password || "비밀번호가 일치하지 않습니다.",
+            })}
+            placeholder="비밀번호를 확인해주세요"
+            label="PASSWORD CONFIRM"
+            type="password"
+          />
+          {errors.passwordConfirm && (
+            <span style={{ color: "red" }}>
+              {errors.passwordConfirm.message}
+            </span>
           )}
           <br />
           <Button type="submit">회원가입</Button>
