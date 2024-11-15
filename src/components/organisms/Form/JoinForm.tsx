@@ -10,7 +10,7 @@ import { LoginData, RegisterResponse } from "../../../types/api/user";
 import { JoinConfirmData } from "../../../types/form/user";
 import { ApiErrorResponse } from "../../../types/api/common";
 import { AxiosError } from "axios";
-import { errorMessages } from "../../../constants/api";
+import { registerErrorMessages } from "../../../constants/api";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -42,8 +42,8 @@ const JoinForm = () => {
           const field = error.response.data.details?.[0].field;
           const message =
             field === "email"
-              ? errorMessages.validation.emailInvalid
-              : errorMessages.validation.passwordInvalid;
+              ? registerErrorMessages.validation.emailInvalid
+              : registerErrorMessages.validation.passwordInvalid;
 
           if (field) {
             setError(field as keyof LoginData, { type: "manual", message });
@@ -51,10 +51,10 @@ const JoinForm = () => {
         } else if (code === 1) {
           setError("email", {
             type: "manual",
-            message: errorMessages.duplicateUser,
+            message: registerErrorMessages.duplicateUser,
           });
         } else {
-          toast.error(errorMessages.generic);
+          toast.error(registerErrorMessages.generic);
         }
       }
     },
