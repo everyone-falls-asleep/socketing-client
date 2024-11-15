@@ -19,7 +19,9 @@ interface EventDate {
   updatedAt: string;
 }
 
-export type EventResponse = ApiResponse<Event[]>;
+export type EventsResponse = ApiResponse<Event[]>;
+
+export type SingleEventResponse = ApiResponse<Event>;
 
 export interface Seat {
   seat_id: string;

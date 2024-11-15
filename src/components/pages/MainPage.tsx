@@ -5,11 +5,11 @@ import { MOCK_EVENTS } from "../templates/event-overview/EventOverviewTemplate";
 import CategorySection from "../templates/category/CategorySection";
 import { fetchAllEvents } from "../../api/events/eventsApi";
 import { useQuery } from "@tanstack/react-query";
-import { EventResponse } from "../../types/api/event";
+import { EventsResponse } from "../../types/api/event";
 
 const MainPage = () => {
   const useEvents = () => {
-    return useQuery<EventResponse, Error>({
+    return useQuery<EventsResponse, Error>({
       queryKey: ["events"],
       queryFn: fetchAllEvents,
       staleTime: 1000 * 60 * 5,
