@@ -26,15 +26,23 @@ export const mockReservationData: Reservation = {
     }),
   ],
   event: {
-    event_id: "1",
+    id: "1",
     title: "콜드플레이 내한 공연",
-    date: ["2024-12-22 18:00PM", "2024-12-23 18:00PM", "2024-12-24 18:00PM"],
+    eventDates: [
+      {
+        createdAt: "2024-11-15T21:04:56.816Z",
+        date: "2024-12-01T19:00:00.000Z",
+        id: "49151570-8eae-43c0-b800-bdb9cdae8692",
+        updatedAt: "2024-11-15T21:04:56.816Z",
+      },
+    ],
     thumbnail:
       "https://ticketimage.interpark.com/Play/image/large/24/24013437_p.gif",
     place: "올림픽 주경기장",
-    price: "129000",
     cast: "콜드플레이",
     age_limit: "12세",
+    createdAt: "",
+    updatedAt: "",
   },
   created_at: "2024/11/14 12:33 PM",
   exchange_status: "0",
