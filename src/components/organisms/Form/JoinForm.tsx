@@ -3,18 +3,30 @@ import Container from "../../layout/Container";
 import LabeledInput from "../../molecules/labeledinput/LabeledInput";
 import Button from "../../atoms/buttons/Button";
 
-import { sendRegisterRequest } from "../../../api/authentication/authApi";
+import {
+  sendRegisterRequest,
+  sendLoginRequest,
+} from "../../../api/authentication/authApi";
 import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
-import { LoginData, RegisterResponse } from "../../../types/api/user";
+import {
+  LoginData,
+  RegisterResponse,
+  LoginResponse,
+} from "../../../types/api/user";
 import { JoinConfirmData } from "../../../types/form/user";
 import { ApiErrorResponse } from "../../../types/api/common";
 import { AxiosError } from "axios";
 import { registerErrorMessages } from "../../../constants/api";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
+
+import { useAuth } from "../../../hooks/useAuth";
+import { useNavigate } from "react-router-dom";
 
 const JoinForm = () => {
+  const { saveAuthInfo } = useAuth();
+  const navigate = useNavigate();
+
   const {
     register,
     handleSubmit,
@@ -31,8 +43,23 @@ const JoinForm = () => {
   >({
     mutationFn: sendRegisterRequest,
 
-    onSuccess: (response: RegisterResponse) => {
-      toast.success(`환영합니다, ${response.data?.nickname}님 !`);
+    onSuccess: async () => {
+      const loginData = {
+        email: watch("email"),
+        password: watch("password"),
+      };
+
+      try {
+        const loginResponse: LoginResponse = await sendLoginRequest(loginData);
+        const loginToken = loginResponse.data?.accessToken;
+        if (loginToken) {
+          saveAuthInfo(loginToken);
+        }
+      } catch (error) {
+        console.error("자동 로그인 실패:", error);
+        toast.error("자동 로그인에 실패했습니다. 로그인 페이지로 이동합니다.");
+        navigate("/login");
+      }
     },
 
     onError: (error: AxiosError<ApiErrorResponse>) => {
@@ -111,7 +138,6 @@ const JoinForm = () => {
           <Button type="submit">회원가입</Button>
         </form>
       </Container>
-      <ToastContainer position="top-center" autoClose={3000} />
     </div>
   );
 };
