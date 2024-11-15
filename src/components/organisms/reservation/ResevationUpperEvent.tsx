@@ -19,7 +19,7 @@ const ResevationUpperEvent = (eventData: Event) => {
                 {eventData.eventDates[0].date} 외{" "}
                 {eventData.eventDates.length - 1}회
               </p>
-              <p>{eventData.age_limit} 이상</p>
+              <p>{String(eventData.ageLimit)}세 이상</p>
               <p>출연: {eventData.cast}</p>
             </div>
           </div>

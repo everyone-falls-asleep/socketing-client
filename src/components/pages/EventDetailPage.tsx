@@ -45,7 +45,7 @@ const MOCK_SCHEDULES: Event[] = [
       "https://ticketimage.interpark.com/Play/image/large/24/24013437_p.gif",
     place: "올림픽 주경기장",
     cast: "콜드플레이",
-    age_limit: "12",
+    ageLimit: 12,
     createdAt: "2024-10-01T12:00:00Z", // 예시 생성일
     updatedAt: "2024-10-01T12:00:00Z", // 예시 수정일
   },

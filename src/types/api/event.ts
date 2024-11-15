@@ -7,7 +7,7 @@ export interface Event {
   thumbnail: string;
   place: string;
   cast: string;
-  age_limit: string;
+  ageLimit: number;
   createdAt: string;
   updatedAt: string;
 }

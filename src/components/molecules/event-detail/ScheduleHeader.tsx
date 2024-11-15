@@ -1,5 +1,5 @@
 import { useState } from "react";
-import ScheduleCalendar from "./scheduleCalendar";
+import ScheduleCalendar from "./ScheduleCalendar";
 
 interface ScheduleHeaderProps {
   selectedDates: Date[];

@@ -27,7 +27,7 @@ const EventAbout = ({ events }: EventProps) => {
             <p className="text-gray-600 text-lg">{event.place}</p>
             <p className="text-gray-600 text-lg">출연: {event.cast}</p>
             <p className="text-gray-600 text-lg">
-              연령 제한: {event.age_limit}세 이상
+              연령 제한: {event.ageLimit}세 이상
             </p>
 
             <div className="mt-4">

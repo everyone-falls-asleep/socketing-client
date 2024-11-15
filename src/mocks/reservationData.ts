@@ -40,7 +40,7 @@ export const mockReservationData: Reservation = {
       "https://ticketimage.interpark.com/Play/image/large/24/24013437_p.gif",
     place: "올림픽 주경기장",
     cast: "콜드플레이",
-    age_limit: "12세",
+    ageLimit: 12,
     createdAt: "",
     updatedAt: "",
   },
