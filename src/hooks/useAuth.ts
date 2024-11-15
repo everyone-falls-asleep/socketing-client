@@ -11,7 +11,7 @@ export const useAuth = () => {
   const { setUserId } = useContext(UserContext);
 
   const saveAuthInfo = (token: string) => {
-    sessionStorage.setItem("authToken", token);
+    localStorage.setItem("authToken", token);
 
     const decodedToken = jwtDecode<{ sub: string }>(token);
     const userId = decodedToken.sub;
@@ -29,7 +29,7 @@ export const useAuth = () => {
       const data = await getUserInfo(userId);
       const nickname = data.data?.nickname;
       if (nickname) {
-        sessionStorage.setItem("nickname", nickname);
+        localStorage.setItem("nickname", nickname);
         toast.success(`안녕하세요, ${nickname}님!`);
         navigate("/");
       }
