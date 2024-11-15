@@ -1,6 +1,8 @@
 import axios from "axios";
 import { LoginData, RegisterResponse } from "../../types/api/user";
-const API_URL = "https://socketing.hjyoon.me/api/auth/";
+import { baseURL } from "../../constants/api";
+
+const API_URL = baseURL + "auth/";
 
 const sendRegisterRequest = async ({
   email,

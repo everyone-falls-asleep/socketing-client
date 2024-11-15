@@ -10,6 +10,7 @@ import { LoginData, RegisterResponse } from "../../../types/api/user";
 import { JoinConfirmData } from "../../../types/form/user";
 import { ApiErrorResponse } from "../../../types/api/common";
 import { AxiosError } from "axios";
+import { errorMessages } from "../../../constants/api";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -41,8 +42,8 @@ const JoinForm = () => {
           const field = error.response.data.details?.[0].field;
           const message =
             field === "email"
-              ? "이메일 형식이 올바르지 않습니다."
-              : "비밀번호는 6글자 이상이어야 합니다.";
+              ? errorMessages.validation.emailInvalid
+              : errorMessages.validation.passwordInvalid;
 
           if (field) {
             setError(field as keyof LoginData, { type: "manual", message });
@@ -50,10 +51,10 @@ const JoinForm = () => {
         } else if (code === 1) {
           setError("email", {
             type: "manual",
-            message: "이미 가입된 사용자입니다.",
+            message: errorMessages.duplicateUser,
           });
         } else {
-          toast.error("회원가입에 실패하였습니다.");
+          toast.error(errorMessages.generic);
         }
       }
     },
