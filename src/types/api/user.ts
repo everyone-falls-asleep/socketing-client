@@ -23,3 +23,14 @@ export interface LoginResponseData {
 }
 
 export type LoginResponse = ApiResponse<LoginResponseData>;
+
+export interface UserResponseData {
+  id: string;
+  nickname: string;
+  email: string;
+  profileImage: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export type UserResponse = ApiResponse<UserResponseData>;
