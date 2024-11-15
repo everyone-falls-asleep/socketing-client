@@ -12,10 +12,38 @@ import {
 } from "../../store/ReservationContext";
 import { mockReservationData } from "../../mocks/reservationData";
 import MainLayout from "../layout/MainLayout";
+import { useQuery } from "@tanstack/react-query";
+import { fetchOneEvent } from "../../api/events/eventsApi";
+import { SingleEventResponse } from "../../types/api/event";
 
 const ReservationPage: React.FC = () => {
   const { socket } = useSocketConnection();
   const { isDateSidebarOpen } = useContext(ReservationContext);
+
+  const useEvent = (event_id: string) => {
+    return useQuery<SingleEventResponse, Error>({
+      queryKey: ["single-event", event_id],
+      queryFn: ({ queryKey }) => {
+        const [, event_id] = queryKey as [string, string];
+        return fetchOneEvent(event_id);
+      },
+      staleTime: 1000 * 60 * 5,
+      gcTime: 1000 * 60 * 10,
+    });
+  };
+
+  const { data, isLoading, isError, error } = useEvent(
+    "075e7ea5-99f3-4c34-bccb-0d18489d0f21"
+  );
+
+  if (isLoading) {
+    console.log(data);
+    return <p>이벤트를 불러오는 중...</p>;
+  }
+
+  if (isError) {
+    return <p>오류 발생: {error.message}</p>;
+  }
 
   return (
     <MainLayout>
@@ -23,7 +51,7 @@ const ReservationPage: React.FC = () => {
         <div className="h-screen flex flex-col">
           {/* 상단 공연 정보  */}
           <ReservationUpperEvent
-            {...mockReservationData.event}
+            {...(data?.data ?? { ...mockReservationData.event })}
           ></ReservationUpperEvent>
           {/* 하단 섹션 (2/3) */}
           <div className="flex flex-1 relative">
@@ -32,7 +60,7 @@ const ReservationPage: React.FC = () => {
               className={`${isDateSidebarOpen ? "ml-1/5" : ""} w-2/5 bg-gray-50 transition-all`}
             >
               <ReservationCalendarSideBar
-                dateData={[...mockReservationData.event.eventDates[0].date]}
+                dateData={[data?.data?.eventDates[0].date ?? "2024-12-25"]}
               />
             </div>
 
