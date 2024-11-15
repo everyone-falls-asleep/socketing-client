@@ -5,6 +5,7 @@ import JoinPage from "../components/pages/JoinPage";
 import Mypage from "../components/pages/MyPage";
 import ReservationPage from "../components/pages/ReservationPage";
 import ReservationConfirmationPage from "../components/pages/ReservationConfirmationPage";
+import EventDetailPage from "../components/pages/EventDetailPage";
 
 const Router = () => {
   return (
@@ -14,6 +15,7 @@ const Router = () => {
         <Route path="login" element={<LoginPage />} />
         <Route path="join" element={<JoinPage />} />
         <Route path="mypage" element={<Mypage />} />
+        <Route path="event" element={<EventDetailPage />} />
         <Route path="reservation" element={<ReservationPage />} />
         <Route
           path="reservation-confirmation"
