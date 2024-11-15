@@ -10,16 +10,16 @@ interface EventListProps {
 const EventList = ({ events }: EventListProps) => {
   const navigate = useNavigate();
 
-  const onClickHandler = (eventId: string) => {
-    navigate(`/reservation/${eventId}`);
+  const onClickHandler = () => {
+    navigate(`/reservation/`);
   };
   return (
     <Grid orientation="vertical">
       {events.map((event) => (
         <EventCard
-          key={event._id}
+          key={event.event_id}
           event={event}
-          onClick={() => onClickHandler(event._id)}
+          onClick={() => onClickHandler(event.event_id)}
         />
       ))}
     </Grid>

@@ -5,7 +5,7 @@ import { Event } from "../../../types/api/event";
 
 const MOCK_EVENTS: Event[] = [
   {
-    _id: "1",
+    event_id: "1",
     title: "콜드플레이 내한 공연",
     date: ["2024-12-22 18:00PM", "2024-12-23 18:00PM", "2024-12-24 18:00PM"],
     thumbnail:
@@ -16,7 +16,7 @@ const MOCK_EVENTS: Event[] = [
     age_limit: "12세",
   },
   {
-    _id: "2",
+    event_id: "2",
     title: "김혜다 단독 콘서트",
     date: ["2024-12-06 18:00PM", "2024-12-07 18:00PM"],
     thumbnail:

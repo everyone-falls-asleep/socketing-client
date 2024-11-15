@@ -1,70 +1,124 @@
-import React, { useState } from "react";
-import Seat from "../../atoms/seats/Seat";
-import Container from "../../layout/Container";
-import Button from "../../atoms/buttons/Button";
+import React, { useState, useRef, useEffect } from "react";
+import { Seat } from "../../../types/api/event";
+import SeatObj from "../../atoms/seats/SeatObj";
+import { useContext } from "react";
+import { ReservationContext } from "../../../store/ReservationContext";
+import { Socket } from "socket.io-client";
 
-interface SeatData {
-  id: string;
+interface Point {
   x: number;
   y: number;
-  fill?: string;
-  stroke?: string;
 }
 
-const SeatContainer: React.FC = () => {
-  const [selectedSeat, setSelectedSeat] = useState<SeatData | null>(null);
+interface SeatContainerProps {
+  seatsData: Seat[];
+  socket: Socket;
+}
 
-  const seatData: SeatData[] = [
-    { id: "1", x: 600, y: 50, fill: "blue", stroke: "black" },
-    { id: "2", x: 300, y: 300, fill: "blue", stroke: "black" },
-    { id: "3", x: 500, y: 400, fill: "blue", stroke: "black" },
-  ];
+const SeatContainer: React.FC<SeatContainerProps> = ({ seatsData, socket }) => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [startPoint, setStartPoint] = useState<Point>({ x: 0, y: 0 });
+  const [translate, setTranslate] = useState<Point>({ x: 0, y: 0 });
+  const [scale, setScale] = useState(1);
 
-  const handleSeatClick = (seat: SeatData) => {
-    setSelectedSeat(seat);
+  const { isDateSidebarOpen } = useContext(ReservationContext);
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      if (isDragging && containerRef.current) {
+        const deltaX = e.clientX - startPoint.x;
+        const deltaY = e.clientY - startPoint.y;
+
+        setTranslate((prev) => ({
+          x: prev.x + deltaX,
+          y: prev.y + deltaY,
+        }));
+
+        setStartPoint({
+          x: e.clientX,
+          y: e.clientY,
+        });
+      }
+    };
+
+    const handleMouseUp = () => {
+      setIsDragging(false);
+    };
+
+    const handleWheel = (e: WheelEvent) => {
+      e.preventDefault();
+      const delta = e.deltaY * -0.001;
+      const newScale = Math.min(Math.max(0.5, scale + delta), 2);
+      setScale(newScale);
+    };
+
+    document.addEventListener("mousemove", handleMouseMove);
+    document.addEventListener("mouseup", handleMouseUp);
+    containerRef.current?.addEventListener("wheel", handleWheel);
+
+    return () => {
+      document.removeEventListener("mousemove", handleMouseMove);
+      document.removeEventListener("mouseup", handleMouseUp);
+      containerRef.current?.removeEventListener("wheel", handleWheel);
+    };
+  }, [isDragging, startPoint, scale]);
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    if (e.button === 1) {
+      // 마우스 중간 버튼
+      e.preventDefault();
+      setIsDragging(true);
+      setStartPoint({
+        x: e.clientX,
+        y: e.clientY,
+      });
+    }
   };
 
   return (
-    <Container width="1000px">
-      <div style={{ position: "relative", width: "100%", height: "500px" }}>
-        {seatData.map((seat) => (
-          <Seat
-            key={seat.id}
-            x={seat.x}
-            y={seat.y}
-            fill={seat.fill}
-            stroke={seat.stroke}
-            width={50}
-            height={50}
-            onClick={() => handleSeatClick(seat)}
-          />
-        ))}
+    <div
+      ref={containerRef}
+      className={`relative w-full h-full overflow-hidden bg-gray-100 cursor-move transition-all duration-300
+                 ${isDateSidebarOpen ? "ml-1/5" : ""}`}
+      onMouseDown={handleMouseDown}
+      style={{ touchAction: "none" }}
+    >
+      <div
+        className="absolute inset-0"
+        style={{
+          transform: `translate(${translate.x}px, ${translate.y}px) scale(${scale})`,
+          transformOrigin: "center",
+          transition: "transform 0.1s ease-out",
+        }}
+      >
+        <svg width="100%" height="100%" viewBox="0 0 800 800">
+          {seatsData.map((seatData) => (
+            <SeatObj
+              key={seatData.seat_id}
+              seatData={seatData}
+              socket={socket}
+            />
+          ))}
+        </svg>
       </div>
-      {selectedSeat && (
-        <div
-          style={{
-            position: "absolute",
-            top: 50,
-            right: 500,
-            backgroundColor: "white",
-            border: "1px solid #ccc",
-            padding: "1rem",
-            boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
-          }}
+
+      {/* 확대/축소 컨트롤 */}
+      <div className="absolute bottom-4 right-4 bg-white rounded-lg shadow-lg p-2">
+        <button
+          onClick={() => setScale((prev) => Math.min(prev + 0.1, 2))}
+          className="px-3 py-1 border rounded-lg mr-2 hover:bg-gray-100"
         >
-          <h3>Seat {selectedSeat.id} Info</h3>
-          <p>X: {selectedSeat.x}</p>
-          <p>Y: {selectedSeat.y}</p>
-          <Button
-            onClick={() => {
-              // TODO: 좌석정보 넘겨서 예매 페이지로
-            }}
-          >
-            예매하기
-          </Button>
-        </div>
-      )}
-    </Container>
+          +
+        </button>
+        <button
+          onClick={() => setScale((prev) => Math.max(prev - 0.1, 0.5))}
+          className="px-3 py-1 border rounded-lg hover:bg-gray-100"
+        >
+          -
+        </button>
+      </div>
+    </div>
   );
 };
 
