@@ -31,12 +31,10 @@ const LoginForm = () => {
 
     onSuccess: (response: LoginResponse) => {
       toast.success(`환영합니다 !`);
-      console.log(response);
     },
 
     onError: (error: AxiosError<ApiErrorResponse>) => {
       if (error.response) {
-        console.log(error.response.data);
         const code = error.response.data.code;
         if (code === 5) {
           const field = error.response.data.details?.[0].field;
@@ -61,7 +59,6 @@ const LoginForm = () => {
   });
 
   const onSubmit = (data: LoginData) => {
-    console.log(data);
     mutation.mutate(data);
   };
 
