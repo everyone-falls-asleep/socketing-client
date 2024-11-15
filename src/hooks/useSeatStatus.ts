@@ -1,13 +1,11 @@
 import { useState, useEffect, useCallback } from "react";
-import { Socket } from "socket.io-client";
-import {
-  ServerToClientEvents,
-  ClientToServerEvents,
-  SeatStatus,
-} from "../types/api/socket";
+import { SeatStatus } from "../types/api/socket";
+import { createMockSocket } from "../mocks/mockSocket";
+
+type MockSocketType = ReturnType<typeof createMockSocket>;
 
 interface UseSeatStatusProps {
-  socket: Socket<ServerToClientEvents, ClientToServerEvents> | null;
+  socket: MockSocketType | null;
   seatId: string;
 }
 
@@ -18,15 +16,17 @@ export const useSeatStatus = ({ socket, seatId }: UseSeatStatusProps) => {
   useEffect(() => {
     if (!socket) return;
 
-    const handleSeatUpdate = (updatedStatus: SeatStatus) => {
-      if (updatedStatus.seatId === seatId) {
-        setStatus(updatedStatus);
+    const handleSeatUpdate = (updatedStatus: unknown) => {
+      const status = updatedStatus as SeatStatus; // 타입 단언 추가
+      if (status.seatId === seatId) {
+        setStatus(status);
       }
     };
 
-    const handleError = (errorData: { message: string; seatId: string }) => {
-      if (errorData.seatId === seatId) {
-        setError(errorData.message);
+    const handleError = (errorData: unknown) => {
+      const errorInfo = errorData as { message: string; seatId: string }; // 타입 단언
+      if (errorInfo.seatId === seatId) {
+        setError(errorInfo.message);
       }
     };
 

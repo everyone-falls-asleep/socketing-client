@@ -1,43 +1,32 @@
 type EventCallback = (...args: unknown[]) => void;
+type Listeners = Map<string, Set<EventCallback>>;
 
-export class MockSocket {
-  private connected: boolean = false;
-  private watchedSeats: Set<string> = new Set();
-  private listeners: Map<string, Set<EventCallback>> = new Map();
+export const createMockSocket = () => {
+  let connected = false;
+  const watchedSeats = new Set<string>();
+  const listeners: Listeners = new Map();
 
-  constructor() {
-    this.connect();
-    this.startMockUpdates();
-  }
-
-  // 이벤트 리스너 추가
-  on(event: string, callback: EventCallback) {
-    if (!this.listeners.has(event)) {
-      this.listeners.set(event, new Set());
+  const on = (event: string, callback: EventCallback) => {
+    if (!listeners.has(event)) {
+      listeners.set(event, new Set());
     }
-    this.listeners.get(event)?.add(callback);
-  }
+    listeners.get(event)?.add(callback);
+  };
 
-  // 이벤트 리스너 제거
-  off(event: string, callback: EventCallback) {
-    this.listeners.get(event)?.delete(callback);
-  }
+  const off = (event: string, callback: EventCallback) => {
+    listeners.get(event)?.delete(callback);
+  };
 
-  // 이벤트 발생
-  emit(event: string, ...args: unknown[]) {
-    if (
-      event === "seat:watch" ||
-      event === "seat:unwatch" ||
-      event === "seat:reserve"
-    ) {
+  const emit = (event: string, ...args: unknown[]) => {
+    if (["seat:watch", "seat:unwatch", "seat:reserve"].includes(event)) {
       const [seatId] = args as [string];
       if (event === "seat:watch") {
-        this.watchedSeats.add(seatId);
+        watchedSeats.add(seatId);
       } else if (event === "seat:unwatch") {
-        this.watchedSeats.delete(seatId);
+        watchedSeats.delete(seatId);
       } else if (event === "seat:reserve") {
         setTimeout(() => {
-          this.emitEvent("seat:update", {
+          emitEvent("seat:update", {
             seatId,
             status: "reserved",
             lastUpdated: new Date().toISOString(),
@@ -45,32 +34,32 @@ export class MockSocket {
         }, 500);
       }
     }
-    this.emitEvent(event, ...args);
-  }
+    emitEvent(event, ...args);
+  };
 
-  private emitEvent(event: string, ...args: unknown[]) {
-    this.listeners.get(event)?.forEach((callback) => {
+  const emitEvent = (event: string, ...args: unknown[]) => {
+    listeners.get(event)?.forEach((callback) => {
       callback(...args);
     });
-  }
+  };
 
-  connect() {
+  const connect = () => {
     setTimeout(() => {
-      this.connected = true;
-      this.emitEvent("connect");
+      connected = true;
+      emitEvent("connect");
     }, 1000);
-  }
+  };
 
-  disconnect() {
-    this.connected = false;
-    this.emitEvent("disconnect");
-    this.watchedSeats.clear();
-    this.listeners.clear();
-  }
+  const disconnect = () => {
+    connected = false;
+    emitEvent("disconnect");
+    watchedSeats.clear();
+    listeners.clear();
+  };
 
-  private startMockUpdates() {
+  const startMockUpdates = () => {
     setInterval(() => {
-      this.watchedSeats.forEach((seatId) => {
+      watchedSeats.forEach((seatId) => {
         if (Math.random() > 0.7) {
           const statuses: ("available" | "temporary_hold" | "reserved")[] = [
             "available",
@@ -80,7 +69,7 @@ export class MockSocket {
           const randomStatus =
             statuses[Math.floor(Math.random() * statuses.length)];
 
-          this.emitEvent("seat:update", {
+          emitEvent("seat:update", {
             seatId,
             status: randomStatus,
             lastUpdated: new Date().toISOString(),
@@ -88,7 +77,18 @@ export class MockSocket {
         }
       });
     }, 3000);
-  }
-}
+  };
 
-export const createMockSocket = () => new MockSocket();
+  // 초기화 호출
+  connect();
+  startMockUpdates();
+
+  return {
+    on,
+    off,
+    emit,
+    connect,
+    disconnect,
+    isConnected: () => connected,
+  };
+};

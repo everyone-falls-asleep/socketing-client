@@ -3,7 +3,9 @@ import { Seat } from "../../../types/api/event";
 import SeatObj from "../../atoms/seats/SeatObj";
 import { useContext } from "react";
 import { ReservationContext } from "../../../store/ReservationContext";
-import { Socket } from "socket.io-client";
+import { createMockSocket } from "../../../mocks/mockSocket";
+
+type MockSocketType = ReturnType<typeof createMockSocket>;
 
 interface Point {
   x: number;
@@ -12,7 +14,7 @@ interface Point {
 
 interface SeatContainerProps {
   seatsData: Seat[];
-  socket: Socket;
+  socket: MockSocketType | null;
 }
 
 const SeatContainer: React.FC<SeatContainerProps> = ({ seatsData, socket }) => {

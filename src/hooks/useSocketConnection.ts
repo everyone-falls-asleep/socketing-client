@@ -1,10 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import { createMockSocket } from "../mocks/mockSocket";
-import { Socket } from "socket.io-client";
+
+type MockSocketType = ReturnType<typeof createMockSocket>;
 
 export const useSocketConnection = () => {
   const [isConnected, setIsConnected] = useState(false);
-  const socketRef = useRef<Socket | null>(null);
+  const socketRef = useRef<MockSocketType | null>(null);
 
   useEffect(() => {
     socketRef.current = createMockSocket();

@@ -19,7 +19,7 @@ const EventList = ({ events }: EventListProps) => {
         <EventCard
           key={event.event_id}
           event={event}
-          onClick={() => onClickHandler(event.event_id)}
+          onClick={() => onClickHandler()}
         />
       ))}
     </Grid>

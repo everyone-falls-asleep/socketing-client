@@ -2,11 +2,13 @@ import { Seat } from "../../../types/api/event";
 import { useContext } from "react";
 import { ReservationContext } from "../../../store/ReservationContext";
 import { useSeatStatus } from "../../../hooks/useSeatStatus";
-import { Socket } from "socket.io-client";
+import { createMockSocket } from "../../../mocks/mockSocket";
+
+type MockSocketType = ReturnType<typeof createMockSocket>;
 
 interface SeatProps {
   seatData: Seat;
-  socket: Socket;
+  socket: MockSocketType | null;
 }
 
 const SeatObj = ({ seatData, socket }: SeatProps) => {
