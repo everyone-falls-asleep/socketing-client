@@ -1,10 +1,18 @@
 import axios from "axios";
+import { baseURL } from "../../constants/api";
+import { EventResponse } from "../../types/api/event";
 
-const API_URL = "https://week13.hjyoon.me/api/posts/";
+const API_URL = baseURL + "events/";
 
 const api = axios.create({
   baseURL: API_URL,
 });
+
+const fetchAllEvents = async (): Promise<EventResponse> => {
+  const response = await api.get<EventResponse>(API_URL);
+  console.log(response.data.data);
+  return response.data;
+};
 
 api.interceptors.request.use(
   (config) => {
@@ -21,3 +29,5 @@ api.interceptors.request.use(
     return Promise.reject(new Error(String(error)));
   }
 );
+
+export { fetchAllEvents };
