@@ -1,9 +1,9 @@
-import Header from "../templates/header/Header";
+import MainLayout from "../layout/MainLayout";
 
 function MyPage() {
   return (
     <>
-      <Header />
+      <MainLayout>?</MainLayout>
     </>
   );
 }

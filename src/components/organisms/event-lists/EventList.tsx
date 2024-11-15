@@ -3,7 +3,7 @@ import Grid from "../../layout/Grid";
 import { useNavigate } from "react-router-dom";
 import { Event } from "../../../types/api/event";
 
-interface EventListProps {
+export interface EventListProps {
   events: Event[];
 }
 
