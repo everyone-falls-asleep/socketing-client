@@ -1,6 +1,12 @@
 import axios from "axios";
-import { LoginData, RegisterResponse } from "../../types/api/user";
-const API_URL = "https://socketing.hjyoon.me/api/auth/";
+import {
+  LoginData,
+  RegisterResponse,
+  LoginResponse,
+} from "../../types/api/user";
+import { baseURL } from "../../constants/api";
+
+const API_URL = baseURL + "auth/";
 
 const sendRegisterRequest = async ({
   email,
@@ -13,4 +19,15 @@ const sendRegisterRequest = async ({
   return response.data;
 };
 
-export { sendRegisterRequest };
+const sendLoginRequest = async ({
+  email,
+  password,
+}: LoginData): Promise<LoginResponse> => {
+  const response = await axios.post<LoginResponse>(API_URL + "login", {
+    email,
+    password,
+  });
+  return response.data;
+};
+
+export { sendRegisterRequest, sendLoginRequest };

@@ -15,3 +15,11 @@ export interface RegisterResponseData {
 }
 
 export type RegisterResponse = ApiResponse<RegisterResponseData>;
+
+export interface LoginResponseData {
+  tokenType: string;
+  expiresIn: string;
+  accessToken: string;
+}
+
+export type LoginResponse = ApiResponse<LoginResponseData>;

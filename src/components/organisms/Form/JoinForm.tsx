@@ -7,16 +7,21 @@ import { sendRegisterRequest } from "../../../api/authentication/authApi";
 import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { LoginData, RegisterResponse } from "../../../types/api/user";
+import { JoinConfirmData } from "../../../types/form/user";
 import { ApiErrorResponse } from "../../../types/api/common";
 import { AxiosError } from "axios";
+import { registerErrorMessages } from "../../../constants/api";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const JoinForm = () => {
   const {
     register,
     handleSubmit,
     setError,
+    watch,
     formState: { errors },
-  } = useForm<LoginData>();
+  } = useForm<JoinConfirmData>();
 
   const mutation = useMutation<
     RegisterResponse,
@@ -27,7 +32,7 @@ const JoinForm = () => {
     mutationFn: sendRegisterRequest,
 
     onSuccess: (response: RegisterResponse) => {
-      alert(`환영합니다, ${response.data?.nickname}님 !`);
+      toast.success(`환영합니다, ${response.data?.nickname}님 !`);
     },
 
     onError: (error: AxiosError<ApiErrorResponse>) => {
@@ -37,8 +42,8 @@ const JoinForm = () => {
           const field = error.response.data.details?.[0].field;
           const message =
             field === "email"
-              ? "이메일 형식이 올바르지 않습니다."
-              : "비밀번호는 6글자 이상이어야 합니다.";
+              ? registerErrorMessages.validation.emailInvalid
+              : registerErrorMessages.validation.passwordInvalid;
 
           if (field) {
             setError(field as keyof LoginData, { type: "manual", message });
@@ -46,18 +51,23 @@ const JoinForm = () => {
         } else if (code === 1) {
           setError("email", {
             type: "manual",
-            message: "이미 가입된 사용자입니다.",
+            message: registerErrorMessages.duplicateUser,
           });
         } else {
-          alert("회원가입에 실패하였습니다.");
+          toast.error(registerErrorMessages.generic);
         }
       }
     },
   });
 
-  const onSubmit = (data: LoginData): void => {
-    mutation.mutate(data);
+  const onSubmit = (data: JoinConfirmData) => {
+    mutation.mutate({
+      email: data.email,
+      password: data.password,
+    });
   };
+
+  const password = watch("password");
 
   return (
     <div>
@@ -83,9 +93,25 @@ const JoinForm = () => {
             <span style={{ color: "red" }}>{errors.password.message}</span>
           )}
           <br />
+          <LabeledInput
+            {...register("passwordConfirm", {
+              validate: (value) =>
+                value === password || "비밀번호가 일치하지 않습니다.",
+            })}
+            placeholder="비밀번호를 확인해주세요"
+            label="PASSWORD CONFIRM"
+            type="password"
+          />
+          {errors.passwordConfirm && (
+            <span style={{ color: "red" }}>
+              {errors.passwordConfirm.message}
+            </span>
+          )}
+          <br />
           <Button type="submit">회원가입</Button>
         </form>
       </Container>
+      <ToastContainer position="top-center" autoClose={3000} />
     </div>
   );
 };
