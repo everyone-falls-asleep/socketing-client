@@ -1,0 +1,12 @@
+div.flex-box {
+  @apply flex justify-center items-center gap-2;
+}
+
+/* image 관련 */
+img.default {
+  @apply h-full object-contain;
+}
+
+div.poster-box {
+  @apply w-24 h-full flex-shrink-0 flex justify-center;
+}
