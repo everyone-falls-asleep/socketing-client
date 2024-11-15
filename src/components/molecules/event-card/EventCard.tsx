@@ -7,7 +7,7 @@ interface EventCardProps {
 }
 
 const EventCard = ({ event, onClick }: EventCardProps) => {
-  const { thumbnail, title, date, place } = event;
+  const { thumbnail, title, eventDates, place } = event;
 
   return (
     <div
@@ -18,7 +18,7 @@ const EventCard = ({ event, onClick }: EventCardProps) => {
       <div className="p-4">
         <h3 className="text-lg font-semibold mb-2">{title}</h3>
         <div className="space-y-1 text-sm text-gray-600">
-          <p>일시: {date[0]}</p>
+          <p>일시: {eventDates[0].date}</p>
           <p>장소: {place}</p>
         </div>
       </div>

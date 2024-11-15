@@ -17,7 +17,7 @@ const EventList = ({ events }: EventListProps) => {
     <Grid orientation="vertical">
       {events.map((event) => (
         <EventCard
-          key={event.event_id}
+          key={event.id}
           event={event}
           onClick={() => onClickHandler()}
         />

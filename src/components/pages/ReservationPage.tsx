@@ -32,7 +32,7 @@ const ReservationPage: React.FC = () => {
               className={`${isDateSidebarOpen ? "ml-1/5" : ""} w-2/5 bg-gray-50 transition-all`}
             >
               <ReservationCalendarSideBar
-                dateData={[...mockReservationData.event.date]}
+                dateData={[...mockReservationData.event.eventDates[0].date]}
               />
             </div>
 

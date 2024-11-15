@@ -1,13 +1,25 @@
+import { ApiResponse } from "./common";
+
 export interface Event {
-  event_id: string;
+  id: string;
   title: string;
-  date: string[];
+  eventDates: EventDate[];
   thumbnail: string;
   place: string;
-  price: string;
   cast: string;
   age_limit: string;
+  createdAt: string;
+  updatedAt: string;
 }
+
+interface EventDate {
+  id: string;
+  date: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export type EventResponse = ApiResponse<Event[]>;
 
 export interface Seat {
   seat_id: string;

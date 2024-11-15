@@ -22,7 +22,7 @@ const MainBanner = ({ events }: EventListProps) => {
     <div className="relative w-full h-[32rem] overflow-hidden">
       {events.map((event, index) => (
         <div
-          key={event.event_id}
+          key={event.id}
           className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
             index === current ? "opacity-100" : "opacity-0"
           }`}

@@ -16,15 +16,14 @@ const ResevationUpperEvent = (eventData: Event) => {
             <div className="space-y-2">
               <p>{eventData.place}</p>
               <p>
-                {eventData.date[0]} 외 {eventData.date.length - 1}회
+                {eventData.eventDates[0].date} 외{" "}
+                {eventData.eventDates.length - 1}회
               </p>
               <p>{eventData.age_limit} 이상</p>
               <p>출연: {eventData.cast}</p>
             </div>
           </div>
-          <p className="text-xl font-bold">
-            가격: {parseInt(eventData.price).toLocaleString()}원
-          </p>
+          <p className="text-xl font-bold">가격: 99,000원</p>
         </div>
       </div>
     </div>
