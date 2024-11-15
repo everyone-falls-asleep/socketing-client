@@ -31,6 +31,7 @@ const LoginForm = () => {
 
     onSuccess: (response: LoginResponse) => {
       toast.success(`환영합니다 !`);
+      console.log(response);
     },
 
     onError: (error: AxiosError<ApiErrorResponse>) => {
