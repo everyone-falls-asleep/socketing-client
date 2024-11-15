@@ -13,7 +13,14 @@ const ReservationSeatContainer: React.FC<ReservationSeatContainerProps> = ({
   seatsData,
   socket,
 }: ReservationSeatContainerProps) => {
-  return <SeatContainer seatsData={seatsData} socket={socket} />;
+  return (
+    <SeatContainer
+      seatsData={seatsData}
+      socket={socket}
+      backgroundImage="/images/screen.svg"
+      viewBox="0 0 10240 7680"
+    />
+  );
 };
 
 export default ReservationSeatContainer;

@@ -19,13 +19,13 @@ const SeatObj = ({ seatData, socket }: SeatProps) => {
   const getStatusColor = () => {
     switch (status?.status) {
       case "available":
-        return "#4ADE80"; // green
+        return "#4ADE80";
       case "reserved":
-        return "#EF4444"; // red
+        return "#EF4444";
       case "temporary_hold":
-        return "#FBBF24"; // yellow
+        return "#FBBF24";
       default:
-        return "#9CA3AF"; // gray
+        return "#9CA3AF";
     }
   };
 
@@ -35,25 +35,16 @@ const SeatObj = ({ seatData, socket }: SeatProps) => {
   };
 
   return (
-    <>
-      <svg
-        viewBox="0 0 800 800"
-        className="absolute top-0 left-0 w-full h-full"
-        style={{ pointerEvents: "none" }}
-      >
-        <circle
-          cx={seatData.x}
-          cy={seatData.y}
-          r="20"
-          fill={getStatusColor()}
-          stroke="#1F2937"
-          strokeWidth="2"
-          onClick={handleSeatClick}
-          style={{ cursor: "pointer", pointerEvents: "all" }}
-          className="transition-colors duration-200 hover:opacity-80"
-        />
-      </svg>
-    </>
+    <circle
+      cx={seatData.x}
+      cy={seatData.y}
+      r="200"
+      fill={getStatusColor()}
+      stroke="#1F2937"
+      strokeWidth="2"
+      onClick={handleSeatClick}
+      className="seat transition-colors duration-200 hover:opacity-80 cursor-pointer"
+    />
   );
 };
 

@@ -15,9 +15,16 @@ interface Point {
 interface SeatContainerProps {
   seatsData: Seat[];
   socket: MockSocketType | null;
+  backgroundImage?: string; // 좌석 배치도 이미지 URL
+  viewBox?: string; // SVG viewBox 설정
 }
 
-const SeatContainer: React.FC<SeatContainerProps> = ({ seatsData, socket }) => {
+const SeatContainer: React.FC<SeatContainerProps> = ({
+  seatsData,
+  socket,
+  backgroundImage = "",
+  viewBox = "0 0 10240 7680",
+}) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [startPoint, setStartPoint] = useState<Point>({ x: 0, y: 0 });
@@ -51,7 +58,7 @@ const SeatContainer: React.FC<SeatContainerProps> = ({ seatsData, socket }) => {
     const handleWheel = (e: WheelEvent) => {
       e.preventDefault();
       const delta = e.deltaY * -0.001;
-      const newScale = Math.min(Math.max(0.5, scale + delta), 2);
+      const newScale = Math.min(Math.max(0.5, scale + delta), 3); // 최대 확대 배율을 3으로 증가
       setScale(newScale);
     };
 
@@ -67,8 +74,7 @@ const SeatContainer: React.FC<SeatContainerProps> = ({ seatsData, socket }) => {
   }, [isDragging, startPoint, scale]);
 
   const handleMouseDown = (e: React.MouseEvent) => {
-    if (e.button === 1) {
-      // 마우스 중간 버튼
+    if (e.button === 0) {
       e.preventDefault();
       setIsDragging(true);
       setStartPoint({
@@ -81,7 +87,7 @@ const SeatContainer: React.FC<SeatContainerProps> = ({ seatsData, socket }) => {
   return (
     <div
       ref={containerRef}
-      className={`relative w-full h-full overflow-hidden bg-gray-100 cursor-move transition-all duration-300
+      className={`relative w-full h-full overflow-hidden bg-gray-100 transition-all duration-300
                  ${isDateSidebarOpen ? "ml-1/5" : ""}`}
       onMouseDown={handleMouseDown}
       style={{ touchAction: "none" }}
@@ -94,30 +100,52 @@ const SeatContainer: React.FC<SeatContainerProps> = ({ seatsData, socket }) => {
           transition: "transform 0.1s ease-out",
         }}
       >
-        <svg width="100%" height="100%" viewBox="0 0 800 800">
-          {seatsData.map((seatData) => (
-            <SeatObj
-              key={seatData.seat_id}
-              seatData={seatData}
-              socket={socket}
-            />
-          ))}
+        <svg
+          width="100%"
+          height="100%"
+          viewBox={viewBox}
+          style={{
+            backgroundImage: backgroundImage
+              ? `url(${backgroundImage})`
+              : "none",
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+          }}
+        >
+          <g className="seats">
+            {seatsData.map((seatData) => (
+              <SeatObj
+                key={seatData.seat_id}
+                seatData={seatData}
+                socket={socket}
+              />
+            ))}
+          </g>
         </svg>
       </div>
 
-      {/* 확대/축소 컨트롤 */}
-      <div className="absolute bottom-4 right-4 bg-white rounded-lg shadow-lg p-2">
+      {/* 줌 컨트롤 */}
+      <div className="absolute bottom-4 right-4 bg-white rounded-lg shadow-lg p-2 flex flex-col gap-2">
         <button
-          onClick={() => setScale((prev) => Math.min(prev + 0.1, 2))}
-          className="px-3 py-1 border rounded-lg mr-2 hover:bg-gray-100"
+          onClick={() => setScale((prev) => Math.min(prev + 0.2, 3))}
+          className="px-3 py-1 border rounded-lg hover:bg-gray-100"
         >
           +
         </button>
         <button
-          onClick={() => setScale((prev) => Math.max(prev - 0.1, 0.5))}
+          onClick={() => setScale((prev) => Math.max(prev - 0.2, 0.5))}
           className="px-3 py-1 border rounded-lg hover:bg-gray-100"
         >
           -
+        </button>
+        <button
+          onClick={() => {
+            setScale(1);
+            setTranslate({ x: 0, y: 0 });
+          }}
+          className="px-2 py-1 border rounded-lg hover:bg-gray-100 text-sm"
+        >
+          Reset
         </button>
       </div>
     </div>
