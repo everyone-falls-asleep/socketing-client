@@ -1,12 +1,11 @@
-import Header from "../templates/header/Header";
+import MainLayout from "../layout/MainLayout";
 import EventOverviewTemplate from "../templates/event-overview/EventOverviewTemplate";
 
 function MainPage() {
   return (
-    <>
-      <Header />
+    <MainLayout>
       <EventOverviewTemplate />
-    </>
+    </MainLayout>
   );
 }
 

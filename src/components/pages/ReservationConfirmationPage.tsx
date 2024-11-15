@@ -1,5 +1,5 @@
+import MainLayout from "../layout/MainLayout";
 import ReservationOverviewTemplate from "../templates/reservation-overview/ReservationOverviewTemplate";
-import Header from "../templates/header/Header";
 
 interface ReservConfirmProps {
   title: string;
@@ -14,13 +14,12 @@ const ReservationConfirmationPage = ({ title }: ReservConfirmProps) => {
   };
 
   return (
-    <>
-      <Header></Header>
+    <MainLayout>
       <ReservationOverviewTemplate
         title={title}
         reservation={reservation}
       ></ReservationOverviewTemplate>
-    </>
+    </MainLayout>
   );
 };
 

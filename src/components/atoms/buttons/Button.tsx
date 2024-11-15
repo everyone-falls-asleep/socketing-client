@@ -36,7 +36,7 @@ const Button = ({
   return (
     <>
       <button
-        className={`m-2 rounded-lg font-bold transition-colors duration-200 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed ${getVariantClasses(
+        className={`text-center whitespace-nowrap rounded-lg font-bold transition-colors duration-200 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed ${getVariantClasses(
           variant
         )} ${getSizeClasses(size)} ${className}`}
         {...props}

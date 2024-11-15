@@ -1,12 +1,11 @@
+import MainLayout from "../layout/MainLayout";
 import JoinForm from "../organisms/Form/JoinForm";
-import Header from "../templates/header/Header";
 
 const JoinPage = () => {
   return (
-    <div>
-      <Header></Header>
+    <MainLayout>
       <JoinForm></JoinForm>
-    </div>
+    </MainLayout>
   );
 };
 
