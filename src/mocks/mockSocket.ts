@@ -18,12 +18,27 @@ export const createMockSocket = () => {
   };
 
   const emit = (event: string, ...args: unknown[]) => {
-    if (["seat:watch", "seat:unwatch", "seat:reserve"].includes(event)) {
+    if (
+      [
+        "seat:watch",
+        "seat:unwatch",
+        "seat:temporary_hold",
+        "seat:reserve",
+      ].includes(event)
+    ) {
       const [seatId] = args as [string];
       if (event === "seat:watch") {
         watchedSeats.add(seatId);
       } else if (event === "seat:unwatch") {
         watchedSeats.delete(seatId);
+      } else if (event === "seat:temporary_hold") {
+        setTimeout(() => {
+          emitEvent("seat:update", {
+            seatId,
+            status: "temporary_hold",
+            lastUpdated: new Date().toISOString(),
+          });
+        }, 500);
       } else if (event === "seat:reserve") {
         setTimeout(() => {
           emitEvent("seat:update", {

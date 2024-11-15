@@ -17,14 +17,14 @@ export const useSeatStatus = ({ socket, seatId }: UseSeatStatusProps) => {
     if (!socket) return;
 
     const handleSeatUpdate = (updatedStatus: unknown) => {
-      const status = updatedStatus as SeatStatus; // 타입 단언 추가
+      const status = updatedStatus as SeatStatus;
       if (status.seatId === seatId) {
         setStatus(status);
       }
     };
 
     const handleError = (errorData: unknown) => {
-      const errorInfo = errorData as { message: string; seatId: string }; // 타입 단언
+      const errorInfo = errorData as { message: string; seatId: string };
       if (errorInfo.seatId === seatId) {
         setError(errorInfo.message);
       }
@@ -33,7 +33,6 @@ export const useSeatStatus = ({ socket, seatId }: UseSeatStatusProps) => {
     socket.on("seat:update", handleSeatUpdate);
     socket.on("seat:error", handleError);
 
-    // 좌석 모니터링 시작
     socket.emit("seat:watch", seatId);
 
     return () => {
@@ -48,9 +47,15 @@ export const useSeatStatus = ({ socket, seatId }: UseSeatStatusProps) => {
     socket.emit("seat:reserve", seatId);
   }, [socket, seatId]);
 
+  const holdSeat = useCallback(() => {
+    if (!socket) return;
+    socket.emit("seat:temporary_hold", seatId);
+  }, [socket, seatId]);
+
   return {
     status,
     error,
     reserveSeat,
+    holdSeat,
   };
 };
