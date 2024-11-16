@@ -1,6 +1,11 @@
 import axios from "axios";
 import { baseURL } from "../../constants/api";
-import { EventsResponse, SingleEventResponse } from "../../types/api/event";
+import {
+  EventsResponse,
+  SingleEventResponse,
+  NewEvent,
+  NewEventResponse,
+} from "../../types/api/event";
 
 const API_URL = baseURL + "events/";
 
@@ -20,6 +25,27 @@ const fetchOneEvent = async (
   return response.data;
 };
 
+const createNewEvent = async ({
+  title,
+  thumbnail,
+  place,
+  cast,
+  ageLimit,
+  eventDates,
+  svg,
+}: NewEvent): Promise<NewEventResponse> => {
+  const response = await api.post<NewEventResponse>(API_URL, {
+    title,
+    thumbnail,
+    place,
+    cast,
+    ageLimit,
+    eventDates,
+    svg,
+  });
+  return response.data;
+};
+
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("authToken");
@@ -36,4 +62,4 @@ api.interceptors.request.use(
   }
 );
 
-export { fetchAllEvents, fetchOneEvent };
+export { fetchAllEvents, fetchOneEvent, createNewEvent };

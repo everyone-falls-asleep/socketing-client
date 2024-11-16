@@ -23,6 +23,29 @@ export type EventsResponse = ApiResponse<Event[]>;
 
 export type SingleEventResponse = ApiResponse<Event>;
 
+export interface NewEvent {
+  title: string;
+  thumbnail: string;
+  place: string;
+  cast: string;
+  ageLimit: number;
+  eventDates: string[];
+  svg: string;
+}
+
+export interface NewEventResponseData {
+  id: string;
+  title: string;
+  thumbnail: string;
+  place: string;
+  cast: string;
+  ageLimit: number;
+  eventDates: string[];
+  svg: string;
+}
+
+export type NewEventResponse = ApiResponse<NewEventResponseData>;
+
 export interface Seat {
   seat_id: string;
   x: string;
