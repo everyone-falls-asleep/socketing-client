@@ -5,7 +5,7 @@ const CardList = ({ events }: EventListProps) => {
   const navigate = useNavigate();
 
   const onClickHandler = (id: string) => {
-    navigate(`/reservation/${id}`);
+    navigate(`/event/${id}`);
   };
   return (
     <div className="px-6 py-8">
