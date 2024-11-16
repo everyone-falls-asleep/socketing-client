@@ -16,7 +16,7 @@ const Router = () => {
         <Route path="join" element={<JoinPage />} />
         <Route path="mypage" element={<Mypage />} />
         <Route path="event" element={<EventDetailPage />} />
-        <Route path="reservation" element={<ReservationPage />} />
+        <Route path="reservation/:id" element={<ReservationPage />} />
         <Route
           path="reservation-confirmation"
           element={

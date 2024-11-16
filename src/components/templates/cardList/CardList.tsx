@@ -4,16 +4,17 @@ import { useNavigate } from "react-router-dom";
 const CardList = ({ events }: EventListProps) => {
   const navigate = useNavigate();
 
-  const onClickHandler = () => {
-    navigate(`/reservation/`);
+  const onClickHandler = (id: string) => {
+    navigate(`/reservation/${id}`);
   };
   return (
-    <div className="px-6 py-8" onClick={onClickHandler}>
+    <div className="px-6 py-8">
       <h2 className="text-3xl font-bold text-center mb-6">곧 열릴 공연들</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {events.map((event) => (
           <div
             key={event.id}
+            onClick={() => onClickHandler(event.id)}
             className="bg-white shadow-lg rounded-lg overflow-hidden"
           >
             <img

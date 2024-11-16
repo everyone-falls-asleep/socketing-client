@@ -15,11 +15,12 @@ import MainLayout from "../layout/MainLayout";
 import { useQuery } from "@tanstack/react-query";
 import { fetchOneEvent } from "../../api/events/eventsApi";
 import { SingleEventResponse } from "../../types/api/event";
+import { useParams } from "react-router-dom";
 
 const ReservationPage: React.FC = () => {
   const { socket } = useSocketConnection();
   const { isDateSidebarOpen } = useContext(ReservationContext);
-
+  const { id } = useParams();
   const useEvent = (event_id: string) => {
     return useQuery<SingleEventResponse, Error>({
       queryKey: ["single-event", event_id],
@@ -32,9 +33,7 @@ const ReservationPage: React.FC = () => {
     });
   };
 
-  const { data, isLoading, isError, error } = useEvent(
-    "075e7ea5-99f3-4c34-bccb-0d18489d0f21"
-  );
+  const { data, isLoading, isError, error } = useEvent(id ?? "default-id");
 
   if (isLoading) {
     console.log(data);
