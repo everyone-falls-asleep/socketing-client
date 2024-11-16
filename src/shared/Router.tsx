@@ -6,6 +6,8 @@ import Mypage from "../components/pages/MyPage";
 import ReservationPage from "../components/pages/ReservationPage";
 import ReservationConfirmationPage from "../components/pages/ReservationConfirmationPage";
 import EventDetailPage from "../components/pages/EventDetailPage";
+import WaitingRoomPage from "../components/pages/WatingRoomPage";
+import SearchResultsPage from "../components/pages/SearchResultsPage";
 import RegisterEventPage from "../components/pages/RegisterEventPage";
 
 const Router = () => {
@@ -16,9 +18,15 @@ const Router = () => {
         <Route path="login" element={<LoginPage />} />
         <Route path="join" element={<JoinPage />} />
         <Route path="mypage" element={<Mypage />} />
-        <Route path="event" element={<EventDetailPage />} />
+        <Route path="event/:id" element={<EventDetailPage />} />
         <Route path="register" element={<RegisterEventPage />} />
         <Route path="reservation/:id" element={<ReservationPage />} />
+        <Route
+          path="/search-results/:searchTerm"
+          element={<SearchResultsPage />}
+        />{" "}
+        {/* 검색 결과 페이지 */}
+        <Route path="waiting" element={<WaitingRoomPage />} />
         <Route
           path="reservation-confirmation"
           element={

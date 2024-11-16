@@ -44,23 +44,25 @@ const ReservationPage: React.FC = () => {
     return <p>오류 발생: {error.message}</p>;
   }
 
+  if (!data?.data) {
+    return <p>오류 발생: 공연 정보를 불러올 수 없습니다.</p>;
+  }
+
+  const eventData = data.data;
+
   return (
     <MainLayout>
       <ReservationProvider>
         <div className="h-screen flex flex-col">
           {/* 상단 공연 정보  */}
-          <ReservationUpperEvent
-            {...(data?.data ?? { ...mockReservationData.event })}
-          ></ReservationUpperEvent>
+          <ReservationUpperEvent {...eventData}></ReservationUpperEvent>
           {/* 하단 섹션 (2/3) */}
           <div className="flex flex-1 relative">
             {/* 날짜 선택 사이드바 (1/5) */}
             <div
               className={`${isDateSidebarOpen ? "ml-1/5" : ""} w-2/5 bg-gray-50 transition-all`}
             >
-              <ReservationCalendarSideBar
-                dateData={[data?.data?.eventDates[0].date ?? "2024-12-25"]}
-              />
+              <ReservationCalendarSideBar dateData={data.data.eventDates} />
             </div>
 
             {/* 좌석 선택 영역 (3/5) */}

@@ -1,7 +1,6 @@
 import MainLayout from "../layout/MainLayout";
 import CardList from "../templates/cardList/CardList";
 import MainBanner from "../templates/mainBanner/MainBanner";
-import { MOCK_EVENTS } from "../templates/event-overview/EventOverviewTemplate";
 import CategorySection from "../templates/category/CategorySection";
 import { fetchAllEvents } from "../../api/events/eventsApi";
 import { useQuery } from "@tanstack/react-query";
@@ -28,11 +27,16 @@ const MainPage = () => {
     return <p>오류 발생: {error.message}</p>;
   }
 
+  if (!data?.data) {
+    return <p>오류 발생: 공연 목록을 불러올 수 없습니다.</p>;
+  }
+  const eventData = data.data;
+
   return (
     <MainLayout>
-      <MainBanner events={data?.data ?? MOCK_EVENTS}></MainBanner>
+      <MainBanner events={eventData}></MainBanner>
       <CategorySection></CategorySection>
-      <CardList events={data?.data ?? MOCK_EVENTS}></CardList>
+      <CardList events={eventData}></CardList>
     </MainLayout>
   );
 };

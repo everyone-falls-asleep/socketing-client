@@ -1,14 +1,13 @@
 import Button from "../../atoms/buttons/Button";
-import { Event } from "../../../types/api/event";
 
 interface ScheduleCardProps {
-  schedule: Event; // Entire schedule, including all the details
+  //schedule: Event; // Entire schedule, including all the details
   dateStr: string; // The specific date to display
   onClick?: () => void; // Optional click handler
 }
 
-const ScheduleCard = ({ schedule, dateStr, onClick }: ScheduleCardProps) => {
-  const { place } = schedule;
+const ScheduleCard = ({ dateStr, onClick }: ScheduleCardProps) => {
+  //const { place } = schedule;
 
   const [dateString, timeString] = dateStr.split(" ");
   const formattedDate = new Date(dateString).toLocaleDateString();
@@ -26,7 +25,9 @@ const ScheduleCard = ({ schedule, dateStr, onClick }: ScheduleCardProps) => {
         <div className="schedule-time text-xl text-gray-600">
           {formattedTime}
         </div>
-        <div className="schedule-place text-base text-gray-500">{place}</div>
+        <div className="schedule-place text-base text-gray-500">
+          {"올림픽 주 경기장"}
+        </div>
       </div>
 
       <Button variant="primary">예약하기</Button>
