@@ -12,7 +12,7 @@ export interface Event {
   updatedAt: string;
 }
 
-interface EventDate {
+export interface EventDate {
   id: string;
   date: string;
   createdAt: string;
