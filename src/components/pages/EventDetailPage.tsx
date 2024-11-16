@@ -1,63 +1,50 @@
-import { Event } from "../../types/api/event";
 import MainLayout from "../layout/MainLayout";
 import EventAbout from "../organisms/event-detail/EventAbout";
 import EventHeader from "../organisms/event-detail/EventHeader";
 import EventSchedule from "../organisms/event-detail/EventSchedule";
 import EventDetailTemplate from "../templates/event-detail/EventDetailTemplate";
-
-const MOCK_SCHEDULES: Event[] = [
-  {
-    id: "1",
-    title: "콜드플레이 내한 공연",
-    eventDates: [
-      {
-        id: "1",
-        date: "2024-11-11 18:00",
-        createdAt: "2024-10-01T12:00:00Z", // 예시 생성일
-        updatedAt: "2024-10-01T12:00:00Z", // 예시 수정일
-      },
-      {
-        id: "2",
-        date: "2024-11-13 20:00",
-        createdAt: "2024-10-01T12:00:00Z",
-        updatedAt: "2024-10-01T12:00:00Z",
-      },
-      {
-        id: "3",
-        date: "2024-11-17 18:00",
-        createdAt: "2024-10-01T12:00:00Z",
-        updatedAt: "2024-10-01T12:00:00Z",
-      },
-      {
-        id: "4",
-        date: "2024-11-18 20:00",
-        createdAt: "2024-10-01T12:00:00Z",
-        updatedAt: "2024-10-01T12:00:00Z",
-      },
-      {
-        id: "5",
-        date: "2024-11-20 19:00",
-        createdAt: "2024-10-01T12:00:00Z",
-        updatedAt: "2024-10-01T12:00:00Z",
-      },
-    ],
-    thumbnail:
-      "https://ticketimage.interpark.com/Play/image/large/24/24013437_p.gif",
-    place: "올림픽 주경기장",
-    cast: "콜드플레이",
-    ageLimit: 12,
-    createdAt: "2024-10-01T12:00:00Z", // 예시 생성일
-    updatedAt: "2024-10-01T12:00:00Z", // 예시 수정일
-  },
-];
+import { useQuery } from "@tanstack/react-query";
+import { SingleEventResponse } from "../../types/api/event";
+import { fetchOneEvent } from "../../api/events/eventsApi";
+import { useParams } from "react-router-dom";
 
 const EventDetailPage = () => {
+  const { id } = useParams();
+
+  const useEvent = (event_id: string) => {
+    return useQuery<SingleEventResponse, Error>({
+      queryKey: ["single-event", event_id],
+      queryFn: ({ queryKey }) => {
+        const [, event_id] = queryKey as [string, string];
+        return fetchOneEvent(event_id);
+      },
+      staleTime: 1000 * 60 * 5,
+      gcTime: 1000 * 60 * 10,
+    });
+  };
+
+  const { data, isLoading, isError, error } = useEvent(id ?? "default-id");
+
+  if (isLoading) {
+    console.log(data);
+    return <p>이벤트를 불러오는 중...</p>;
+  }
+
+  if (isError) {
+    return <p>오류 발생: {error.message}</p>;
+  }
+
+  if (!data?.data) {
+    return <p>오류 발생: 공연 정보를 불러올 수 없습니다.</p>;
+  }
+  const eventData = data.data;
+
   return (
     <MainLayout>
       <EventDetailTemplate
-        eventHeader={<EventHeader />}
-        eventSchedule={<EventSchedule events={MOCK_SCHEDULES} />}
-        eventAbout={<EventAbout events={MOCK_SCHEDULES} />}
+        eventHeader={<EventHeader event={eventData} />}
+        eventSchedule={<EventSchedule dates={eventData.eventDates} />}
+        eventAbout={<EventAbout event={eventData} />}
       ></EventDetailTemplate>
     </MainLayout>
   );

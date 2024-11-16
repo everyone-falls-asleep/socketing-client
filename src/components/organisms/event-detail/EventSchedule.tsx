@@ -1,22 +1,23 @@
 import { useState } from "react";
-import { Event } from "../../../types/api/event";
+import { EventDate } from "../../../types/api/event";
 import ScheduleHeader from "../../molecules/event-detail/ScheduleHeader";
 import ScheduleList from "../../molecules/event-detail/ScheduleList";
 
-interface EventProps {
-  events: Event[];
+interface ScheduleProps {
+  dates: EventDate[];
 }
 
-const EventSchedule = ({ events }: EventProps) => {
+const EventSchedule = ({ dates }: ScheduleProps) => {
   const [selectedDates, setSelectedDates] = useState<Date[]>([]);
 
   /* Manage Valid Date by useState in case tickets are sold out */
   const [validDates] = useState<Set<string>>(
     new Set(
-      events.flatMap((event) =>
-        event.eventDates.map((eventDate) =>
-          new Date(eventDate.date).toDateString()
-        )
+      dates.flatMap(
+        (date) =>
+          // event.eventDates.map((eventDate) =>
+          new Date(date.date).toDateString()
+        //)
       )
     )
   );
@@ -27,9 +28,10 @@ const EventSchedule = ({ events }: EventProps) => {
   };
 
   // Filter events based on selected dates
-  const filteredSchedules = events.filter((event) =>
-    event.eventDates.some((eventDate) => {
+  const filteredSchedules = dates.filter((date) =>
+    dates.some((eventDate) => {
       const eventDateObj = new Date(eventDate.date);
+      console.log(date);
       return selectedDates.some(
         (selectedDate) =>
           selectedDate.getDate() === eventDateObj.getDate() &&

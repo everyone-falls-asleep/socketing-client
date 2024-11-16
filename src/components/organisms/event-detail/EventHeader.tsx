@@ -1,4 +1,10 @@
-const EventHeader = () => {
+import { Event } from "../../../types/api/event";
+
+type EventHeaderProps = {
+  event: Event;
+};
+
+const EventHeader = ({ event }: EventHeaderProps) => {
   return (
     <div
       id="event-header"
@@ -7,15 +13,15 @@ const EventHeader = () => {
       <div id="poster-container" className="poster-box bg-amber-200">
         <img
           className="h-full object-contain"
-          src="https://ticketimage.interpark.com/Play/image/large/24/24013437_p.gif"
-          alt="콜드플레이 공연 이미지"
+          src={event.thumbnail}
+          alt="event poster image"
         />
       </div>
       <div
         id="event-title-container"
         className="h-full bg-gray-300 p-2 flex items-center"
       >
-        <h1 className="text-2xl font-bold">콜드플레이 공연</h1>
+        <h1 className="text-2xl font-bold">{event.title}</h1>
       </div>
     </div>
   );

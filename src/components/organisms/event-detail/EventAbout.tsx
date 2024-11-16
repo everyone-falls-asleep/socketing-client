@@ -1,12 +1,10 @@
 import { Event } from "../../../types/api/event";
 
-interface EventProps {
-  events: Event[];
+interface EventAboutProps {
+  event: Event;
 }
 
-const EventAbout = ({ events }: EventProps) => {
-  const event = events[0];
-
+const EventAbout = ({ event }: EventAboutProps) => {
   return (
     <div className="px-2">
       <div id="event-content-title" className="text-start p-2 bg-red-300">
