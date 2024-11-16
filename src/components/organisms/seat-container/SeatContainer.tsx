@@ -15,8 +15,8 @@ interface Point {
 interface SeatContainerProps {
   seatsData: Seat[];
   socket: MockSocketType | null;
-  backgroundImage?: string; // 좌석 배치도 이미지 URL
-  viewBox?: string; // SVG viewBox 설정
+  backgroundImage?: string;
+  viewBox?: string;
 }
 
 const SeatContainer: React.FC<SeatContainerProps> = ({
@@ -30,7 +30,6 @@ const SeatContainer: React.FC<SeatContainerProps> = ({
   const [startPoint, setStartPoint] = useState<Point>({ x: 0, y: 0 });
   const [translate, setTranslate] = useState<Point>({ x: 0, y: 0 });
   const [scale, setScale] = useState(1);
-
   const { isDateSidebarOpen } = useContext(ReservationContext);
 
   useEffect(() => {
@@ -58,7 +57,7 @@ const SeatContainer: React.FC<SeatContainerProps> = ({
     const handleWheel = (e: WheelEvent) => {
       e.preventDefault();
       const delta = e.deltaY * -0.001;
-      const newScale = Math.min(Math.max(0.5, scale + delta), 3); // 최대 확대 배율을 3으로 증가
+      const newScale = Math.min(Math.max(0.5, scale + delta), 3);
       setScale(newScale);
     };
 
@@ -84,6 +83,22 @@ const SeatContainer: React.FC<SeatContainerProps> = ({
     }
   };
 
+  const renderSeat = (seatData: Seat) => (
+    <g
+      key={seatData.seat_id}
+      transform={`translate(${seatData.x},${seatData.y})`}
+    >
+      <SeatObj
+        seatData={{
+          ...seatData,
+          x: "0",
+          y: "0",
+        }}
+        socket={socket}
+      />
+    </g>
+  );
+
   return (
     <div
       ref={containerRef}
@@ -97,7 +112,7 @@ const SeatContainer: React.FC<SeatContainerProps> = ({
         style={{
           transform: `translate(${translate.x}px, ${translate.y}px) scale(${scale})`,
           transformOrigin: "center",
-          transition: "transform 0.1s ease-out",
+          transition: isDragging ? "none" : "transform 0.1s ease-out",
         }}
       >
         <svg
@@ -108,35 +123,21 @@ const SeatContainer: React.FC<SeatContainerProps> = ({
             backgroundImage: backgroundImage
               ? `url(${backgroundImage})`
               : "none",
-            backgroundSize: "cover",
+            backgroundSize: "contain",
             backgroundPosition: "center",
+            backgroundRepeat: "no-repeat",
           }}
         >
-          <g className="seats">
-            {seatsData.map((seatData) => (
-              <SeatObj
-                key={seatData.seat_id}
-                seatData={seatData}
-                socket={socket}
-              />
-            ))}
-          </g>
+          {seatsData.map(renderSeat)}
         </svg>
       </div>
 
-      {/* 줌 컨트롤 */}
-      <div className="absolute bottom-4 right-4 bg-white rounded-lg shadow-lg p-2 flex flex-col gap-2">
+      <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-white rounded-lg shadow-lg p-2 flex gap-2">
         <button
           onClick={() => setScale((prev) => Math.min(prev + 0.2, 3))}
           className="px-3 py-1 border rounded-lg hover:bg-gray-100"
         >
           +
-        </button>
-        <button
-          onClick={() => setScale((prev) => Math.max(prev - 0.2, 0.5))}
-          className="px-3 py-1 border rounded-lg hover:bg-gray-100"
-        >
-          -
         </button>
         <button
           onClick={() => {
@@ -146,6 +147,12 @@ const SeatContainer: React.FC<SeatContainerProps> = ({
           className="px-2 py-1 border rounded-lg hover:bg-gray-100 text-sm"
         >
           Reset
+        </button>
+        <button
+          onClick={() => setScale((prev) => Math.max(prev - 0.2, 0.5))}
+          className="px-3 py-1 border rounded-lg hover:bg-gray-100"
+        >
+          -
         </button>
       </div>
     </div>

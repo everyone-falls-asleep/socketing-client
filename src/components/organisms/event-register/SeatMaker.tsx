@@ -141,7 +141,7 @@ const SeatMaker: React.FC<SeatMakerProps> = ({
       };
 
       console.log("스크린 좌표:", e.clientX, e.clientY);
-      console.log("svg 변환 좌표:", coordinates.x, coordinates.y);
+      console.log("svg 변환 좌표:", newSeat.x, newSeat.y);
 
       setSeats((prev) => [...prev, newSeat]);
       console.log(seats);
