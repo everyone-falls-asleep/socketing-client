@@ -9,8 +9,11 @@ import { NewEventResponse } from "../../../types/api/event";
 import { AxiosError } from "axios";
 import { ApiErrorResponse } from "../../../types/api/common";
 import { toast } from "react-toastify";
+import { useEventCreate } from "../../../store/EventCreateContext";
 
 const EventRegisterForm = () => {
+  const { setEvent } = useEventCreate();
+
   const [formData, setFormData] = useState<NewEvent>({
     title: "",
     thumbnail: "",
@@ -34,12 +37,14 @@ const EventRegisterForm = () => {
       toast.success(
         "공연이 등록되었습니다. 좌석을 배치하여 좌석 배치도를 등록해주세요."
       );
-      // event_id 저장
+      if (response.data) {
+        setEvent(response.data);
+      }
     },
 
     onError: (error: AxiosError<ApiErrorResponse>) => {
       if (error.response) {
-        toast.error("공연 등록에 실패하였습니다. 다시 시도해주세요.");
+        toast.error("공연 등록 중 오류가 발생했습니다. 다시 시도해주세요.");
       }
     },
   });
