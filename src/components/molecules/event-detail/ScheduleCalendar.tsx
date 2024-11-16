@@ -14,7 +14,6 @@ const ScheduleCalendar = ({
   const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
   const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
 
-  // Get the number of days in a given month
   const getDaysInMonth = (year: number, month: number) => {
     return new Date(year, month + 1, 0).getDate();
   };
@@ -24,7 +23,6 @@ const ScheduleCalendar = ({
     (_, i) => i + 1
   );
 
-  // Navigate to the previous month
   const goToPreviousMonth = () => {
     if (currentMonth === 0) {
       setCurrentMonth(11);
@@ -34,7 +32,6 @@ const ScheduleCalendar = ({
     }
   };
 
-  // Navigate to the next month
   const goToNextMonth = () => {
     if (currentMonth === 11) {
       setCurrentMonth(0);
@@ -43,6 +40,8 @@ const ScheduleCalendar = ({
       setCurrentMonth(currentMonth + 1);
     }
   };
+
+  const validDatesAsDate = validDates.map((dateString) => new Date(dateString));
 
   return (
     <div
@@ -74,11 +73,11 @@ const ScheduleCalendar = ({
         <div className="grid grid-cols-7 gap-3">
           {dates.map((day) => {
             const date = new Date(currentYear, currentMonth, day);
-            const isHighlighted = validDates.some(
+            const isHighlighted = validDatesAsDate.some(
               (highlightDate) =>
-                highlightDate.getDate() === day &&
-                highlightDate.getMonth() === currentMonth &&
-                highlightDate.getFullYear() === currentYear
+                highlightDate.getDate() === date.getDate() &&
+                highlightDate.getMonth() === date.getMonth() &&
+                highlightDate.getFullYear() === date.getFullYear()
             );
             const isSelected = selectedDates.some(
               (d) => d.getTime() === date.getTime()
@@ -88,18 +87,19 @@ const ScheduleCalendar = ({
               <button
                 key={day}
                 onClick={() => {
-                  if (!isHighlighted) return;
-                  const newSelectedDates = isSelected
-                    ? selectedDates.filter(
-                        (d) => d.getTime() !== date.getTime()
-                      )
-                    : [...selectedDates, date];
-                  onDateSelect(newSelectedDates);
+                  if (isHighlighted) {
+                    const newSelectedDates = isSelected
+                      ? selectedDates.filter(
+                          (d) => d.getTime() !== date.getTime()
+                        )
+                      : [...selectedDates, date];
+                    onDateSelect(newSelectedDates);
+                  }
                 }}
                 className={`
                   flex justify-center items-center p-4 rounded-lg focus:outline-none transition-colors duration-200 text-center text-base font-medium
-                  ${isSelected ? "bg-blue-300" : isHighlighted ? "bg-yellow-200" : "bg-gray-200 text-gray-700"}
-                  ${isHighlighted ? "hover:bg-yellow-300" : "hover:bg-blue-400"}
+                  ${isSelected ? "bg-yellow-500" : "bg-gray-200 text-gray-700"}
+                  ${isHighlighted && !isSelected ? "bg-yellow-200 hover:bg-yellow-300" : ""}
                   ${!isHighlighted && "cursor-not-allowed"}
                 `}
                 disabled={!isHighlighted}
