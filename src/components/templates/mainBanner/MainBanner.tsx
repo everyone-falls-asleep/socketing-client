@@ -6,7 +6,7 @@ const MainBanner = ({ events }: EventListProps) => {
   const navigate = useNavigate();
 
   const onClickHandler = () => {
-    navigate(`/`);
+    navigate(`/event`);
   };
   const [current, setCurrent] = useState(0);
 
