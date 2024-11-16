@@ -2,28 +2,15 @@ import React, { useState } from "react";
 import Button from "../../atoms/buttons/Button";
 import { useNavigate } from "react-router-dom";
 import Input from "../../atoms/inputs/Input";
-import { MOCK_EVENTS } from "../event-overview/EventOverviewTemplate";
 
 const Header: React.FC = () => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState(""); // 검색어 상태
 
-  // 검색 필터링 함수
-  const filterEvents = (query: string) => {
-    const lowerCaseQuery = query.toLowerCase();
-    return MOCK_EVENTS.filter(
-      (event) =>
-        event.title.toLowerCase().includes(lowerCaseQuery) || // 제목 필터링
-        event.place.toLowerCase().includes(lowerCaseQuery) || // 장소 필터링
-        event.cast.toLowerCase().includes(lowerCaseQuery) // 출연진 필터링
-    );
-  };
-
   const handleSearch = () => {
     if (searchQuery.trim() !== "") {
-      const filtered = filterEvents(searchQuery);
-      navigate("/search-results", { state: { results: filtered } });
-      setSearchQuery("");
+      navigate(`/search-results/${encodeURIComponent(searchQuery)}`); // URL 경로에 검색어 포함
+      setSearchQuery(""); // 검색창 초기화
     } else {
       alert("검색어를 입력해주세요");
     }

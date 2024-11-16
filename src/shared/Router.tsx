@@ -19,7 +19,10 @@ const Router = () => {
         <Route path="mypage" element={<Mypage />} />
         <Route path="event/:id" element={<EventDetailPage />} />
         <Route path="reservation/:id" element={<ReservationPage />} />
-        <Route path="/search-results" element={<SearchResultsPage />} />{" "}
+        <Route
+          path="/search-results/:searchTerm"
+          element={<SearchResultsPage />}
+        />{" "}
         {/* 검색 결과 페이지 */}
         <Route path="waiting" element={<WaitingRoomPage />} />
         <Route
