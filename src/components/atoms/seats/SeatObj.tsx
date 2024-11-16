@@ -19,17 +19,18 @@ const SeatObj = ({ seatData, socket }: SeatProps) => {
   const getStatusColor = () => {
     switch (status?.status) {
       case "available":
-        return "#9CA3AF";
+        return "#FFF";
       case "reserved":
-        return "#EF4444";
+        return "#9CA3AF";
       case "temporary_hold":
         return "#FBBF24";
       default:
-        return "#FFF";
+        return "#9CA3AF";
     }
   };
 
-  const handleSeatClick = () => {
+  const handleSeatClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
     if (status?.status !== "available") return;
     setSelectedSeat(seatData);
     holdSeat();
@@ -37,8 +38,6 @@ const SeatObj = ({ seatData, socket }: SeatProps) => {
 
   return (
     <circle
-      cx={seatData.x}
-      cy={seatData.y}
       r="150"
       fill={getStatusColor()}
       stroke="#1F2937"
