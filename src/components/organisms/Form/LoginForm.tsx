@@ -1,76 +1,30 @@
 import Subtitle from "../../atoms/titles/subtitle/SubTitle";
-import Container from "../../layout/Container";
 import Button from "../../atoms/buttons/Button";
 import LabeledInput from "../../molecules/labeledinput/LabeledInput";
+import {
+  FieldErrors,
+  UseFormHandleSubmit,
+  UseFormRegister,
+} from "react-hook-form";
+import { LoginData } from "../../../types/api/user";
 
-import { sendLoginRequest } from "../../../api/authentication/authApi";
-import { useMutation } from "@tanstack/react-query";
-import { useForm } from "react-hook-form";
-import { LoginData, LoginResponse } from "../../../types/api/user";
-import { ApiErrorResponse } from "../../../types/api/common";
-import { AxiosError } from "axios";
-import { loginErrorMessages } from "../../../constants/api";
-import { toast } from "react-toastify";
-import { useAuth } from "../../../hooks/useAuth";
+interface LoginFormProps {
+  register: UseFormRegister<LoginData>;
+  handleSubmit: UseFormHandleSubmit<LoginData>;
+  onSubmit: (data: LoginData) => void;
+  errors: FieldErrors<LoginData>;
+}
 
-const LoginForm = () => {
-  const { saveAuthInfo } = useAuth();
-
-  const {
-    register,
-    handleSubmit,
-    setError,
-    formState: { errors },
-  } = useForm<LoginData>();
-
-  const mutation = useMutation<
-    LoginResponse,
-    AxiosError<ApiErrorResponse>,
-    LoginData,
-    unknown
-  >({
-    mutationFn: sendLoginRequest,
-
-    onSuccess: (response: LoginResponse) => {
-      const token = response.data?.accessToken;
-      if (token) {
-        saveAuthInfo(token);
-      }
-    },
-
-    onError: (error: AxiosError<ApiErrorResponse>) => {
-      if (error.response) {
-        const code = error.response.data.code;
-        if (code === 5) {
-          const field = error.response.data.details?.[0].field;
-          const message =
-            field === "email"
-              ? loginErrorMessages.validation.emailInvalid
-              : loginErrorMessages.validation.passwordInvalid;
-
-          if (field) {
-            setError(field as keyof LoginData, { type: "manual", message });
-          }
-        } else if (code === 2) {
-          setError("password", {
-            type: "manual",
-            message: loginErrorMessages.noMatch,
-          });
-        } else {
-          toast.error(loginErrorMessages.generic);
-        }
-      }
-    },
-  });
-
-  const onSubmit = (data: LoginData) => {
-    mutation.mutate(data);
-  };
-
+const LoginForm = ({
+  register,
+  handleSubmit,
+  onSubmit,
+  errors,
+}: LoginFormProps) => {
   return (
-    <div>
-      <Subtitle>로그인</Subtitle>
-      <Container width="400px">
+    <div className="mx-auto w-full sm:max-w-[25rem] md:max-w-[30rem] lg:max-w-[35rem] xl:max-w-[40rem] px-4">
+      <Subtitle className="p-2 text-center">로그인</Subtitle>
+      <div className="login-form-container mt-5">
         <form onSubmit={(e) => void handleSubmit(onSubmit)(e)}>
           <LabeledInput
             {...register("email")}
@@ -93,7 +47,7 @@ const LoginForm = () => {
           <br />
           <Button type="submit">로그인</Button>
         </form>
-      </Container>
+      </div>
     </div>
   );
 };

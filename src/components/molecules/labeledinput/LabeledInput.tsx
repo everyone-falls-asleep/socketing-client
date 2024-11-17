@@ -7,7 +7,7 @@ const LabeledInput = React.forwardRef<HTMLInputElement, LabeledInputProps>(
   ({ label, placeholder, width, ...props }, ref) => {
     return (
       <div>
-        <Font className="text-left">{label}</Font>
+        <Font className="text-left p-1">{label}</Font>
         <Input
           ref={ref}
           placeholder={placeholder}
