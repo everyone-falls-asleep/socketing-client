@@ -101,6 +101,7 @@ const ReservationPage = () => {
           <ReservationSeatContainer
             seatsData={seatsData.data}
             socket={socket}
+            svg={svgString}
           />
 
           {/* 우측 사이드바 (1/5) */}
