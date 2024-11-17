@@ -1,10 +1,12 @@
-import { Event } from "../../../types/api/event";
+import { useEventDetail } from "../../../store/EventDetailContext";
 
-type EventHeaderProps = {
-  event: Event;
-};
+const EventDetailHeader = () => {
+  const { event } = useEventDetail();
 
-const EventHeader = ({ event }: EventHeaderProps) => {
+  if (!event) {
+    return null;
+  }
+
   return (
     <div
       id="event-header"
@@ -27,4 +29,4 @@ const EventHeader = ({ event }: EventHeaderProps) => {
   );
 };
 
-export default EventHeader;
+export default EventDetailHeader;

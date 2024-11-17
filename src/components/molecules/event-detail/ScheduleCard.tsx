@@ -1,17 +1,14 @@
 import Button from "../../atoms/buttons/Button";
+import dayjs from "dayjs";
 
 interface ScheduleCardProps {
-  //schedule: Event; // Entire schedule, including all the details
-  dateStr: string; // The specific date to display
-  onClick?: () => void; // Optional click handler
+  date: Date;
+  onClick?: () => void;
 }
 
-const ScheduleCard = ({ dateStr, onClick }: ScheduleCardProps) => {
-  //const { place } = schedule;
-
-  const [dateString, timeString] = dateStr.split(" ");
-  const formattedDate = new Date(dateString).toLocaleDateString();
-  const formattedTime = timeString;
+const ScheduleCard = ({ date, onClick }: ScheduleCardProps) => {
+  const formattedDate = dayjs(date).format("YYYY-MM-DD");
+  const formattedTime = dayjs(date).format("HH:mm");
 
   return (
     <div
@@ -24,9 +21,6 @@ const ScheduleCard = ({ dateStr, onClick }: ScheduleCardProps) => {
         </div>
         <div className="schedule-time text-xl text-gray-600">
           {formattedTime}
-        </div>
-        <div className="schedule-place text-base text-gray-500">
-          {"올림픽 주 경기장"}
         </div>
       </div>
 

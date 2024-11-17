@@ -1,30 +1,46 @@
 import { useNavigate } from "react-router-dom";
-import { EventDate } from "../../../types/api/event";
 import ScheduleCard from "./ScheduleCard";
+import { Event, EventDate } from "../../../types/api/event";
 
 interface ScheduleListProps {
-  schedules: EventDate[];
+  filteredEvent: Event;
+  selectedDates: Date[];
 }
 
-const ScheduleList = ({ schedules }: ScheduleListProps) => {
+const ScheduleList = ({ filteredEvent, selectedDates }: ScheduleListProps) => {
   const navigate = useNavigate();
 
   const handleScheduleClick = (eventId: string) => {
     navigate(`/reservation/${eventId}`);
   };
 
+  const filteredSchedules =
+    selectedDates.length === 0
+      ? filteredEvent.eventDates
+      : filteredEvent.eventDates.filter((schedule: EventDate) => {
+          const scheduleDate = new Date(schedule.date);
+          return selectedDates.some((selectedDate) => {
+            return (
+              selectedDate.getDate() === scheduleDate.getDate() &&
+              selectedDate.getMonth() === scheduleDate.getMonth() &&
+              selectedDate.getFullYear() === scheduleDate.getFullYear()
+            );
+          });
+        });
+
   return (
-    <div className="schedule-container flex flex-col gap-2">
-      {schedules?.map((schedule, index) => {
-        return (
+    <div className="schedule-list">
+      {filteredSchedules.length > 0 ? (
+        filteredSchedules.map((schedule: EventDate) => (
           <ScheduleCard
-            key={`${schedule.id}-${index}`} // 수정된 부분: schedule.id 사용
-            // schedule={schedule}
-            dateStr={schedule.date} // 수정된 부분: eventDate.date 사용
-            onClick={() => handleScheduleClick(schedule.id)} // 수정된 부분: schedule.id 사용
+            key={schedule.id}
+            date={new Date(schedule.date)}
+            onClick={() => handleScheduleClick(filteredEvent.id)}
           />
-        );
-      })}
+        ))
+      ) : (
+        <div>선택된 날짜에 해당하는 공연 일정이 없습니다.</div>
+      )}
     </div>
   );
 };

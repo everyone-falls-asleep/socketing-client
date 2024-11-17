@@ -1,14 +1,16 @@
-import { Event } from "../../../types/api/event";
+import { useEventDetail } from "../../../store/EventDetailContext";
 
-interface EventAboutProps {
-  event: Event;
-}
+const EventDetailAbout = () => {
+  const { event } = useEventDetail();
 
-const EventAbout = ({ event }: EventAboutProps) => {
+  if (!event) {
+    return null;
+  }
+
   return (
     <div className="px-2">
-      <div id="event-content-title" className="text-start p-2 bg-red-300">
-        <h2 className="text-2xl font-bold bg-white">공연 소개</h2>
+      <div id="event-content-title" className="tab-content-title-container">
+        <h2 className="tab-content-title">공연 소개</h2>
       </div>
       <div id="event-about" className="content-container bg-slate-400">
         <div key={event.id} className="event-details p-2 flex">
@@ -45,4 +47,4 @@ const EventAbout = ({ event }: EventAboutProps) => {
   );
 };
 
-export default EventAbout;
+export default EventDetailAbout;

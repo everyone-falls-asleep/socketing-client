@@ -1,12 +1,44 @@
-div.flex-box {
+.flex-box {
   @apply flex justify-center items-center gap-2;
 }
 
 /* image 관련 */
-img.default {
+.default {
   @apply h-full object-contain;
 }
 
-div.poster-box {
+.poster-box {
   @apply w-24 h-full flex-shrink-0 flex justify-center;
+}
+
+.tab-group {
+  @apply flex space-x-4 border-b-2 pb-2;
+}
+
+.tab-menu {
+  @apply px-4 py-2 text-lg font-semibold;
+}
+
+.tab-menu-active {
+  @apply border-b-2 border-blue-500 text-blue-500;
+}
+
+.tab-menu-inactiv {
+  @apply text-gray-600;
+}
+
+.tab-content-title-container {
+  @apply text-start p-2 bg-red-300;
+}
+
+.tab-content-title {
+  @apply text-2xl font-bold bg-white;
+}
+
+.selected-date-label {
+  @apply flex items-center bg-blue-100 rounded-full px-3 py-1 mr-2 shadow-sm;
+}
+
+.label-remove-icon {
+  @apply ml-2 text-gray-500 hover:text-gray-800 focus:outline-none;
 }
