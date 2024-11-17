@@ -29,13 +29,11 @@ const Router = () => {
         <Route path="waiting" element={<WaitingRoomPage />} />
         <Route
           path="reservation-confirmation"
-          element={
-            <ReservationConfirmationPage title="예매가 완료되었습니다." />
-          }
+          element={<ReservationConfirmationPage />}
         />
         <Route
           path="reservation-info"
-          element={<ReservationConfirmationPage title="예매 정보" />}
+          element={<ReservationConfirmationPage />}
         />
       </Routes>
     </BrowserRouter>
