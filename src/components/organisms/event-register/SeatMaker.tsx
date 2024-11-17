@@ -1,4 +1,11 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useContext } from "react";
+import { EventCreateContext } from "../../../store/EventCreateContext";
+import { usePostMutation } from "../../../hooks/usePostMutation";
+import { createNewSeat } from "../../../api/events/eventsApi";
+import { NewSeat, NewSeatResponse } from "../../../types/api/event";
+import { AxiosError } from "axios";
+import { ApiErrorResponse } from "../../../types/api/common";
+import { toast } from "react-toastify";
 
 interface Point {
   x: number;
@@ -7,15 +14,11 @@ interface Point {
 
 export interface Seat {
   seat_id: string;
-  x: string;
-  y: string;
-  area: string;
-  row: string;
-  number: string;
-  seat_status: "0" | "1" | "2";
-  event_id: string;
-  date: string;
-  price: string;
+  x: number;
+  y: number;
+  area: number;
+  row: number;
+  number: number;
 }
 
 interface SeatMakerProps {
@@ -29,6 +32,8 @@ const SeatMaker: React.FC<SeatMakerProps> = ({
   onSeatsUpdate,
   initialSeats = [],
 }) => {
+  const { event } = useContext(EventCreateContext);
+
   const containerRef = useRef<HTMLDivElement>(null);
   const [seats, setSeats] = useState<Seat[]>(initialSeats);
   const [isDragging, setIsDragging] = useState(false);
@@ -36,11 +41,10 @@ const SeatMaker: React.FC<SeatMakerProps> = ({
   const [translate, setTranslate] = useState<Point>({ x: 0, y: 0 });
   const [scale, setScale] = useState(1);
   const [isEditMode, setIsEditMode] = useState(false);
-  const [backgroundImage, setBackgroundImage] = useState<string | null>(null);
 
   // 현재 좌석 설정값
-  const [currentArea, setCurrentArea] = useState("A");
-  const [currentRow, setCurrentRow] = useState("1");
+  const [currentArea, setCurrentArea] = useState(1);
+  const [currentRow, setCurrentRow] = useState(1);
   const [currentNumber, setCurrentNumber] = useState(1);
   const [currentPrice, setCurrentPrice] = useState("50000");
 
@@ -129,15 +133,11 @@ const SeatMaker: React.FC<SeatMakerProps> = ({
 
       const newSeat: Seat = {
         seat_id: `${Date.now()}`,
-        x: String(Math.round(coordinates.x)),
-        y: String(Math.round(coordinates.y)),
+        x: Math.round(coordinates.x),
+        y: Math.round(coordinates.y),
         area: currentArea,
         row: currentRow,
-        number: String(currentNumber),
-        seat_status: "0",
-        event_id: "",
-        date: "",
-        price: currentPrice,
+        number: currentNumber,
       };
 
       console.log("스크린 좌표:", e.clientX, e.clientY);
@@ -149,20 +149,50 @@ const SeatMaker: React.FC<SeatMakerProps> = ({
     }
   };
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+  // const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   const file = e.target.files?.[0];
+  //   if (!file) return;
 
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      setBackgroundImage(event.target?.result as string);
-    };
-    reader.readAsDataURL(file);
-  };
+  //   const reader = new FileReader();
+  //   reader.onload = (event) => {
+  //     setBackgroundImage(event.target?.result as string);
+  //   };
+  //   reader.readAsDataURL(file);
+  // };
 
-  const handleComplete = () => {
+  const createSeatMutation = usePostMutation<
+    NewSeatResponse,
+    AxiosError<ApiErrorResponse>,
+    NewSeat
+  >(createNewSeat);
+
+  const handleComplete = async () => {
     setIsEditMode(false);
     onSeatsUpdate?.(seats);
+
+    try {
+      if (!event?.id) {
+        return;
+      }
+      const eventID = event?.id;
+      await Promise.all(
+        seats.map((seat) => {
+          const new_seat: NewSeat = {
+            event_id: eventID,
+            cx: seat.x,
+            cy: seat.y,
+            area: seat.area,
+            row: seat.row,
+            number: seat.number,
+          };
+          return createSeatMutation.mutateAsync(new_seat);
+        })
+      );
+      toast.success("모든 좌석이 성공적으로 생성되었습니다.");
+    } catch (error) {
+      console.log(error);
+      toast.error("좌석 생성 중 오류가 발생했습니다.");
+    }
   };
 
   const handleSeatClick = (seatId: string) => {
@@ -190,22 +220,16 @@ const SeatMaker: React.FC<SeatMakerProps> = ({
     </g>
   );
 
+  // if (!event?.svg) {
+  //   return <div></div>
+  // }
+
+  // const svgStr = event.svg;
+
   return (
     <div className="flex h-screen">
       {/* Control Panel */}
       <div className="w-64 bg-white border-r border-gray-200 p-4 flex flex-col gap-4">
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            배치도 업로드
-          </label>
-          <input
-            type="file"
-            accept="image/svg+xml,.svg"
-            onChange={handleImageUpload}
-            className="w-full"
-          />
-        </div>
-
         <div>
           <button
             onClick={() => setIsEditMode(!isEditMode)}
@@ -230,7 +254,7 @@ const SeatMaker: React.FC<SeatMakerProps> = ({
               <input
                 type="text"
                 value={currentArea}
-                onChange={(e) => setCurrentArea(e.target.value)}
+                onChange={() => setCurrentArea(1)} // 수정 필요
                 className="mt-1 w-full border rounded p-2"
               />
             </div>
@@ -242,7 +266,7 @@ const SeatMaker: React.FC<SeatMakerProps> = ({
               <input
                 type="text"
                 value={currentRow}
-                onChange={(e) => setCurrentRow(e.target.value)}
+                onChange={(e) => setCurrentRow(Number(e.target.value))} // 수정 필요
                 className="mt-1 w-full border rounded p-2"
               />
             </div>
@@ -290,8 +314,8 @@ const SeatMaker: React.FC<SeatMakerProps> = ({
 
         {isEditMode && (
           <button
-            onClick={handleComplete}
-            className="mt-auto px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+            onClick={void handleComplete}
+            className="bg-green-500 text-white rounded hover:bg-green-600"
           >
             완료
           </button>
@@ -319,9 +343,7 @@ const SeatMaker: React.FC<SeatMakerProps> = ({
             viewBox={viewBox}
             onClick={handleSvgClick}
             style={{
-              backgroundImage: backgroundImage
-                ? `url(${backgroundImage})`
-                : "none",
+              backgroundImage: "none",
               backgroundSize: "contain",
               backgroundPosition: "center",
               backgroundRepeat: "no-repeat",
