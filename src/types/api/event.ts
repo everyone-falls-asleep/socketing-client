@@ -47,17 +47,17 @@ export interface NewEventResponseData {
 export type NewEventResponse = ApiResponse<NewEventResponseData>;
 
 export interface Seat {
-  seat_id: string;
-  x: string;
-  y: string;
+  id: string;
+  cx: string;
+  cy: string;
   area: string;
   row: string;
   number: string;
-  seat_status: "0" | "1" | "2";
-  event_id: string;
-  date: string;
-  price: string;
+  // createdAt: string;
+  // updatedAt: string;
 }
+
+export type SeatResponse = ApiResponse<Seat[]>;
 
 export interface NewSeat {
   event_id: string;

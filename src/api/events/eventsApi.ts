@@ -7,6 +7,7 @@ import {
   NewEventResponse,
   NewSeat,
   NewSeatResponse,
+  SeatResponse,
 } from "../../types/api/event";
 
 const API_URL = baseURL + "events/";
@@ -69,6 +70,11 @@ const createNewSeat = async ({
   return response.data;
 };
 
+const fetchAllSeats = async (event_id: string): Promise<SeatResponse> => {
+  const response = await api.get<SeatResponse>(API_URL + event_id + "/seats");
+  return response.data;
+};
+
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("authToken");
@@ -85,4 +91,10 @@ api.interceptors.request.use(
   }
 );
 
-export { fetchAllEvents, fetchOneEvent, createNewEvent, createNewSeat };
+export {
+  fetchAllEvents,
+  fetchOneEvent,
+  createNewEvent,
+  createNewSeat,
+  fetchAllSeats,
+};
