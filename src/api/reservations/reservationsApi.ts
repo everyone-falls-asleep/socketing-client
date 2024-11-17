@@ -24,4 +24,20 @@ const createNewReservation = async ({
   return response.data;
 };
 
+api.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem("authToken");
+    if (token && config.headers) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error: unknown) => {
+    if (error instanceof Error) {
+      return Promise.reject(error);
+    }
+    return Promise.reject(new Error(String(error)));
+  }
+);
+
 export { createNewReservation };
