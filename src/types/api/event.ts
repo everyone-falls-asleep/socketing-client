@@ -59,6 +59,27 @@ export interface Seat {
   price: string;
 }
 
+export interface NewSeat {
+  event_id: string;
+  cx: number;
+  cy: number;
+  area: number;
+  row: number;
+  number: number;
+}
+
+export interface NewSeatResponseData {
+  id: string;
+  cx: number;
+  cy: number;
+  area: number;
+  row: number;
+  number: number;
+  event: Event;
+}
+
+export type NewSeatResponse = ApiResponse<NewSeatResponseData>;
+
 export interface Reservation {
   reservation_id: string;
   seats: Seat[];

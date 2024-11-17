@@ -5,6 +5,8 @@ import {
   SingleEventResponse,
   NewEvent,
   NewEventResponse,
+  NewSeat,
+  NewSeatResponse,
 } from "../../types/api/event";
 
 const API_URL = baseURL + "events/";
@@ -46,6 +48,27 @@ const createNewEvent = async ({
   return response.data;
 };
 
+const createNewSeat = async ({
+  event_id,
+  cx,
+  cy,
+  area,
+  row,
+  number,
+}: NewSeat): Promise<NewSeatResponse> => {
+  const response = await api.post<NewSeatResponse>(
+    API_URL + event_id + "/seats",
+    {
+      cx,
+      cy,
+      area,
+      row,
+      number,
+    }
+  );
+  return response.data;
+};
+
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("authToken");
@@ -62,4 +85,4 @@ api.interceptors.request.use(
   }
 );
 
-export { fetchAllEvents, fetchOneEvent, createNewEvent };
+export { fetchAllEvents, fetchOneEvent, createNewEvent, createNewSeat };
