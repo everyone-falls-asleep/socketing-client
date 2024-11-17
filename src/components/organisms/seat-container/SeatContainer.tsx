@@ -84,15 +84,12 @@ const SeatContainer: React.FC<SeatContainerProps> = ({
   };
 
   const renderSeat = (seatData: Seat) => (
-    <g
-      key={seatData.seat_id}
-      transform={`translate(${seatData.x},${seatData.y})`}
-    >
+    <g key={seatData.id} transform={`translate(${seatData.cx},${seatData.cy})`}>
       <SeatObj
         seatData={{
           ...seatData,
-          x: "0",
-          y: "0",
+          cx: "0",
+          cy: "0",
         }}
         socket={socket}
       />

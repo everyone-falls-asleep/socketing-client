@@ -12,7 +12,7 @@ interface SeatProps {
 }
 
 const SeatObj = ({ seatData, socket }: SeatProps) => {
-  const seatId = seatData.seat_id;
+  const seatId = seatData.id;
   const { setSelectedSeat } = useContext(ReservationContext);
   const { status, holdSeat } = useSeatStatus({ socket, seatId });
 

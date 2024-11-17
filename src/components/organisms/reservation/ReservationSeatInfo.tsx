@@ -12,7 +12,7 @@ const ReservationSeatInfo = () => {
             <p>구역: {selectedSeat.area}</p>
             <p>열: {selectedSeat.row}</p>
             <p>번호: {selectedSeat.number}</p>
-            <p>가격: {parseInt(selectedSeat.price).toLocaleString()}원</p>
+            <p>가격: 99,000원</p>
           </div>
           <button
             className="w-full py-3 bg-blue-500 text-white rounded-lg
