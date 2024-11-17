@@ -1,4 +1,3 @@
-import { useNavigate } from "react-router-dom";
 import ScheduleCard from "./ScheduleCard";
 import { Event, EventDate } from "../../../types/api/event";
 
@@ -8,12 +7,6 @@ interface ScheduleListProps {
 }
 
 const ScheduleList = ({ filteredEvent, selectedDates }: ScheduleListProps) => {
-  const navigate = useNavigate();
-
-  const handleScheduleClick = (eventId: string) => {
-    navigate(`/reservation/${eventId}`);
-  };
-
   const filteredSchedules =
     selectedDates.length === 0
       ? filteredEvent.eventDates
@@ -34,8 +27,9 @@ const ScheduleList = ({ filteredEvent, selectedDates }: ScheduleListProps) => {
         filteredSchedules.map((schedule: EventDate) => (
           <ScheduleCard
             key={schedule.id}
+            eventId={filteredEvent.id}
+            eventDateId={schedule.id}
             date={new Date(schedule.date)}
-            onClick={() => handleScheduleClick(filteredEvent.id)}
           />
         ))
       ) : (

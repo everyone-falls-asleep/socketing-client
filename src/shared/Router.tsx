@@ -20,7 +20,10 @@ const Router = () => {
         <Route path="mypage" element={<Mypage />} />
         <Route path="event/:id" element={<EventDetailPage />} />
         <Route path="register" element={<RegisterEventPage />} />
-        <Route path="reservation/:id" element={<ReservationPage />} />
+        <Route
+          path="reservation/:eventId/:eventDateId"
+          element={<ReservationPage />}
+        />
         <Route
           path="/search-results/:searchTerm"
           element={<SearchResultsPage />}
