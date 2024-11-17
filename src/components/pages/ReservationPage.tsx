@@ -78,6 +78,10 @@ const ReservationPage = () => {
   if (!seatsData?.data) {
     return <p>오류 발생: 좌석 정보를 불러올 수 없습니다.</p>;
   }
+  if (!eventData.data.svg) {
+    return <div></div>;
+  }
+  const svgString = eventData.data.svg;
 
   return (
     <MainLayout>

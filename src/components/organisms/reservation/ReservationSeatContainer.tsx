@@ -7,18 +7,20 @@ type MockSocketType = ReturnType<typeof createMockSocket>;
 interface ReservationSeatContainerProps {
   seatsData: Seat[];
   socket: MockSocketType | null;
+  svg: string;
 }
 
 const ReservationSeatContainer: React.FC<ReservationSeatContainerProps> = ({
   seatsData,
   socket,
+  svg,
 }: ReservationSeatContainerProps) => {
   return (
     <SeatContainer
       seatsData={seatsData}
       socket={socket}
-      backgroundImage="/images/screen.svg"
-      viewBox="0 0 10240 7680"
+      svg={svg}
+      viewBox="0 0 1024 768"
     />
   );
 };

@@ -1,9 +1,9 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useContext } from "react";
 import { Seat } from "../../../types/api/event";
 import SeatObj from "../../atoms/seats/SeatObj";
-import { useContext } from "react";
 import { ReservationContext } from "../../../store/ReservationContext";
 import { createMockSocket } from "../../../mocks/mockSocket";
+import SvgWrapper from "../../../utils/SvgWrapper";
 
 type MockSocketType = ReturnType<typeof createMockSocket>;
 
@@ -15,14 +15,14 @@ interface Point {
 interface SeatContainerProps {
   seatsData: Seat[];
   socket: MockSocketType | null;
-  backgroundImage?: string;
+  svg: string;
   viewBox?: string;
 }
 
 const SeatContainer: React.FC<SeatContainerProps> = ({
   seatsData,
   socket,
-  backgroundImage = "",
+  svg,
   viewBox = "0 0 10240 7680",
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -85,14 +85,7 @@ const SeatContainer: React.FC<SeatContainerProps> = ({
 
   const renderSeat = (seatData: Seat) => (
     <g key={seatData.id} transform={`translate(${seatData.cx},${seatData.cy})`}>
-      <SeatObj
-        seatData={{
-          ...seatData,
-          cx: "0",
-          cy: "0",
-        }}
-        socket={socket}
-      />
+      <SeatObj seatData={{ ...seatData, cx: 0, cy: 0 }} socket={socket} />
     </g>
   );
 
@@ -112,21 +105,12 @@ const SeatContainer: React.FC<SeatContainerProps> = ({
           transition: isDragging ? "none" : "transform 0.1s ease-out",
         }}
       >
-        <svg
-          width="100%"
-          height="100%"
+        <SvgWrapper
+          svgString={svg}
+          seats={seatsData}
+          renderSeat={renderSeat}
           viewBox={viewBox}
-          style={{
-            backgroundImage: backgroundImage
-              ? `url(${backgroundImage})`
-              : "none",
-            backgroundSize: "contain",
-            backgroundPosition: "center",
-            backgroundRepeat: "no-repeat",
-          }}
-        >
-          {seatsData.map(renderSeat)}
-        </svg>
+        />
       </div>
 
       <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-white rounded-lg shadow-lg p-2 flex gap-2">
