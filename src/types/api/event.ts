@@ -8,6 +8,7 @@ export interface Event {
   place: string;
   cast: string;
   ageLimit: number;
+  svg?: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -47,14 +48,15 @@ export interface NewEventResponseData {
 export type NewEventResponse = ApiResponse<NewEventResponseData>;
 
 export interface Seat {
-  id: string;
-  cx: string;
-  cy: string;
-  area: string;
-  row: string;
-  number: string;
-  // createdAt: string;
-  // updatedAt: string;
+  id: string; // DB의 고유 ID
+  seat_id?: string; // 임시 ID (SeatMaker에서 사용)
+  cx: number; // x 좌표
+  cy: number; // y 좌표
+  x?: number; // 임시 x 좌표 (SeatMaker에서 사용)
+  y?: number; // 임시 y 좌표 (SeatMaker에서 사용)
+  area: number;
+  row: number;
+  number: number;
 }
 
 export type SeatResponse = ApiResponse<Seat[]>;

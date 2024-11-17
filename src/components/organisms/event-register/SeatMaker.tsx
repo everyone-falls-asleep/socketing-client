@@ -6,34 +6,26 @@ import { NewSeat, NewSeatResponse } from "../../../types/api/event";
 import { AxiosError } from "axios";
 import { ApiErrorResponse } from "../../../types/api/common";
 import { toast } from "react-toastify";
+import SvgWrapper from "../../../utils/SvgWrapper";
+import { Seat } from "../../../types/api/event";
 
 interface Point {
   x: number;
   y: number;
 }
 
-export interface Seat {
-  seat_id: string;
-  x: number;
-  y: number;
-  area: number;
-  row: number;
-  number: number;
-}
-
 interface SeatMakerProps {
-  viewBox?: string;
   onSeatsUpdate?: (seats: Seat[]) => void;
   initialSeats?: Seat[];
+  isDateSidebarOpen?: boolean;
 }
 
 const SeatMaker: React.FC<SeatMakerProps> = ({
-  viewBox = "0 0 10240 7680",
   onSeatsUpdate,
   initialSeats = [],
+  isDateSidebarOpen = false,
 }) => {
   const { event } = useContext(EventCreateContext);
-
   const containerRef = useRef<HTMLDivElement>(null);
   const [seats, setSeats] = useState<Seat[]>(initialSeats);
   const [isDragging, setIsDragging] = useState(false);
@@ -90,18 +82,12 @@ const SeatMaker: React.FC<SeatMakerProps> = ({
 
   const handleMouseDown = (e: React.MouseEvent) => {
     if (e.button === 0 && !isEditMode) {
-      // 일반 모드에서만 드래깅 가능
-      if (
-        e.target === e.currentTarget ||
-        (e.target as HTMLElement).tagName === "svg"
-      ) {
-        e.preventDefault();
-        setIsDragging(true);
-        setStartPoint({
-          x: e.clientX,
-          y: e.clientY,
-        });
-      }
+      e.preventDefault();
+      setIsDragging(true);
+      setStartPoint({
+        x: e.clientX,
+        y: e.clientY,
+      });
     }
   };
 
@@ -121,44 +107,32 @@ const SeatMaker: React.FC<SeatMakerProps> = ({
 
     return { x, y };
   };
-
   const handleSvgClick = (e: React.MouseEvent<SVGSVGElement>) => {
     if (!isEditMode) return;
 
-    if (
-      e.target === e.currentTarget ||
-      (e.target as HTMLElement).tagName === "svg"
-    ) {
-      const coordinates = getSVGCoordinates(e);
-
-      const newSeat: Seat = {
-        seat_id: `${Date.now()}`,
-        x: Math.round(coordinates.x),
-        y: Math.round(coordinates.y),
-        area: currentArea,
-        row: currentRow,
-        number: currentNumber,
-      };
-
-      console.log("스크린 좌표:", e.clientX, e.clientY);
-      console.log("svg 변환 좌표:", newSeat.x, newSeat.y);
-
-      setSeats((prev) => [...prev, newSeat]);
-      console.log(seats);
-      setCurrentNumber((prev) => prev + 1);
+    const targetElement = e.target as HTMLElement;
+    if (targetElement.tagName === "circle") {
+      return;
     }
+
+    const coordinates = getSVGCoordinates(e);
+
+    // 임시 좌석 생성 시에는 id를 임시로 생성하고 cx, cy 대신 x, y 사용
+    const newSeat: Seat = {
+      id: `temp-${Date.now()}`, // 임시 ID
+      seat_id: `${Date.now()}`, // 이전 호환성을 위해 유지
+      cx: Math.round(coordinates.x),
+      cy: Math.round(coordinates.y),
+      x: Math.round(coordinates.x), // 이전 호환성을 위해 유지
+      y: Math.round(coordinates.y), // 이전 호환성을 위해 유지
+      area: currentArea,
+      row: currentRow,
+      number: currentNumber,
+    };
+
+    setSeats((prev) => [...prev, newSeat]);
+    setCurrentNumber((prev) => prev + 1);
   };
-
-  // const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   const file = e.target.files?.[0];
-  //   if (!file) return;
-
-  //   const reader = new FileReader();
-  //   reader.onload = (event) => {
-  //     setBackgroundImage(event.target?.result as string);
-  //   };
-  //   reader.readAsDataURL(file);
-  // };
 
   const createSeatMutation = usePostMutation<
     NewSeatResponse,
@@ -171,16 +145,14 @@ const SeatMaker: React.FC<SeatMakerProps> = ({
     onSeatsUpdate?.(seats);
 
     try {
-      if (!event?.id) {
-        return;
-      }
-      const eventID = event?.id;
+      if (!event?.id) return;
+
       await Promise.all(
         seats.map((seat) => {
           const new_seat: NewSeat = {
-            event_id: eventID,
-            cx: seat.x,
-            cy: seat.y,
+            event_id: event.id,
+            cx: seat.cx || seat.x!, // x, cx 둘 다 체크
+            cy: seat.cy || seat.y!, // y, cy 둘 다 체크
             area: seat.area,
             row: seat.row,
             number: seat.number,
@@ -197,34 +169,27 @@ const SeatMaker: React.FC<SeatMakerProps> = ({
 
   const handleSeatClick = (seatId: string) => {
     if (!isEditMode) return;
-
     setSeats((prev) => prev.filter((seat) => seat.seat_id !== seatId));
   };
 
   const renderSeat = (seat: Seat) => (
     <g
-      key={seat.seat_id}
-      transform={`translate(${seat.x},${seat.y})`}
+      key={seat.id || seat.seat_id}
+      transform={`translate(${seat.cx || seat.x},${seat.cy || seat.y})`}
       onClick={(e) => {
         e.stopPropagation();
-        handleSeatClick(seat.seat_id);
+        handleSeatClick(seat.id || seat.seat_id!);
       }}
       style={{ cursor: isEditMode ? "pointer" : "default" }}
     >
       <circle
-        r="150"
+        r="20"
         fill={isEditMode ? "#FF4444" : "#4A90E2"}
         stroke={isEditMode ? "#CC0000" : "#2171C7"}
         strokeWidth="2"
       />
     </g>
   );
-
-  // if (!event?.svg) {
-  //   return <div></div>
-  // }
-
-  // const svgStr = event.svg;
 
   return (
     <div className="flex h-screen">
@@ -314,8 +279,8 @@ const SeatMaker: React.FC<SeatMakerProps> = ({
 
         {isEditMode && (
           <button
-            onClick={void handleComplete}
-            className="bg-green-500 text-white rounded hover:bg-green-600"
+            onClick={() => void handleComplete}
+            className="mt-4 w-full px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
           >
             완료
           </button>
@@ -325,7 +290,8 @@ const SeatMaker: React.FC<SeatMakerProps> = ({
       {/* SVG Container */}
       <div
         ref={containerRef}
-        className="relative flex-1 overflow-hidden bg-gray-100"
+        className={`relative w-full h-full overflow-hidden bg-gray-100 transition-all duration-300 
+                   ${isDateSidebarOpen ? "ml-1/5" : ""}`}
         onMouseDown={handleMouseDown}
         style={{ touchAction: "none" }}
       >
@@ -337,20 +303,14 @@ const SeatMaker: React.FC<SeatMakerProps> = ({
             transition: isDragging ? "none" : "transform 0.1s ease-out",
           }}
         >
-          <svg
-            width="100%"
-            height="100%"
-            viewBox={viewBox}
+          <SvgWrapper
+            svgString={event?.svg || ""}
             onClick={handleSvgClick}
-            style={{
-              backgroundImage: "none",
-              backgroundSize: "contain",
-              backgroundPosition: "center",
-              backgroundRepeat: "no-repeat",
-            }}
-          >
-            {seats.map(renderSeat)}
-          </svg>
+            seats={seats}
+            renderSeat={renderSeat}
+            scale={scale}
+            isDateSidebarOpen={isDateSidebarOpen}
+          />
         </div>
       </div>
     </div>
