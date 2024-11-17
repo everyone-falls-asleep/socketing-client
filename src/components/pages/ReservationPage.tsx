@@ -10,64 +10,85 @@ import {
   ReservationContext,
   ReservationProvider,
 } from "../../store/ReservationContext";
-import { mockReservationData } from "../../mocks/reservationData";
 import MainLayout from "../layout/MainLayout";
-import { useQuery } from "@tanstack/react-query";
-import { fetchOneEvent } from "../../api/events/eventsApi";
+import { fetchAllSeats, fetchOneEvent } from "../../api/events/eventsApi";
 import { SingleEventResponse } from "../../types/api/event";
+import { SeatResponse } from "../../types/api/event";
 import { useParams } from "react-router-dom";
+import { useCustomQuery } from "../../hooks/useCustomQuery";
 
 const ReservationPage: React.FC = () => {
   const { socket } = useSocketConnection();
   const { isDateSidebarOpen } = useContext(ReservationContext);
   const { id } = useParams();
+
   const useEvent = (event_id: string) => {
-    return useQuery<SingleEventResponse, Error>({
+    return useCustomQuery<SingleEventResponse>({
       queryKey: ["single-event", event_id],
       queryFn: ({ queryKey }) => {
         const [, event_id] = queryKey as [string, string];
         return fetchOneEvent(event_id);
       },
-      staleTime: 1000 * 60 * 5,
-      gcTime: 1000 * 60 * 10,
     });
   };
 
-  const { data, isLoading, isError, error } = useEvent(id ?? "default-id");
+  const useSeat = (event_id: string) => {
+    return useCustomQuery<SeatResponse>({
+      queryKey: ["seats", event_id],
+      queryFn: ({ queryKey }) => {
+        const [, event_id] = queryKey as [string, string];
+        return fetchAllSeats(event_id);
+      },
+    });
+  };
 
-  if (isLoading) {
-    console.log(data);
+  const {
+    data: eventData,
+    isLoading: eventLoading,
+    isError: eventError,
+  } = useEvent(id ?? "default-id");
+  const {
+    data: seatsData,
+    isLoading: seatsLoading,
+    isError: seatsError,
+  } = useSeat(id ?? "default-id");
+
+  if (eventLoading || seatsLoading) {
     return <p>이벤트를 불러오는 중...</p>;
   }
 
-  if (isError) {
-    return <p>오류 발생: {error.message}</p>;
+  if (eventError || seatsError) {
+    return <p>오류 발생</p>;
   }
 
-  if (!data?.data) {
+  if (!eventData?.data) {
     return <p>오류 발생: 공연 정보를 불러올 수 없습니다.</p>;
   }
 
-  const eventData = data.data;
+  if (!seatsData?.data) {
+    return <p>오류 발생: 좌석 정보를 불러올 수 없습니다.</p>;
+  }
 
   return (
     <MainLayout>
       <ReservationProvider>
         <div className="h-screen flex flex-col">
           {/* 상단 공연 정보  */}
-          <ReservationUpperEvent {...eventData}></ReservationUpperEvent>
+          <ReservationUpperEvent {...eventData.data}></ReservationUpperEvent>
           {/* 하단 섹션 (2/3) */}
           <div className="flex flex-1 relative">
             {/* 날짜 선택 사이드바 (1/5) */}
             <div
               className={`${isDateSidebarOpen ? "ml-1/5" : ""} w-2/5 bg-gray-50 transition-all`}
             >
-              <ReservationCalendarSideBar dateData={data.data.eventDates} />
+              <ReservationCalendarSideBar
+                dateData={eventData.data.eventDates}
+              />
             </div>
 
             {/* 좌석 선택 영역 (3/5) */}
             <ReservationSeatContainer
-              seatsData={mockReservationData.seats}
+              seatsData={seatsData.data}
               socket={socket}
             />
 
