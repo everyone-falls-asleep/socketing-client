@@ -3,12 +3,12 @@ import MainPage from "../components/pages/MainPage";
 import LoginPage from "../components/pages/LoginPage";
 import JoinPage from "../components/pages/JoinPage";
 import Mypage from "../components/pages/MyPage";
-import ReservationPage from "../components/pages/ReservationPage";
 import ReservationConfirmationPage from "../components/pages/ReservationConfirmationPage";
 import EventDetailPage from "../components/pages/EventDetailPage";
 import WaitingRoomPage from "../components/pages/WatingRoomPage";
 import SearchResultsPage from "../components/pages/SearchResultsPage";
 import RegisterEventPage from "../components/pages/RegisterEventPage";
+import { ReservationPageWrapper } from "../components/pages/ReservationPage";
 
 const Router = () => {
   return (
@@ -22,7 +22,7 @@ const Router = () => {
         <Route path="register" element={<RegisterEventPage />} />
         <Route
           path="reservation/:eventId/:eventDateId"
-          element={<ReservationPage />}
+          element={<ReservationPageWrapper />}
         />
         <Route
           path="/search-results/:searchTerm"

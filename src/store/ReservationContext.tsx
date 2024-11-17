@@ -6,6 +6,10 @@ interface ReservationContextType {
   setSelectedSeat: (seat: Seat | null) => void;
   isDateSidebarOpen: boolean;
   toggleDateSidebar: () => void;
+  eventId: string | null;
+  setEventId: (eventId: string | null) => void;
+  eventDateId: string | null;
+  setEventDateId: (eventDateId: string | null) => void;
 }
 
 export const ReservationContext = createContext<ReservationContextType>({
@@ -13,6 +17,10 @@ export const ReservationContext = createContext<ReservationContextType>({
   setSelectedSeat: () => {},
   isDateSidebarOpen: true,
   toggleDateSidebar: () => {},
+  eventId: "",
+  setEventId: () => {},
+  eventDateId: "",
+  setEventDateId: () => {},
 });
 
 export const ReservationProvider: React.FC<PropsWithChildren> = ({
@@ -20,7 +28,8 @@ export const ReservationProvider: React.FC<PropsWithChildren> = ({
 }) => {
   const [selectedSeat, setSelectedSeat] = useState<Seat | null>(null);
   const [isDateSidebarOpen, setIsDateSidebarOpen] = useState(true);
-
+  const [eventId, setEventId] = useState<string | null>("");
+  const [eventDateId, setEventDateId] = useState<string | null>("");
   const toggleDateSidebar = () => {
     setIsDateSidebarOpen(!isDateSidebarOpen);
   };
@@ -32,6 +41,10 @@ export const ReservationProvider: React.FC<PropsWithChildren> = ({
         setSelectedSeat,
         isDateSidebarOpen,
         toggleDateSidebar,
+        eventId,
+        setEventId,
+        eventDateId,
+        setEventDateId,
       }}
     >
       {children}

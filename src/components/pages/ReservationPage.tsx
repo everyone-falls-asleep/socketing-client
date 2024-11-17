@@ -1,11 +1,10 @@
-import React from "react";
 import ReservationUpperEvent from "../organisms/reservation/ResevationUpperEvent";
 import { useSocketConnection } from "../../hooks/useSocketConnection";
 import ReservationCalendarSideBar from "../organisms/reservation/ReservationCalendarSideBar";
 import ReservationSeatContainer from "../organisms/reservation/ReservationSeatContainer";
 import ReservationMinimap from "../organisms/reservation/ReservationMinimap";
 import ReservationSeatInfo from "../organisms/reservation/ReservationSeatInfo";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import {
   ReservationContext,
   ReservationProvider,
@@ -17,10 +16,21 @@ import { SeatResponse } from "../../types/api/event";
 import { useParams } from "react-router-dom";
 import { useCustomQuery } from "../../hooks/useCustomQuery";
 
-const ReservationPage: React.FC = () => {
+const ReservationPage = () => {
   const { socket } = useSocketConnection();
-  const { isDateSidebarOpen } = useContext(ReservationContext);
-  const { id } = useParams();
+  const { isDateSidebarOpen, setEventId, setEventDateId } =
+    useContext(ReservationContext);
+  const { eventId, eventDateId } = useParams();
+
+  useEffect(() => {
+    console.log(eventId);
+    if (eventId) {
+      setEventId(eventId);
+    }
+    if (eventDateId) {
+      setEventDateId(eventDateId);
+    }
+  }, [eventId, eventDateId, setEventId, setEventDateId]);
 
   const useEvent = (event_id: string) => {
     return useCustomQuery<SingleEventResponse>({
@@ -46,12 +56,12 @@ const ReservationPage: React.FC = () => {
     data: eventData,
     isLoading: eventLoading,
     isError: eventError,
-  } = useEvent(id ?? "default-id");
+  } = useEvent(eventId ?? "default-id");
   const {
     data: seatsData,
     isLoading: seatsLoading,
     isError: seatsError,
-  } = useSeat(id ?? "default-id");
+  } = useSeat(eventId ?? "default-id");
 
   if (eventLoading || seatsLoading) {
     return <p>이벤트를 불러오는 중...</p>;
@@ -71,40 +81,42 @@ const ReservationPage: React.FC = () => {
 
   return (
     <MainLayout>
-      <ReservationProvider>
-        <div className="h-screen flex flex-col">
-          {/* 상단 공연 정보  */}
-          <ReservationUpperEvent {...eventData.data}></ReservationUpperEvent>
-          {/* 하단 섹션 (2/3) */}
-          <div className="flex flex-1 relative">
-            {/* 날짜 선택 사이드바 (1/5) */}
-            <div
-              className={`${isDateSidebarOpen ? "ml-1/5" : ""} w-2/5 bg-gray-50 transition-all`}
-            >
-              <ReservationCalendarSideBar
-                dateData={eventData.data.eventDates}
-              />
-            </div>
+      <div className="h-screen flex flex-col">
+        {/* 상단 공연 정보  */}
+        <ReservationUpperEvent {...eventData.data}></ReservationUpperEvent>
+        {/* 하단 섹션 (2/3) */}
+        <div className="flex flex-1 relative">
+          {/* 날짜 선택 사이드바 (1/5) */}
+          <div
+            className={`${isDateSidebarOpen ? "ml-1/5" : ""} w-2/5 bg-gray-50 transition-all`}
+          >
+            <ReservationCalendarSideBar dateData={eventData.data.eventDates} />
+          </div>
 
-            {/* 좌석 선택 영역 (3/5) */}
-            <ReservationSeatContainer
-              seatsData={seatsData.data}
-              socket={socket}
-            />
+          {/* 좌석 선택 영역 (3/5) */}
+          <ReservationSeatContainer
+            seatsData={seatsData.data}
+            socket={socket}
+          />
 
-            {/* 우측 사이드바 (1/5) */}
-            <div className="w-1/5 border-l bg-white">
-              {/* 미니맵 (1/3) */}
-              <ReservationMinimap />
+          {/* 우측 사이드바 (1/5) */}
+          <div className="w-1/5 border-l bg-white">
+            {/* 미니맵 (1/3) */}
+            <ReservationMinimap />
 
-              {/* 좌석 정보 및 예매 버튼 (2/3) */}
-              <ReservationSeatInfo />
-            </div>
+            {/* 좌석 정보 및 예매 버튼 (2/3) */}
+            <ReservationSeatInfo />
           </div>
         </div>
-      </ReservationProvider>
+      </div>
     </MainLayout>
   );
 };
+
+export const ReservationPageWrapper = () => (
+  <ReservationProvider>
+    <ReservationPage />
+  </ReservationProvider>
+);
 
 export default ReservationPage;
