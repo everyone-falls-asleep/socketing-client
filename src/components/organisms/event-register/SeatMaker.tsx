@@ -252,9 +252,9 @@ const SeatMaker: React.FC<SeatMakerProps> = ({
                 구역
               </label>
               <input
-                type="text"
+                type="number"
                 value={currentArea}
-                onChange={() => setCurrentArea(1)} // 수정 필요
+                onChange={(e) => setCurrentArea(Number(e.target.value))}
                 className="mt-1 w-full border rounded p-2"
               />
             </div>
@@ -264,9 +264,9 @@ const SeatMaker: React.FC<SeatMakerProps> = ({
                 열
               </label>
               <input
-                type="text"
+                type="number"
                 value={currentRow}
-                onChange={(e) => setCurrentRow(Number(e.target.value))} // 수정 필요
+                onChange={(e) => setCurrentRow(Number(e.target.value))}
                 className="mt-1 w-full border rounded p-2"
               />
             </div>
