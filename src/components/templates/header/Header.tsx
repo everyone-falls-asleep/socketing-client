@@ -2,15 +2,22 @@ import React, { useState } from "react";
 import Button from "../../atoms/buttons/Button";
 import { useNavigate } from "react-router-dom";
 import Input from "../../atoms/inputs/Input";
+import LoginModal from "../../organisms/auth/LoginModal";
+import HeaderLogo from "../../molecules/header-logo/HeaderLogo";
 
-const Header: React.FC = () => {
+interface HeaderProps {
+  showAuthButtons?: boolean;
+}
+
+const Header: React.FC<HeaderProps> = ({ showAuthButtons = true }) => {
   const navigate = useNavigate();
-  const [searchQuery, setSearchQuery] = useState(""); // 검색어 상태
+  const [searchQuery, setSearchQuery] = useState("");
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
   const handleSearch = () => {
     if (searchQuery.trim() !== "") {
-      navigate(`/search-results/${encodeURIComponent(searchQuery)}`); // URL 경로에 검색어 포함
-      setSearchQuery(""); // 검색창 초기화
+      navigate(`/search-results/${encodeURIComponent(searchQuery)}`);
+      setSearchQuery("");
     } else {
       alert("검색어를 입력해주세요");
     }
@@ -23,45 +30,52 @@ const Header: React.FC = () => {
   };
 
   return (
-    <header className="flex items-center justify-between px-6 py-4 bg-black text-white">
-      <a href="/" className="text-2xl font-bold">
-        SocKeTing
-      </a>
-      <div className="flex  items-center w-1/2 bg-white rounded-lg overflow-hidden">
-        <Input
-          type="text"
-          placeholder="공연 검색"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          onKeyDown={handleKeyDown}
-          className="w-full p-2 rounded-r-none text-gray-700 outline-none"
-        />
-        <button
-          onClick={handleSearch}
-          className="p-3 w-[100px] bg-rose-400 rounded-r-lg hover:bg-rose-500"
-        >
-          🔍
-        </button>
-      </div>
-      <div className="flex space-x-4">
-        <Button
-          variant="primary"
-          onClick={() => {
-            navigate("/login");
-          }}
-        >
-          Login
-        </Button>
-        <Button
-          variant="primary"
-          onClick={() => {
-            navigate("/join");
-          }}
-        >
-          Sign Up
-        </Button>
-      </div>
-    </header>
+    <>
+      <header className="flex items-center justify-between px-6 py-4 bg-black text-white">
+        <HeaderLogo>
+          <a href="/" className="text-2xl font-bold">
+            SocKeTing
+          </a>
+        </HeaderLogo>
+
+        <div className="flex items-center w-1/2 bg-white rounded-lg overflow-hidden">
+          <Input
+            type="text"
+            placeholder="공연 검색"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            onKeyDown={handleKeyDown}
+            className="w-full p-2 rounded-r-none text-gray-700 outline-none"
+          />
+          <button
+            onClick={handleSearch}
+            className="p-3 w-[100px] bg-rose-400 rounded-r-lg hover:bg-rose-500"
+          >
+            🔍
+          </button>
+        </div>
+        {showAuthButtons && (
+          <div className="flex space-x-4">
+            <Button variant="primary" onClick={() => setIsLoginModalOpen(true)}>
+              로그인
+            </Button>
+            <Button
+              variant="primary"
+              onClick={() => {
+                navigate("/join");
+              }}
+            >
+              회원가입
+            </Button>
+          </div>
+        )}
+      </header>
+
+      <LoginModal
+        isOpen={isLoginModalOpen}
+        onClose={() => setIsLoginModalOpen(false)}
+      />
+    </>
   );
 };
 

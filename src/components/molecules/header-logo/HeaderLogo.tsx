@@ -6,10 +6,7 @@ const HeaderLogo = ({ className }: HTMLAttributes<HTMLDivElement>) => {
   return (
     <HeaderItem className={`${className} justify-start align-items`}>
       <Link to="/">
-        <img
-          className="h-full object-contain"
-          src="https://cdn.iconscout.com/icon/free/png-256/free-ticket-113-452641.png?f=webp"
-        />
+        <div className="text-2xl font-bold">SocKeTing</div>
       </Link>
     </HeaderItem>
   );

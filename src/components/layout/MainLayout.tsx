@@ -1,10 +1,15 @@
 import Header from "../templates/header/Header";
 import Footer from "../templates/footer/Footer";
 
-const MainLayout = ({ children }: { children: React.ReactNode }) => {
+interface MainLayoutProps {
+  children: React.ReactNode;
+  showAuthButtons?: boolean;
+}
+
+const MainLayout = ({ children, showAuthButtons = true }: MainLayoutProps) => {
   return (
     <div>
-      <Header />
+      <Header showAuthButtons={showAuthButtons} />
       <main>{children}</main>
       <Footer />
     </div>

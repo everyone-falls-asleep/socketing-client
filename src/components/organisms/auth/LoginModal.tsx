@@ -1,19 +1,23 @@
-import MainLayout from "../layout/MainLayout";
-import LoginForm from "../organisms/Form/LoginForm";
-import LoginTemplate from "../templates/login/LoginTemplate";
-import { AxiosError } from "axios";
-import { ApiErrorResponse } from "../../types/api/common";
-import { LoginData, LoginResponse } from "../../types/api/user";
-import { useMutation } from "@tanstack/react-query";
-import { sendLoginRequest } from "../../api/authentication/authApi";
-import { useAuth } from "../../hooks/useAuth";
-import { loginErrorMessages } from "../../constants/api";
+import React from "react";
+import LoginForm from "../Form/LoginForm";
 import { useForm } from "react-hook-form";
+import { LoginData, LoginResponse } from "../../../types/api/user";
+import { useMutation } from "@tanstack/react-query";
+import { sendLoginRequest } from "../../../api/authentication/authApi";
+import { useAuth } from "../../../hooks/useAuth";
+import { loginErrorMessages } from "../../../constants/api";
 import { toast } from "react-toastify";
+import { AxiosError } from "axios";
+import { ApiErrorResponse } from "../../../types/api/common";
+import Modal from "../../molecules/modal/Modal";
 
-const LoginPage = () => {
+interface LoginModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
   const { saveAuthInfo } = useAuth();
-
   const {
     register,
     handleSubmit,
@@ -27,14 +31,14 @@ const LoginPage = () => {
     LoginData
   >({
     mutationFn: sendLoginRequest,
-
     onSuccess: (response: LoginResponse) => {
       const token = response.data?.accessToken;
       if (token) {
         saveAuthInfo(token);
+        onClose();
+        toast.success("로그인되었습니다.");
       }
     },
-
     onError: (error: AxiosError<ApiErrorResponse>) => {
       if (error.response) {
         const code = error.response.data.code;
@@ -65,19 +69,15 @@ const LoginPage = () => {
   };
 
   return (
-    <MainLayout showAuthButtons={false}>
-      <LoginTemplate
-        loginForm={
-          <LoginForm
-            register={register}
-            handleSubmit={handleSubmit}
-            onSubmit={onSubmit}
-            errors={errors}
-          />
-        }
+    <Modal isOpen={isOpen} onClose={onClose}>
+      <LoginForm
+        register={register}
+        handleSubmit={handleSubmit}
+        onSubmit={onSubmit}
+        errors={errors}
       />
-    </MainLayout>
+    </Modal>
   );
 };
 
-export default LoginPage;
+export default LoginModal;
