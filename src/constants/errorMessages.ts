@@ -23,3 +23,24 @@ export const fetchErrorMessages = {
   noSeatsData: "오류 발생: 좌석 정보를 불러올 수 없습니다.",
   noSvgData: "오류 발생: 좌석 배치도를 불러올 수 없습니다.",
 };
+
+const tokenErrorMessage = "로그인 세션이 만료되었습니다. 다시 로그인해주세요.";
+
+export const postEventErrorMessages = {
+  invalidToken: tokenErrorMessage,
+  general: "공연 등록에 실패하였습니다. 다시 시도해주세요.",
+};
+
+export const postSeatErrorMessages = {
+  invalidToken: tokenErrorMessage,
+  general: "좌석 정보 등록에 실패하였습니다. 다시 시도해주세요.",
+  validation: "입력 형식이 잘못되었습니다. 다시 시도해주세요.",
+  inValidevent: "이벤트 정보가 유효하지 않습니다.",
+  duplicatesSeat: "같은 위치에 좌석 정보가 중복됩니다.",
+};
+
+export const postReservationErrorMessages = {
+  invalidToken: tokenErrorMessage,
+  general: "예매에 실패하였습니다. 다시 시도해주세요.",
+  reserved: "이미 예매된 좌석입니다.",
+};
