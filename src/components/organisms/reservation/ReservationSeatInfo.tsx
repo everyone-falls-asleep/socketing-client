@@ -9,7 +9,8 @@ import { AxiosError } from "axios";
 import { ApiErrorResponse } from "../../../types/api/common";
 import { createNewReservation } from "../../../api/reservations/reservationsApi";
 import { useSeatStatus } from "../../../hooks/useSeatStatus";
-
+import { postReservationErrorMessages } from "../../../constants/errorMessages";
+import { toast } from "react-toastify";
 const ReservationSeatInfo = () => {
   const { selectedSeat, eventId, eventDateId, socket } =
     useContext(ReservationContext);
@@ -23,7 +24,29 @@ const ReservationSeatInfo = () => {
     NewReservationResponse,
     AxiosError<ApiErrorResponse>,
     NewReservation
-  >(createNewReservation);
+  >(createNewReservation, {
+    onSuccess: () => {
+      
+    },
+
+    onError: (error: AxiosError<ApiErrorResponse>) => {
+      if (error.response) {
+        const code = error.response.data.code;
+        switch (code) {
+          case 8:
+            toast.error(postReservationErrorMessages.invalidToken);
+            break;
+          case 13:
+            toast.error(postReservationErrorMessages.reserved);
+            break;
+          default:
+            toast.error(postReservationErrorMessages.general);
+        }
+      } else {
+        toast.error(postReservationErrorMessages.general);
+      }
+    },
+  });
 
   const handleReservationSubmit = async () => {
     try {

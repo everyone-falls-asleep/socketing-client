@@ -4,12 +4,13 @@ import Container from "../../layout/Container";
 import Input from "../../atoms/inputs/Input";
 import Button from "../../atoms/buttons/Button";
 import { createNewEvent } from "../../../api/events/eventsApi";
-import { useMutation } from "@tanstack/react-query";
+import { usePostMutation } from "../../../hooks/usePostMutation";
 import { NewEventResponse } from "../../../types/api/event";
 import { AxiosError } from "axios";
 import { ApiErrorResponse } from "../../../types/api/common";
 import { toast } from "react-toastify";
 import { useEventCreate } from "../../../store/EventCreateContext";
+import { postEventErrorMessages } from "../../../constants/errorMessages";
 
 const EventRegisterForm = () => {
   const { setEvent } = useEventCreate();
@@ -24,18 +25,14 @@ const EventRegisterForm = () => {
     svg: "",
   });
 
-  const mutation = useMutation<
+  const createEventmutation = usePostMutation<
     NewEventResponse,
     AxiosError<ApiErrorResponse>,
-    NewEvent,
-    unknown
-  >({
-    mutationFn: createNewEvent,
-
+    NewEvent
+  >(createNewEvent, {
     onSuccess: (response: NewEventResponse) => {
-      console.log(response);
       toast.success(
-        "공연이 등록되었습니다. 좌석을 배치하여 좌석 배치도를 등록해주세요."
+        "공연이 등록되었습니다. 이제 좌석을 배치하여 좌석 배치도를 등록해주세요."
       );
       if (response.data) {
         setEvent(response.data);
@@ -44,7 +41,11 @@ const EventRegisterForm = () => {
 
     onError: (error: AxiosError<ApiErrorResponse>) => {
       if (error.response) {
-        toast.error("공연 등록 중 오류가 발생했습니다. 다시 시도해주세요.");
+        if (error.response.data.code === 8) {
+          toast.error(postEventErrorMessages.invalidToken);
+        } else {
+          toast.error(postEventErrorMessages.general);
+        }
       }
     },
   });
@@ -75,7 +76,7 @@ const EventRegisterForm = () => {
   };
 
   const onSubmit = () => {
-    mutation.mutate(formData);
+    createEventmutation.mutate(formData);
   };
 
   return (

@@ -8,6 +8,7 @@ import { ApiErrorResponse } from "../../../types/api/common";
 import { toast } from "react-toastify";
 import SvgWrapper from "../../../utils/SvgWrapper";
 import { Seat } from "../../../types/api/event";
+import { postSeatErrorMessages } from "../../../constants/errorMessages";
 
 interface Point {
   x: number;
@@ -147,7 +148,7 @@ const SeatMaker: React.FC<SeatMakerProps> = ({
     try {
       if (!event?.id) return;
 
-      await Promise.all(
+      const results = await Promise.allSettled(
         seats.map((seat) => {
           const new_seat: NewSeat = {
             event_id: event.id,
@@ -157,13 +158,48 @@ const SeatMaker: React.FC<SeatMakerProps> = ({
             row: seat.row,
             number: seat.number,
           };
-          return createSeatMutation.mutateAsync(new_seat);
+          return createSeatMutation.mutateAsync(new_seat, {
+            onError: () => {},
+          });
         })
       );
+
+      const firstError = results.find(
+        (result): result is PromiseRejectedResult =>
+          result.status === "rejected"
+      );
+
+      if (firstError) {
+        const error = firstError.reason as AxiosError<ApiErrorResponse>;
+        if (error.response) {
+          const code = error.response.data.code;
+
+          switch (code) {
+            case 8:
+              toast.error(postSeatErrorMessages.invalidToken);
+              break;
+            case 5:
+              toast.error(postSeatErrorMessages.validation);
+              break;
+            case 9:
+              toast.error(postSeatErrorMessages.inValidevent);
+              break;
+            case 10:
+              toast.error(postSeatErrorMessages.duplicatesSeat);
+              break;
+            default:
+              toast.error(postSeatErrorMessages.general);
+          }
+        } else {
+          toast.error(postSeatErrorMessages.general);
+        }
+        return; // 처리 중단
+      }
+
       toast.success("모든 좌석이 성공적으로 생성되었습니다.");
     } catch (error) {
       console.log(error);
-      toast.error("좌석 생성 중 오류가 발생했습니다.");
+      toast.error(postSeatErrorMessages.general);
     }
   };
 
