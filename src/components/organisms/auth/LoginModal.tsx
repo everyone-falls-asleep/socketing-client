@@ -1,5 +1,4 @@
 import React from "react";
-import LoginForm from "../Form/LoginForm";
 import { useForm } from "react-hook-form";
 import { LoginData, LoginResponse } from "../../../types/api/user";
 import { useMutation } from "@tanstack/react-query";
@@ -10,11 +9,16 @@ import { toast } from "react-toastify";
 import { AxiosError } from "axios";
 import { ApiErrorResponse } from "../../../types/api/common";
 import Modal from "../../molecules/modal/Modal";
+import LabeledInput from "../../molecules/labeledinput/LabeledInput";
+import Button from "../../atoms/buttons/Button";
+import SubTitle from "../../atoms/titles/subtitle/SubTitle";
 
 interface LoginModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
+
+type EmailOnlyData = Pick<LoginData, "email">;
 
 const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
   const { saveAuthInfo } = useAuth();
@@ -23,7 +27,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
     handleSubmit,
     setError,
     formState: { errors },
-  } = useForm<LoginData>();
+  } = useForm<EmailOnlyData>();
 
   const mutation = useMutation<
     LoginResponse,
@@ -43,19 +47,9 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
       if (error.response) {
         const code = error.response.data.code;
         if (code === 5) {
-          const field = error.response.data.details?.[0].field;
-          const message =
-            field === "email"
-              ? loginErrorMessages.validation.emailInvalid
-              : loginErrorMessages.validation.passwordInvalid;
-
-          if (field) {
-            setError(field as keyof LoginData, { type: "manual", message });
-          }
-        } else if (code === 2) {
-          setError("password", {
+          setError("email", {
             type: "manual",
-            message: loginErrorMessages.noMatch,
+            message: loginErrorMessages.validation.emailInvalid,
           });
         } else {
           toast.error(loginErrorMessages.generic);
@@ -64,18 +58,42 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
     },
   });
 
-  const onSubmit = (data: LoginData) => {
-    mutation.mutate(data);
+  const onSubmit = (data: EmailOnlyData) => {
+    if (!data.email.trim()) {
+      setError("email", {
+        type: "manual",
+        message: "이름을 입력해주세요",
+      });
+      return;
+    }
+
+    const loginData: LoginData = {
+      email: `${data.email.trim()}@jungle.com`,
+      password: "123456",
+    };
+
+    mutation.mutate(loginData);
   };
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
-      <LoginForm
-        register={register}
-        handleSubmit={handleSubmit}
-        onSubmit={onSubmit}
-        errors={errors}
-      />
+      <div className="mx-auto w-full sm:max-w-[25rem] md:max-w-[30rem] lg:max-w-[35rem] xl:max-w-[40rem] px-4">
+        <SubTitle className="text-center">로그인</SubTitle>
+        <div className="login-form-container mt-5">
+          <form onSubmit={(e) => void handleSubmit(onSubmit)(e)}>
+            <LabeledInput
+              {...register("email")}
+              placeholder="이름을 입력해주세요"
+              label="이름"
+            />
+            {errors.email && (
+              <span style={{ color: "red" }}>{errors.email.message}</span>
+            )}
+            <br />
+            <Button type="submit">로그인</Button>
+          </form>
+        </div>
+      </div>
     </Modal>
   );
 };

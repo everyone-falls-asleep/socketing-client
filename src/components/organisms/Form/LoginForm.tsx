@@ -1,4 +1,4 @@
-import Subtitle from "../../atoms/titles/subtitle/SubTitle";
+import SubTitle from "../../atoms/titles/subtitle/SubTitle";
 import Button from "../../atoms/buttons/Button";
 import LabeledInput from "../../molecules/labeledinput/LabeledInput";
 import {
@@ -23,7 +23,7 @@ const LoginForm = ({
 }: LoginFormProps) => {
   return (
     <div className="mx-auto w-full sm:max-w-[25rem] md:max-w-[30rem] lg:max-w-[35rem] xl:max-w-[40rem] px-4">
-      <Subtitle className="p-2 text-center">로그인</Subtitle>
+      <SubTitle className="p-2 text-center">로그인</SubTitle>
       <div className="login-form-container mt-5">
         <form onSubmit={(e) => void handleSubmit(onSubmit)(e)}>
           <LabeledInput

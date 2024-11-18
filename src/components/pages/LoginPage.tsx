@@ -65,7 +65,7 @@ const LoginPage = () => {
   };
 
   return (
-    <MainLayout showAuthButtons={false}>
+    <MainLayout>
       <LoginTemplate
         loginForm={
           <LoginForm

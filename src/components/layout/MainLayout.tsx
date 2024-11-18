@@ -3,13 +3,12 @@ import Footer from "../templates/footer/Footer";
 
 interface MainLayoutProps {
   children: React.ReactNode;
-  showAuthButtons?: boolean;
 }
 
-const MainLayout = ({ children, showAuthButtons = true }: MainLayoutProps) => {
+const MainLayout = ({ children }: MainLayoutProps) => {
   return (
     <div>
-      <Header showAuthButtons={showAuthButtons} />
+      <Header />
       <main>{children}</main>
       <Footer />
     </div>
