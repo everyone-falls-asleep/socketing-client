@@ -11,6 +11,7 @@ export interface Event {
   svg?: string;
   createdAt: string;
   updatedAt: string;
+  ticketingStartTime?: string;
 }
 
 export interface EventDate {
