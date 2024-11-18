@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import MainLayout from "../layout/MainLayout";
 import EventDetailTemplate from "../templates/event-detail/EventDetailTemplate";
-import { useQuery } from "@tanstack/react-query";
+import { createResourceQuery } from "../../hooks/useCustomQuery";
 import { SingleEventResponse } from "../../types/api/event";
 import { fetchOneEvent } from "../../api/events/eventsApi";
 import { useParams } from "react-router-dom";
@@ -9,21 +9,17 @@ import { useEventDetail } from "../../store/EventDetailContext";
 import EventDetailHeader from "../organisms/event-detail/EventDetailHeader";
 import EventDetailSchedule from "../organisms/event-detail/EventDetailSchedule";
 import EventDetailAbout from "../organisms/event-detail/EventDetailAbout";
+import { fetchErrorMessages } from "../../constants/errorMessages";
 
 const EventDetailPage = () => {
   const { id } = useParams();
   const { setEvent, setFilteredEvent } = useEventDetail();
 
-  const useEvent = (event_id: string) => {
-    return useQuery<SingleEventResponse, Error>({
-      queryKey: ["single-event", event_id],
-      queryFn: () => fetchOneEvent(event_id),
-      staleTime: 1000 * 60 * 5,
-      gcTime: 1000 * 60 * 10,
-    });
-  };
-
-  const { data, isLoading, isError, error } = useEvent(id ?? "default-id");
+  const useEvent = createResourceQuery<SingleEventResponse>(
+    "single-event",
+    fetchOneEvent
+  );
+  const { data, isLoading, isError } = useEvent(id ?? "default-id");
 
   useEffect(() => {
     if (data?.data) {
@@ -46,17 +42,9 @@ const EventDetailPage = () => {
     }
   }, [data, setEvent, setFilteredEvent]);
 
-  if (isLoading) {
-    return <p>이벤트를 불러오는 중...</p>;
-  }
-
-  if (isError) {
-    return <p>오류 발생: {error.message}</p>;
-  }
-
-  if (!data?.data) {
-    return <p>오류 발생: 공연 정보를 불러올 수 없습니다.</p>;
-  }
+  if (isLoading) return <p>{fetchErrorMessages.isLoading}</p>;
+  if (isError) return <p>{fetchErrorMessages.general}</p>;
+  if (!data?.data) return <p>{fetchErrorMessages.noEventData}</p>;
 
   return (
     <MainLayout>

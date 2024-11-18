@@ -11,7 +11,8 @@ import { fetchAllSeats, fetchOneEvent } from "../../api/events/eventsApi";
 import { SingleEventResponse } from "../../types/api/event";
 import { SeatResponse } from "../../types/api/event";
 import { useParams } from "react-router-dom";
-import { useCustomQuery } from "../../hooks/useCustomQuery";
+import { createResourceQuery } from "../../hooks/useCustomQuery";
+import { fetchErrorMessages } from "../../constants/errorMessages";
 
 const ReservationPage = () => {
   const { socket } = useSocketConnection();
@@ -20,34 +21,15 @@ const ReservationPage = () => {
   const { eventId, eventDateId } = useParams();
 
   useEffect(() => {
-    console.log(eventId);
-    if (eventId) {
-      setEventId(eventId);
-    }
-    if (eventDateId) {
-      setEventDateId(eventDateId);
-    }
+    if (eventId) setEventId(eventId);
+    if (eventDateId) setEventDateId(eventDateId);
   }, [eventId, eventDateId, setEventId, setEventDateId]);
 
-  const useEvent = (event_id: string) => {
-    return useCustomQuery<SingleEventResponse>({
-      queryKey: ["single-event", event_id],
-      queryFn: ({ queryKey }) => {
-        const [, event_id] = queryKey as [string, string];
-        return fetchOneEvent(event_id);
-      },
-    });
-  };
-
-  const useSeat = (event_id: string) => {
-    return useCustomQuery<SeatResponse>({
-      queryKey: ["seats", event_id],
-      queryFn: ({ queryKey }) => {
-        const [, event_id] = queryKey as [string, string];
-        return fetchAllSeats(event_id);
-      },
-    });
-  };
+  const useEvent = createResourceQuery<SingleEventResponse>(
+    "single-event",
+    fetchOneEvent
+  );
+  const useSeat = createResourceQuery<SeatResponse>("seats", fetchAllSeats);
 
   const {
     data: eventData,
@@ -60,24 +42,13 @@ const ReservationPage = () => {
     isError: seatsError,
   } = useSeat(eventId ?? "default-id");
 
-  if (eventLoading || seatsLoading) {
-    return <p>이벤트를 불러오는 중...</p>;
-  }
+  if (eventLoading || seatsLoading)
+    return <p>{fetchErrorMessages.isLoading}</p>;
+  if (eventError || seatsError) return <p>{fetchErrorMessages.general}</p>;
+  if (!eventData?.data) return <p>{fetchErrorMessages.noEventData}</p>;
+  if (!seatsData?.data) return <p>{fetchErrorMessages.noSeatsData}</p>;
+  if (!eventData.data.svg) return <div>{fetchErrorMessages.noSvgData}</div>;
 
-  if (eventError || seatsError) {
-    return <p>오류 발생</p>;
-  }
-
-  if (!eventData?.data) {
-    return <p>오류 발생: 공연 정보를 불러올 수 없습니다.</p>;
-  }
-
-  if (!seatsData?.data) {
-    return <p>오류 발생: 좌석 정보를 불러올 수 없습니다.</p>;
-  }
-  if (!eventData.data.svg) {
-    return <div></div>;
-  }
   const svgString = eventData.data.svg;
 
   return (

@@ -4,32 +4,24 @@ import CardList from "../templates/cardList/CardList";
 import MainLayout from "../layout/MainLayout";
 import { Event } from "../../types/api/event";
 import { fetchAllEvents } from "../../api/events/eventsApi";
-import { useQuery } from "@tanstack/react-query";
+import { createResourceQuery } from "../../hooks/useCustomQuery";
 import { EventsResponse } from "../../types/api/event";
+import { fetchErrorMessages } from "../../constants/errorMessages";
 
 const SearchResultsPage: React.FC = () => {
   const searchTerm = useParams<{ searchTerm: string }>().searchTerm ?? ""; // URL 경로에서 검색어 가져오기
   const lowerCaseSearchTerm = searchTerm?.toLowerCase() || "";
 
-  const { data, isLoading, isError, error } = useQuery<EventsResponse, Error>({
-    queryKey: ["events"],
-    queryFn: fetchAllEvents,
-    staleTime: 1000 * 60 * 5,
-    gcTime: 1000 * 60 * 10,
-  });
+  const useEvents = createResourceQuery<EventsResponse>(
+    "all-events",
+    fetchAllEvents
+  );
 
-  if (isLoading) {
-    console.log(data);
-    return <p>이벤트를 불러오는 중...</p>;
-  }
+  const { data, isLoading, isError } = useEvents();
 
-  if (isError) {
-    return <p>오류 발생: {error.message}</p>;
-  }
-
-  if (!data?.data) {
-    return <p>오류 발생: 데이터를 불러올 수 없습니다.</p>;
-  }
+  if (isLoading) return <p>{fetchErrorMessages.isLoading}</p>;
+  if (isError) return <p>{fetchErrorMessages.general}</p>;
+  if (!data?.data) return <p>{fetchErrorMessages.noEventData}</p>;
 
   // 검색 필터링 함수
   const filterEvents = data.data.filter((event: Event) => {

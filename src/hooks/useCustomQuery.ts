@@ -7,7 +7,7 @@ interface UseCustomQueryOptions<TResponse> {
   gcTime?: number;
 }
 
-export const useCustomQuery = <TResponse>({
+const useCustomQuery = <TResponse>({
   queryKey,
   queryFn,
   staleTime = 1000 * 60 * 5, // 기본 staleTime
@@ -19,4 +19,23 @@ export const useCustomQuery = <TResponse>({
     staleTime,
     gcTime,
   });
+};
+
+type QueryFn<T> = (id: string) => Promise<T>;
+
+export const createResourceQuery = <T>(
+  resourceName: string,
+  fetchFn: QueryFn<T>
+) => {
+  return (id?: string) => {
+    const queryKey = id ? [resourceName, id] : [resourceName];
+
+    return useCustomQuery<T>({
+      queryKey,
+      queryFn: ({ queryKey }) => {
+        const [, resourceId] = queryKey as [string, string?];
+        return fetchFn(resourceId ?? "default");
+      },
+    });
+  };
 };
