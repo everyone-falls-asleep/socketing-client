@@ -1,4 +1,3 @@
-import React from "react";
 import { useParams } from "react-router-dom";
 import CardList from "../templates/cardList/CardList";
 import MainLayout from "../layout/MainLayout";
@@ -8,7 +7,7 @@ import { createResourceQuery } from "../../hooks/useCustomQuery";
 import { EventsResponse } from "../../types/api/event";
 import { fetchErrorMessages } from "../../constants/errorMessages";
 
-const SearchResultsPage: React.FC = () => {
+const SearchResultsPage = () => {
   const searchTerm = useParams<{ searchTerm: string }>().searchTerm ?? ""; // URL 경로에서 검색어 가져오기
   const lowerCaseSearchTerm = searchTerm?.toLowerCase() || "";
 
