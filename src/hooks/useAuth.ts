@@ -11,21 +11,20 @@ export const useAuth = () => {
   const { setUserId } = useContext(UserContext);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
 
-  // 로그인 상태 확인
   useEffect(() => {
     const token = localStorage.getItem("authToken");
-    if (token) {
+    if (token && !isAuthenticated) {
       setIsAuthenticated(true);
       const decodedToken = jwtDecode<{ sub: string }>(token);
       const userId = decodedToken.sub;
       if (userId) {
         setUserId(userId);
-        void fetchUserInfo(userId); // 사용자 정보 불러오기
+        void fetchUserInfo(userId, false, false);
       } else {
         console.error("토큰에서 userID를 찾을 수 없습니다.");
       }
     }
-  }, [setUserId]);
+  }, [isAuthenticated, setUserId]);
 
   const saveAuthInfo = (token: string) => {
     localStorage.setItem("authToken", token);
@@ -35,20 +34,28 @@ export const useAuth = () => {
 
     if (userId) {
       setUserId(userId);
-      void fetchUserInfo(userId); // 사용자 정보 불러오기
+      void fetchUserInfo(userId, true, true);
     } else {
       console.error("토큰에서 userID를 찾을 수 없습니다.");
     }
   };
 
-  const fetchUserInfo = async (userId: string) => {
+  const fetchUserInfo = async (
+    userId: string,
+    showToast: boolean,
+    redirectToHome: boolean
+  ) => {
     try {
       const data = await getUserInfo(userId);
       const nickname = data.data?.nickname;
       if (nickname) {
         localStorage.setItem("nickname", nickname);
-        toast.success(`안녕하세요, ${nickname}님!`);
-        navigate("/"); // 메인 페이지로 리디렉션
+        if (showToast) {
+          toast.success(`안녕하세요, ${nickname}님!`);
+        }
+        if (redirectToHome) {
+          navigate("/"); // 메인 페이지로 리다이렉트
+        }
       }
     } catch (error) {
       console.error("사용자 정보 불러오기 실패:", error);
