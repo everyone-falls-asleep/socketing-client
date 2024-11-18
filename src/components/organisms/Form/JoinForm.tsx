@@ -17,7 +17,7 @@ import {
 import { JoinConfirmData } from "../../../types/form/user";
 import { ApiErrorResponse } from "../../../types/api/common";
 import { AxiosError } from "axios";
-import { registerErrorMessages } from "../../../constants/api";
+import { registerErrorMessages } from "../../../constants/errorMessages";
 import { toast } from "react-toastify";
 
 import { useAuth } from "../../../hooks/useAuth";

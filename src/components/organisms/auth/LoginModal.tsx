@@ -5,7 +5,7 @@ import { LoginData, LoginResponse } from "../../../types/api/user";
 import { useMutation } from "@tanstack/react-query";
 import { sendLoginRequest } from "../../../api/authentication/authApi";
 import { useAuth } from "../../../hooks/useAuth";
-import { loginErrorMessages } from "../../../constants/api";
+import { loginErrorMessages } from "../../../constants/errorMessages";
 import { toast } from "react-toastify";
 import { AxiosError } from "axios";
 import { ApiErrorResponse } from "../../../types/api/common";
