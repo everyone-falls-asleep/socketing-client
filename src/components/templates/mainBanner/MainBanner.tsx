@@ -69,7 +69,7 @@ const MainBanner = ({ events }: EventListProps) => {
   return (
     <>
       {/* 남은 시간 표시 */}
-      {/* <div className="w-full text-black text-center py-2 text-3xl"></div> */}
+      <div className="w-full h-6"></div>
       <div className="w-full bg-black text-white text-center py-2 text-3xl">
         <h1 className="text-[24px] font-bold">
           {filteredEvents.length > 0
