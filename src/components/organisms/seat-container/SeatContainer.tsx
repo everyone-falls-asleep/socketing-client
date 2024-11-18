@@ -2,10 +2,7 @@ import React, { useState, useRef, useEffect, useContext } from "react";
 import { Seat } from "../../../types/api/event";
 import SeatObj from "../../atoms/seats/SeatObj";
 import { ReservationContext } from "../../../store/ReservationContext";
-import { createMockSocket } from "../../../mocks/mockSocket";
 import SvgWrapper from "../../../utils/SvgWrapper";
-
-type MockSocketType = ReturnType<typeof createMockSocket>;
 
 interface Point {
   x: number;
@@ -14,14 +11,12 @@ interface Point {
 
 interface SeatContainerProps {
   seatsData: Seat[];
-  socket: MockSocketType | null;
   svg: string;
   viewBox?: string;
 }
 
 const SeatContainer: React.FC<SeatContainerProps> = ({
   seatsData,
-  socket,
   svg,
   viewBox = "0 0 10240 7680",
 }) => {
@@ -85,7 +80,7 @@ const SeatContainer: React.FC<SeatContainerProps> = ({
 
   const renderSeat = (seatData: Seat) => (
     <g key={seatData.id} transform={`translate(${seatData.cx},${seatData.cy})`}>
-      <SeatObj seatData={{ ...seatData, cx: 0, cy: 0 }} socket={socket} />
+      <SeatObj seatData={{ ...seatData, cx: 0, cy: 0 }} />
     </g>
   );
 

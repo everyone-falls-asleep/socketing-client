@@ -2,18 +2,14 @@ import { Seat } from "../../../types/api/event";
 import { useContext } from "react";
 import { ReservationContext } from "../../../store/ReservationContext";
 import { useSeatStatus } from "../../../hooks/useSeatStatus";
-import { createMockSocket } from "../../../mocks/mockSocket";
-
-type MockSocketType = ReturnType<typeof createMockSocket>;
 
 interface SeatProps {
   seatData: Seat;
-  socket: MockSocketType | null;
 }
 
-const SeatObj = ({ seatData, socket }: SeatProps) => {
+const SeatObj = ({ seatData }: SeatProps) => {
   const seatId = seatData.id;
-  const { setSelectedSeat } = useContext(ReservationContext);
+  const { setSelectedSeat, socket } = useContext(ReservationContext);
   const { status, holdSeat } = useSeatStatus({ socket, seatId });
 
   const getStatusColor = () => {

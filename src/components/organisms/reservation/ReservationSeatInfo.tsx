@@ -8,9 +8,16 @@ import {
 import { AxiosError } from "axios";
 import { ApiErrorResponse } from "../../../types/api/common";
 import { createNewReservation } from "../../../api/reservations/reservationsApi";
+import { useSeatStatus } from "../../../hooks/useSeatStatus";
 
 const ReservationSeatInfo = () => {
-  const { selectedSeat, eventId, eventDateId } = useContext(ReservationContext);
+  const { selectedSeat, eventId, eventDateId, socket } =
+    useContext(ReservationContext);
+
+  const { reserveSeat } = useSeatStatus({
+    socket,
+    seatId: selectedSeat?.id ?? "",
+  });
 
   const createReservationMutation = usePostMutation<
     NewReservationResponse,
@@ -29,6 +36,9 @@ const ReservationSeatInfo = () => {
         const response =
           await createReservationMutation.mutateAsync(reservation);
         console.log(response);
+        if (response.message == "Success") {
+          reserveSeat();
+        }
       }
     } catch (error) {
       console.log(error);

@@ -1,5 +1,4 @@
 import ReservationUpperEvent from "../organisms/reservation/ResevationUpperEvent";
-import { useSocketConnection } from "../../hooks/useSocketConnection";
 import ReservationCalendarSideBar from "../organisms/reservation/ReservationCalendarSideBar";
 import ReservationSeatContainer from "../organisms/reservation/ReservationSeatContainer";
 import ReservationMinimap from "../organisms/reservation/ReservationMinimap";
@@ -12,13 +11,27 @@ import { SingleEventResponse } from "../../types/api/event";
 import { SeatResponse } from "../../types/api/event";
 import { useParams } from "react-router-dom";
 import { createResourceQuery } from "../../hooks/useCustomQuery";
+import { useSocketConnection } from "../../hooks/useSocketConnection";
 import { fetchErrorMessages } from "../../constants/errorMessages";
 
 const ReservationPage = () => {
-  const { socket } = useSocketConnection();
-  const { isDateSidebarOpen, setEventId, setEventDateId } =
+  const { isDateSidebarOpen, setEventId, setEventDateId, setSocket } =
     useContext(ReservationContext);
   const { eventId, eventDateId } = useParams();
+  const { socket: newSocket } = useSocketConnection();
+
+  useEffect(() => {
+    if (newSocket) {
+      setSocket(newSocket);
+    }
+
+    return () => {
+      if (newSocket) {
+        newSocket.disconnect();
+        setSocket(null);
+      }
+    };
+  }, [newSocket, setSocket]);
 
   useEffect(() => {
     if (eventId) setEventId(eventId);
@@ -68,7 +81,6 @@ const ReservationPage = () => {
           {/* 좌석 선택 영역 (3/5) */}
           <ReservationSeatContainer
             seatsData={seatsData.data}
-            socket={socket}
             svg={svgString}
           />
 
