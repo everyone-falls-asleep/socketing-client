@@ -32,45 +32,51 @@ const Header: React.FC<HeaderProps> = ({ showAuthButtons = true }) => {
   return (
     <>
       <header className="flex items-center justify-between px-6 py-4 bg-black text-white">
-        <HeaderLogo>
-          <a href="/" className="text-2xl font-bold">
-            SocKeTing
-          </a>
-        </HeaderLogo>
-
-        <div className="flex items-center w-1/2 bg-white rounded-lg overflow-hidden">
-          <Input
-            type="text"
-            placeholder="공연 검색"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            onKeyDown={handleKeyDown}
-            className="w-full p-2 rounded-r-none text-gray-700 outline-none"
-          />
-          <button
-            onClick={handleSearch}
-            className="p-3 w-[100px] bg-rose-400 rounded-r-lg hover:bg-rose-500"
-          >
-            🔍
-          </button>
+        {/* 로고 */}
+        <div className="flex items-center flex-shrink-0">
+          <HeaderLogo>
+            <a href="/" className="text-2xl font-bold">
+              SocKeTing
+            </a>
+          </HeaderLogo>
+        </div>
+        {/* 검색창 */}
+        <div className="flex-grow hidden md:flex justify-center">
+          <div className="flex items-center w-[55%] bg-white rounded-lg overflow-hidden">
+            <Input
+              type="text"
+              placeholder="공연 검색"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onKeyDown={handleKeyDown}
+              className="w-full p-2 rounded-r-none text-gray-700 outline-none"
+            />
+            <button
+              onClick={handleSearch}
+              className="p-3 w-[100px] bg-rose-400 rounded-r-lg hover:bg-rose-500"
+            >
+              🔍
+            </button>
+          </div>
         </div>
         {showAuthButtons && (
-          <div className="flex space-x-4">
+          <div className="flex space-x-4 w-[15%] justify-end">
             <Button variant="primary" onClick={() => setIsLoginModalOpen(true)}>
               로그인
             </Button>
-            <Button
+            {/* <Button
               variant="primary"
               onClick={() => {
                 navigate("/join");
               }}
             >
               회원가입
-            </Button>
+            </Button> */}
           </div>
         )}
       </header>
 
+      {/* 로그인 모달 */}
       <LoginModal
         isOpen={isLoginModalOpen}
         onClose={() => setIsLoginModalOpen(false)}
