@@ -46,7 +46,7 @@ const ReservationSeatInfo = () => {
   };
 
   return (
-    <div className="h-2/3 p-4">
+    <div>
       {selectedSeat ? (
         <div className="space-y-4">
           <h2 className="text-lg font-bold">좌석 정보</h2>

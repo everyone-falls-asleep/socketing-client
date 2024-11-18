@@ -1,36 +1,35 @@
-import ReservationUpperEvent from "../organisms/reservation/ResevationUpperEvent";
+import React, { useContext, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import MainLayout from "../layout/MainLayout";
+import FourSectionLayout from "../layout/FourSectionLayout";
+import ReservationUpperEvent from "../organisms/reservation/ReservationUpperEvent";
 import ReservationCalendarSideBar from "../organisms/reservation/ReservationCalendarSideBar";
 import ReservationSeatContainer from "../organisms/reservation/ReservationSeatContainer";
 import ReservationMinimap from "../organisms/reservation/ReservationMinimap";
 import ReservationSeatInfo from "../organisms/reservation/ReservationSeatInfo";
-import { useContext, useEffect } from "react";
 import { ReservationContext } from "../../store/ReservationContext";
-import MainLayout from "../layout/MainLayout";
 import { fetchAllSeats, fetchOneEvent } from "../../api/events/eventsApi";
-import { SingleEventResponse } from "../../types/api/event";
-import { SeatResponse } from "../../types/api/event";
-import { useParams } from "react-router-dom";
 import { createResourceQuery } from "../../hooks/useCustomQuery";
 import { useSocketConnection } from "../../hooks/useSocketConnection";
+import { SingleEventResponse, SeatResponse } from "../../types/api/event";
 import { fetchErrorMessages } from "../../constants/errorMessages";
 
-const ReservationPage = () => {
-  const { isDateSidebarOpen, setEventId, setEventDateId, setSocket } =
+const ReservationPage: React.FC = () => {
+  const { setEventId, setEventDateId, setSocket } =
     useContext(ReservationContext);
   const { eventId, eventDateId } = useParams();
   const { socket: newSocket } = useSocketConnection();
+  const [isLeftSidebarOpen, setIsLeftSidebarOpen] =
+    React.useState<boolean>(true);
 
   useEffect(() => {
     if (newSocket) {
       setSocket(newSocket);
-    }
-
-    return () => {
-      if (newSocket) {
+      return () => {
         newSocket.disconnect();
         setSocket(null);
-      }
-    };
+      };
+    }
   }, [newSocket, setSocket]);
 
   useEffect(() => {
@@ -62,38 +61,24 @@ const ReservationPage = () => {
   if (!seatsData?.data) return <p>{fetchErrorMessages.noSeatsData}</p>;
   if (!eventData.data.svg) return <div>{fetchErrorMessages.noSvgData}</div>;
 
-  const svgString = eventData.data.svg;
-
   return (
     <MainLayout>
-      <div className="h-screen flex flex-col">
-        {/* 상단 공연 정보  */}
-        <ReservationUpperEvent {...eventData.data}></ReservationUpperEvent>
-        {/* 하단 섹션 (2/3) */}
-        <div className="flex flex-1 relative">
-          {/* 날짜 선택 사이드바 (1/5) */}
-          <div
-            className={`${isDateSidebarOpen ? "ml-1/5" : ""} w-2/5 bg-gray-50 transition-all`}
-          >
-            <ReservationCalendarSideBar dateData={eventData.data.eventDates} />
-          </div>
-
-          {/* 좌석 선택 영역 (3/5) */}
+      <FourSectionLayout
+        topContent={<ReservationUpperEvent {...eventData.data} />}
+        leftSidebarContent={
+          <ReservationCalendarSideBar dateData={eventData.data.eventDates} />
+        }
+        centerContent={
           <ReservationSeatContainer
             seatsData={seatsData.data}
-            svg={svgString}
+            svg={eventData.data.svg}
           />
-
-          {/* 우측 사이드바 (1/5) */}
-          <div className="w-1/5 border-l bg-white">
-            {/* 미니맵 (1/3) */}
-            <ReservationMinimap />
-
-            {/* 좌석 정보 및 예매 버튼 (2/3) */}
-            <ReservationSeatInfo />
-          </div>
-        </div>
-      </div>
+        }
+        rightTopContent={<ReservationMinimap />}
+        rightBottomContent={<ReservationSeatInfo />}
+        isLeftSidebarOpen={isLeftSidebarOpen}
+        toggleSidebar={() => setIsLeftSidebarOpen(!isLeftSidebarOpen)}
+      />
     </MainLayout>
   );
 };

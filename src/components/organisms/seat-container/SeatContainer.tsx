@@ -1,7 +1,6 @@
-import React, { useState, useRef, useEffect, useContext } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Seat } from "../../../types/api/event";
 import SeatObj from "../../atoms/seats/SeatObj";
-import { ReservationContext } from "../../../store/ReservationContext";
 import SvgWrapper from "../../../utils/SvgWrapper";
 
 interface Point {
@@ -25,7 +24,6 @@ const SeatContainer: React.FC<SeatContainerProps> = ({
   const [startPoint, setStartPoint] = useState<Point>({ x: 0, y: 0 });
   const [translate, setTranslate] = useState<Point>({ x: 0, y: 0 });
   const [scale, setScale] = useState(1);
-  const { isDateSidebarOpen } = useContext(ReservationContext);
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -87,10 +85,9 @@ const SeatContainer: React.FC<SeatContainerProps> = ({
   return (
     <div
       ref={containerRef}
-      className={`relative w-full h-full overflow-hidden bg-gray-100 transition-all duration-300
-                 ${isDateSidebarOpen ? "ml-1/5" : ""}`}
+      className="relative flex-1 overflow-hidden bg-gray-100"
+      style={{ height: "100%" }}
       onMouseDown={handleMouseDown}
-      style={{ touchAction: "none" }}
     >
       <div
         className="absolute inset-0"
