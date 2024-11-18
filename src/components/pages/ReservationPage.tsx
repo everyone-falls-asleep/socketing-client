@@ -5,10 +5,7 @@ import ReservationSeatContainer from "../organisms/reservation/ReservationSeatCo
 import ReservationMinimap from "../organisms/reservation/ReservationMinimap";
 import ReservationSeatInfo from "../organisms/reservation/ReservationSeatInfo";
 import { useContext, useEffect } from "react";
-import {
-  ReservationContext,
-  ReservationProvider,
-} from "../../store/ReservationContext";
+import { ReservationContext } from "../../store/ReservationContext";
 import MainLayout from "../layout/MainLayout";
 import { fetchAllSeats, fetchOneEvent } from "../../api/events/eventsApi";
 import { SingleEventResponse } from "../../types/api/event";
@@ -117,11 +114,5 @@ const ReservationPage = () => {
     </MainLayout>
   );
 };
-
-export const ReservationPageWrapper = () => (
-  <ReservationProvider>
-    <ReservationPage />
-  </ReservationProvider>
-);
 
 export default ReservationPage;

@@ -5,10 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { SingleEventResponse } from "../../types/api/event";
 import { fetchOneEvent } from "../../api/events/eventsApi";
 import { useParams } from "react-router-dom";
-import {
-  useEventDetail,
-  EventDetailProvider,
-} from "../../store/EventDetailContext";
+import { useEventDetail } from "../../store/EventDetailContext";
 import EventDetailHeader from "../organisms/event-detail/EventDetailHeader";
 import EventDetailSchedule from "../organisms/event-detail/EventDetailSchedule";
 import EventDetailAbout from "../organisms/event-detail/EventDetailAbout";
@@ -72,12 +69,4 @@ const EventDetailPage = () => {
   );
 };
 
-const WrappedEventDetailPage = () => {
-  return (
-    <EventDetailProvider>
-      <EventDetailPage />
-    </EventDetailProvider>
-  );
-};
-
-export default WrappedEventDetailPage;
+export default EventDetailPage;

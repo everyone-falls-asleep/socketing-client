@@ -4,11 +4,11 @@ import LoginPage from "../components/pages/LoginPage";
 import JoinPage from "../components/pages/JoinPage";
 import Mypage from "../components/pages/MyPage";
 import ReservationConfirmationPage from "../components/pages/ReservationConfirmationPage";
-import EventDetailPage from "../components/pages/EventDetailPage";
+import { WrappedEventDetailPage } from "../components/wrappers/WrappedEventDatailPage";
 import WaitingRoomPage from "../components/pages/WatingRoomPage";
 import SearchResultsPage from "../components/pages/SearchResultsPage";
 import RegisterEventPage from "../components/pages/RegisterEventPage";
-import { ReservationPageWrapper } from "../components/pages/ReservationPage";
+import { WrappedReservationPage } from "../components/wrappers/WrappedReservationPage";
 
 const Router = () => {
   return (
@@ -18,11 +18,11 @@ const Router = () => {
         <Route path="login" element={<LoginPage />} />
         <Route path="join" element={<JoinPage />} />
         <Route path="mypage" element={<Mypage />} />
-        <Route path="event/:id" element={<EventDetailPage />} />
+        <Route path="event/:id" element={<WrappedEventDetailPage />} />
         <Route path="register" element={<RegisterEventPage />} />
         <Route
           path="reservation/:eventId/:eventDateId"
-          element={<ReservationPageWrapper />}
+          element={<WrappedReservationPage />}
         />
         <Route
           path="/search-results/:searchTerm"
