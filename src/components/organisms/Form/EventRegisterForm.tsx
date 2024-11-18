@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useForm, Controller } from "react-hook-form";
 import { NewEvent } from "../../../types/api/event";
 import Container from "../../layout/Container";
 import Input from "../../atoms/inputs/Input";
@@ -15,17 +15,24 @@ import { postEventErrorMessages } from "../../../constants/errorMessages";
 const EventRegisterForm = () => {
   const { setEvent } = useEventCreate();
 
-  const [formData, setFormData] = useState<NewEvent>({
-    title: "",
-    thumbnail: "",
-    place: "",
-    cast: "",
-    ageLimit: 12,
-    eventDates: [new Date().toISOString().slice(0, 16)],
-    svg: "",
+  const {
+    register,
+    handleSubmit,
+    control,
+    formState: { errors },
+  } = useForm<NewEvent>({
+    defaultValues: {
+      title: "",
+      thumbnail: "",
+      place: "",
+      cast: "",
+      ageLimit: 12,
+      eventDates: [new Date().toISOString().slice(0, 16)],
+      svg: "",
+    },
   });
 
-  const createEventmutation = usePostMutation<
+  const createEventMutation = usePostMutation<
     NewEventResponse,
     AxiosError<ApiErrorResponse>,
     NewEvent
@@ -38,7 +45,6 @@ const EventRegisterForm = () => {
         setEvent(response.data);
       }
     },
-
     onError: (error: AxiosError<ApiErrorResponse>) => {
       if (error.response) {
         if (error.response.data.code === 8) {
@@ -50,111 +56,139 @@ const EventRegisterForm = () => {
     },
   });
 
-  const handleChange = (
-    field: keyof NewEvent,
-    value: string | number | string[]
+  const onSubmit = (data: NewEvent) => {
+    createEventMutation.mutate(data);
+  };
+
+  const handleImageUpload = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    onChange: (value: string) => void
   ) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
-  };
-
-  const handleDateChange = (index: number, value: string) => {
-    const updatedDates = [...formData.eventDates];
-    updatedDates[index] = value;
-    handleChange("eventDates", updatedDates);
-  };
-
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
     const reader = new FileReader();
     reader.onload = (event) => {
-      handleChange("svg", event.target?.result as string);
-      console.log(event.target?.result as string);
+      onChange(event.target?.result as string);
     };
     reader.readAsText(file);
   };
 
-  const onSubmit = () => {
-    createEventmutation.mutate(formData);
-  };
-
   return (
-    <div>
-      <Container width="2000px" className="flex items-start">
-        <label>
-          공연 이름:
-          <Input
-            className="w-[200px]"
-            type="text"
-            value={formData.title}
-            onChange={(e) => handleChange("title", e.target.value)}
-          />
-        </label>
-        <label>
-          포스터 URL:
-          <Input
-            className="w-[200px]"
-            type="text"
-            value={formData.thumbnail}
-            onChange={(e) => handleChange("thumbnail", e.target.value)}
-          />
-        </label>
-        <label>
-          장소:
-          <Input
-            className="w-[200px]"
-            type="text"
-            value={formData.place}
-            onChange={(e) => handleChange("place", e.target.value)}
-          />
-        </label>
-        <label>
-          가수:
-          <Input
-            className="w-[200px]"
-            type="text"
-            value={formData.cast}
-            onChange={(e) => handleChange("cast", e.target.value)}
-          />
-        </label>
-        <label>
-          연령 제한:
-          <Input
-            className="w-[200px]"
-            type="number"
-            value={formData.ageLimit}
-            onChange={(e) => handleChange("ageLimit", Number(e.target.value))}
-          />
-        </label>
-      </Container>
-      <Container width="2000px" className="flex items-start">
-        <label className="pr-3">공연 날짜:</label>
-        <Input
-          className="w-[250px]"
-          type="datetime-local"
-          value={formData.eventDates}
-          onChange={(e) => handleDateChange(0, e.target.value)}
-        />
-        <div className="flex items-center">
-          <label className="pl-10 p-3 w-[200px]">배치도 업로드:</label>
-          <input
-            type="file"
-            accept="image/svg+xml,.svg"
-            className="w-full"
-            onChange={handleImageUpload}
-          />
-        </div>
-        <Button
-          variant="primary"
-          onClick={() => {
-            onSubmit();
-          }}
-        >
-          공연 등록
-        </Button>
-      </Container>
-    </div>
+    <form onSubmit={(e) => void handleSubmit(onSubmit)(e)}>
+      <div>
+        <Container width="2000px" className="flex items-start">
+          <div className="flex flex-col items-start mr-4">
+            <label>공연 이름:</label>
+            <Input
+              className="w-[200px]"
+              type="text"
+              {...register("title", {
+                required: "공연 이름은 필수 항목입니다.",
+              })}
+            />
+            {errors.title && (
+              <span className="text-red-500">{errors.title.message}</span>
+            )}
+          </div>
+
+          <div className="flex flex-col items-start mr-4">
+            <label>포스터 URL:</label>
+            <Input
+              className="w-[200px]"
+              type="text"
+              {...register("thumbnail", {
+                required: "포스터 URL은 필수 항목입니다.",
+              })}
+            />
+            {errors.thumbnail && (
+              <span className="text-red-500">{errors.thumbnail.message}</span>
+            )}
+          </div>
+
+          <div className="flex flex-col items-start mr-4">
+            <label>장소:</label>
+            <Input
+              className="w-[200px]"
+              type="text"
+              {...register("place", { required: "장소는 필수 항목입니다." })}
+            />
+            {errors.place && (
+              <span className="text-red-500">{errors.place.message}</span>
+            )}
+          </div>
+
+          <div className="flex flex-col items-start mr-4">
+            <label>가수:</label>
+            <Input
+              className="w-[200px]"
+              type="text"
+              {...register("cast", { required: "가수는 필수 항목입니다." })}
+            />
+            {errors.cast && (
+              <span className="text-red-500">{errors.cast.message}</span>
+            )}
+          </div>
+
+          <div className="flex flex-col items-start mr-4">
+            <label>연령 제한:</label>
+            <Input
+              className="w-[200px]"
+              type="number"
+              {...register("ageLimit", {
+                required: "연령 제한은 필수 항목입니다.",
+                valueAsNumber: true,
+              })}
+            />
+            {errors.ageLimit && (
+              <span className="text-red-500">{errors.ageLimit.message}</span>
+            )}
+          </div>
+        </Container>
+        <Container width="2000px" className="flex items-start mt-4">
+          <div className="flex flex-col items-start mr-4">
+            <label>공연 날짜:</label>
+            <Controller
+              control={control}
+              name="eventDates.0"
+              rules={{ required: "공연 날짜는 필수 항목입니다." }}
+              render={({ field }) => (
+                <Input className="w-[250px]" type="datetime-local" {...field} />
+              )}
+            />
+            {errors.eventDates?.[0] && (
+              <span className="text-red-500">
+                {errors.eventDates[0]?.message}
+              </span>
+            )}
+          </div>
+
+          <div className="flex flex-col items-start mr-4">
+            <label>배치도 업로드:</label>
+            <Controller
+              control={control}
+              name="svg"
+              rules={{ required: "배치도 업로드는 필수 항목입니다." }}
+              render={({ field }) => (
+                <input
+                  type="file"
+                  accept="image/svg+xml,.svg"
+                  className="w-full"
+                  onChange={(e) => handleImageUpload(e, field.onChange)}
+                />
+              )}
+            />
+            {errors.svg && (
+              <span className="text-red-500">{errors.svg.message}</span>
+            )}
+          </div>
+
+          <Button variant="primary" type="submit" className="mt-6">
+            공연 등록
+          </Button>
+        </Container>
+      </div>
+    </form>
   );
 };
 
