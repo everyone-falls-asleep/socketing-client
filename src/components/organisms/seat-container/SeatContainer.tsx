@@ -44,6 +44,7 @@ const SeatContainer: React.FC<SeatContainerProps> = ({
 
     return () => {
       socket.off("serverTime");
+      socket.off("userList");
     };
   }, [socket]);
 
