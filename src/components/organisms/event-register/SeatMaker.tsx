@@ -15,6 +15,8 @@ interface SeatMakerProps {
   seats: Seat[];
   setSeats: React.Dispatch<React.SetStateAction<Seat[]>>;
   isDateSidebarOpen?: boolean;
+  snapToGrid: boolean;
+  setSnapToGrid: (value: boolean) => void;
 }
 
 const SeatMaker: React.FC<SeatMakerProps> = ({
@@ -28,12 +30,15 @@ const SeatMaker: React.FC<SeatMakerProps> = ({
   seats,
   setSeats,
   isDateSidebarOpen = false,
+  snapToGrid,
 }) => {
   const { event } = useEventCreate();
   const containerRef = useRef<HTMLDivElement>(null);
   const [isDragging, setIsDragging] = React.useState<boolean>(false);
   const [startPoint, setStartPoint] = React.useState<Point>({ x: 0, y: 0 });
   const [translate, setTranslate] = React.useState<Point>({ x: 0, y: 0 });
+
+  const gridSize = 20;
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent): void => {
@@ -95,6 +100,14 @@ const SeatMaker: React.FC<SeatMakerProps> = ({
     return { x: svgP.x, y: svgP.y };
   };
 
+  const snapToGridPoint = (point: Point): Point => {
+    if (!snapToGrid) return point;
+    return {
+      x: Math.round(point.x / gridSize) * gridSize,
+      y: Math.round(point.y / gridSize) * gridSize,
+    };
+  };
+
   const handleSvgClick = (e: React.MouseEvent<SVGSVGElement>): void => {
     if (!isEditMode) return;
 
@@ -104,11 +117,12 @@ const SeatMaker: React.FC<SeatMakerProps> = ({
     }
 
     const coordinates = getSVGCoordinates(e);
+    const snappedCoordinates = snapToGridPoint(coordinates);
 
     const newSeat: Seat = {
       id: `temp-${Date.now()}`,
-      cx: Math.round(coordinates.x),
-      cy: Math.round(coordinates.y),
+      cx: Math.round(snappedCoordinates.x),
+      cy: Math.round(snappedCoordinates.y),
       area: currentArea,
       row: currentRow,
       number: currentNumber,
@@ -135,6 +149,7 @@ const SeatMaker: React.FC<SeatMakerProps> = ({
       onClick={(e) => {
         e.stopPropagation();
         handleSeatClick(seat.id);
+        setCurrentNumber(currentNumber - 1);
       }}
       style={{ cursor: isEditMode ? "pointer" : "default" }}
     >
@@ -146,6 +161,7 @@ const SeatMaker: React.FC<SeatMakerProps> = ({
       />
     </g>
   );
+
   return (
     <div
       ref={containerRef}

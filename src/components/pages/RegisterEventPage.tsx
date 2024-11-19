@@ -15,6 +15,7 @@ const RegisterEventPage: React.FC = () => {
   const [currentNumber, setCurrentNumber] = useState<number>(1);
   const [currentPrice, setCurrentPrice] = useState<string>("50000");
   const [seats, setSeats] = useState<Seat[]>([]);
+  const [snapToGrid, setSnapToGrid] = React.useState<boolean>(false);
 
   return (
     <EventCreateProvider>
@@ -34,6 +35,8 @@ const RegisterEventPage: React.FC = () => {
             currentPrice={currentPrice}
             setCurrentPrice={setCurrentPrice}
             onComplete={(updatedSeats: Seat[]) => setSeats(updatedSeats)}
+            snapToGrid={snapToGrid}
+            setSnapToGrid={setSnapToGrid}
           />
         }
         centerContent={
@@ -48,6 +51,8 @@ const RegisterEventPage: React.FC = () => {
             seats={seats}
             setSeats={setSeats}
             isDateSidebarOpen={isLeftSidebarOpen}
+            snapToGrid={snapToGrid}
+            setSnapToGrid={setSnapToGrid}
           />
         }
         rightTopContent={<div>rightT</div>}
