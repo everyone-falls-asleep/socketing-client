@@ -34,7 +34,7 @@ const SeatObj = ({ seatData }: SeatProps) => {
 
   return (
     <circle
-      r="20"
+      r="15"
       fill={getStatusColor()}
       stroke="#1F2937"
       strokeWidth="2"

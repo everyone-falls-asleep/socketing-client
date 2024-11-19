@@ -59,8 +59,8 @@ const SeatControlPanel: React.FC<SeatControlPanelProps> = ({
         seats.map((seat) => {
           const new_seat: NewSeat = {
             event_id: event.id,
-            cx: seat.cx || seat.x!,
-            cy: seat.cy || seat.y!,
+            cx: seat.cx,
+            cy: seat.cy,
             area: seat.area,
             row: seat.row,
             number: seat.number,
@@ -100,7 +100,7 @@ const SeatControlPanel: React.FC<SeatControlPanelProps> = ({
         } else {
           toast.error(postSeatErrorMessages.general);
         }
-        return; // 처리 중단
+        return;
       }
 
       toast.success("모든 좌석이 성공적으로 생성되었습니다.");
