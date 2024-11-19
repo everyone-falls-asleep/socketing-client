@@ -13,8 +13,10 @@ export interface NewReservationResponseData {
   eventDate: EventDate;
   seat: Seat;
 
-  created_at: string;
-  update_at: string;
+  created_at?: string;
+  update_at?: string;
 }
 
 export type NewReservationResponse = ApiResponse<NewReservationResponseData>;
+
+export type ReservationsResponse = ApiResponse<NewReservationResponseData[]>;

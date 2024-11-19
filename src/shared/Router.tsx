@@ -9,6 +9,7 @@ import WaitingRoomPage from "../components/pages/WatingRoomPage";
 import SearchResultsPage from "../components/pages/SearchResultsPage";
 import RegisterEventPage from "../components/pages/RegisterEventPage";
 import { WrappedReservationPage } from "../components/wrappers/WrappedReservationPage";
+import AdminPage from "../components/pages/AdminPage";
 
 const Router = () => {
   return (
@@ -38,6 +39,7 @@ const Router = () => {
           path="reservation-info"
           element={<ReservationConfirmationPage />}
         />
+        <Route path="admin" element={<AdminPage />} />
       </Routes>
     </BrowserRouter>
   );

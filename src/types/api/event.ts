@@ -45,7 +45,7 @@ export interface NewEventResponseData {
   cast: string;
   ageLimit: number;
   eventDates?: string[];
-  svg: string;
+  svg?: string;
 }
 
 export type NewEventResponse = ApiResponse<NewEventResponseData>;

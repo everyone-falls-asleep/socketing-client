@@ -29,8 +29,9 @@ export interface UserResponseData {
   nickname: string;
   email: string;
   profileImage: string;
-  createdAt: string;
-  updatedAt: string;
+  createdAt?: string;
+  updatedAt?: string;
+  role: string;
 }
 
 export type UserResponse = ApiResponse<UserResponseData>;

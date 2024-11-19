@@ -2,10 +2,11 @@ import axios from "axios";
 import {
   NewReservation,
   NewReservationResponse,
+  ReservationsResponse,
 } from "../../types/api/reservation";
 import { baseURL } from "../../constants/api";
 
-const API_URL = baseURL + "reservations/";
+const API_URL = baseURL + "reservations";
 
 const api = axios.create({
   baseURL: API_URL,
@@ -33,6 +34,22 @@ const fetchOneReservation = async (
   return response.data;
 };
 
+const fetchReservationsByEvent = async (
+  event_id: string
+): Promise<ReservationsResponse> => {
+  const response = await api.get<ReservationsResponse>(API_URL, {
+    params: {
+      eventId: event_id,
+    },
+  });
+  return response.data;
+};
+
+const fetchReservationsByUser = async (): Promise<ReservationsResponse> => {
+  const response = await api.get<ReservationsResponse>(API_URL);
+  return response.data;
+};
+
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("authToken");
@@ -49,4 +66,9 @@ api.interceptors.request.use(
   }
 );
 
-export { createNewReservation, fetchOneReservation };
+export {
+  createNewReservation,
+  fetchOneReservation,
+  fetchReservationsByEvent,
+  fetchReservationsByUser,
+};
