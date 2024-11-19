@@ -1,4 +1,3 @@
-import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { jwtDecode } from "jwt-decode";
 import { useContext } from "react";
@@ -7,7 +6,6 @@ import { getUserInfo } from "../api/users/usersApi";
 import "react-toastify/dist/ReactToastify.css";
 
 export const useAuth = () => {
-  const navigate = useNavigate();
   const { setUserId } = useContext(UserContext);
 
   const saveAuthInfo = (token: string) => {
@@ -38,7 +36,7 @@ export const useAuth = () => {
         const name = email.split("@")[0];
         localStorage.setItem("name", name);
         toast.success(`안녕하세요, ${name}님!`);
-        navigate("/");
+        // navigate("/");
       }
     } catch (error) {
       console.error("사용자 정보 불러오기 실패:", error);

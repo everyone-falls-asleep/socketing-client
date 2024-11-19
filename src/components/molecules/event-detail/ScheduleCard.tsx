@@ -23,16 +23,20 @@ const ScheduleCard = ({ eventId, eventDateId, date }: ScheduleCardProps) => {
   };
 
   return (
-    <div className="event-card h-28 flex items-center justify-between px-8 py-4 mx-2 mb-2 border border-gray-300 rounded-lg shadow-sm cursor-pointer hover:bg-gray-100 transition">
+    <div className="event-card h-22 flex items-center justify-between px-8 py-4 mx-2 mb-2 rounded-lg border shadow-lg hover:bg-gray-100 transition">
       <div className="schedule-info flex gap-4">
         <div
           id="schedule-date"
-          className=" text-2xl font-semibold text-gray-800"
+          className=" text-lg font-semibold text-gray-800 flex items-end"
         >
-          {year}년 {month}월 {day}일
+          <p>
+            {year}년 {month}월 {day}일
+          </p>
         </div>
-        <div className="schedule-time text-xl text-gray-600">
-          {hour}시 {minute}분
+        <div className="schedule-time text-base text-gray-600 flex items-end">
+          <p className="">
+            {hour}시 {minute}분
+          </p>
         </div>
       </div>
 

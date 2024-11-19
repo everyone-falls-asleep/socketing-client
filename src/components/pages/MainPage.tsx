@@ -22,13 +22,7 @@ const MainPage = () => {
 
   return (
     <MainLayout>
-      <MainPageTemplate 
-        mainBanner={<MainBanner events={eventData} />}
-        impending
-      />
-
       <MainBanner events={eventData}></MainBanner>
-      {/* <CategorySection></CategorySection> */}
       <CardList events={eventData}></CardList>
     </MainLayout>
   );

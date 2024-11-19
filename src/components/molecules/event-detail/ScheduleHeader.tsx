@@ -36,7 +36,7 @@ const ScheduleHeader = ({
   // };
 
   return (
-    <div id="schedule-header" className="mb-4 rounded-sm bg-rose-100 w-full">
+    <div id="schedule-header" className="mb-4 rounded-sm w-full">
       {/* <div
         id="shcedule-header-label-container"
         className="flex items-center p-4"
@@ -47,7 +47,7 @@ const ScheduleHeader = ({
       </div> */}
       <div
         id="schedule-calendar-container"
-        className="w-full p-2 flex justify-center"
+        className="w-full flex justify-center"
       >
         <ScheduleCalendar
           validDates={validDates}

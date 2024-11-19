@@ -10,17 +10,6 @@ const EventDetailHeader = () => {
     return null;
   }
 
-  const formattedDate = new Date(event.eventDates[0].date)
-    .toISOString()
-    .replace("T", " ")
-    .slice(0, 16);
-
-  const year = formattedDate.slice(0, 4);
-  const month = formattedDate.slice(5, 7);
-  const day = formattedDate.slice(8, 10);
-  const hour = formattedDate.slice(11, 13);
-  const minute = formattedDate.slice(14, 16);
-
   const onDeleteHandler = async () => {
     try {
       await deleteEvent(event.id);
@@ -59,11 +48,7 @@ const EventDetailHeader = () => {
           className="flex flex-col flex-grow h-full p-4 justify-center items-start"
         >
           <h1 className="text-2xl font-bold py-2">{event.title}</h1>
-          <p className="pl-1 font-bold text-stone-700">{event.place}</p>
-          <p className="pl-1 font-bold text-stone-700">{event.cast}</p>
-          <p className="pl-1 font-bold text-stone-700">
-            {year}년 {month}월 {day}일 {hour}시 {minute}분
-          </p>
+          <p className="pl-1 font-bold text-stone-600">{event.place}</p>
         </div>
         <div>
           <button

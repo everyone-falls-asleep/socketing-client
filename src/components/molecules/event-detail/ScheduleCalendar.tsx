@@ -46,7 +46,7 @@ const ScheduleCalendar = ({
   return (
     <div
       id="calendar"
-      className="schedule-filter w-96 p-6 bg-white rounded-lg shadow-lg"
+      className="schedule-filter w-96 p-6 bg-white rounded-lg shadow-2xl"
     >
       <div className="flex justify-between items-center mb-6">
         <button
@@ -97,8 +97,8 @@ const ScheduleCalendar = ({
               }}
               className={`
                   flex justify-center items-center p-4 rounded-lg focus:outline-none transition-colors duration-200 text-center text-base font-medium
-                  ${isSelected ? "bg-yellow-500" : "bg-gray-200 text-gray-700"}
-                  ${isHighlighted && !isSelected ? "bg-yellow-200 hover:bg-yellow-300" : ""}
+                  ${isSelected ? "bg-rose-500" : "bg-gray-200 text-gray-700"}
+                  ${isHighlighted && !isSelected ? "bg-rose-300 hover:bg-rose-400" : ""}
                   ${!isHighlighted && "cursor-not-allowed"}
                 `}
               disabled={!isHighlighted}

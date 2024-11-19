@@ -44,19 +44,23 @@ const EventDetailAboutTab = () => {
             <h2 className="text-2xl font-bold mb-2">{event.title}</h2>
             <div className="pl-2 flex flex-col">
               <div className="flex gap-2">
-                <p className="text-gray-600 text-lg w-24">장소</p>
+                <p className="text-gray-600 text-lg font-bold w-24">장소</p>
                 <p className="text-gray-600 text-lg">{event.place}</p>
               </div>
               <div className="flex gap-2">
-                <p className="text-gray-600 text-lg w-24">출연</p>
+                <p className="text-gray-600 text-lg font-bold w-24">출연</p>
                 <p className="text-gray-600 text-lg">{event.cast}</p>
               </div>
               <div className="flex gap-2">
-                <p className="text-gray-600 text-lg w-24">연령 제한</p>
+                <p className="text-gray-600 text-lg font-bold w-24">
+                  연령 제한
+                </p>
                 <p className="text-gray-600 text-lg">{event.ageLimit}세 이상</p>
               </div>
               <div className="flex gap-2">
-                <p className="text-gray-600 text-lg w-24">공연 일정</p>
+                <p className="text-gray-600 text-lg font-bold w-24">
+                  공연 일정
+                </p>
                 <p>
                   <ul className="list-disc pl-6">
                     {event.eventDates.map((schedule) => (

@@ -22,7 +22,7 @@ const EventDetailScheduleTab = () => {
       <div className="tab-content-title-container">
         <h2 className="tab-content-title">공연 일정</h2>
       </div>
-      <div className="flex px-4">
+      <div className="flex px-4 gap-10">
         <div className="w-[50%]">
           <ScheduleHeader
             validDates={validDates}
@@ -30,7 +30,7 @@ const EventDetailScheduleTab = () => {
             onDateSelect={onDateSelect}
           />
         </div>
-        <div className="w-[50%]">
+        <div className="w-[50%] pt-5">
           <ScheduleList
             filteredEvent={filteredEvent}
             selectedDates={selectedDates}
