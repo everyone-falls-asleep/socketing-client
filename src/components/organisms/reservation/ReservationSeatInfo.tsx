@@ -73,9 +73,9 @@ const ReservationSeatInfo = () => {
   return (
     <div>
       {selectedSeat ? (
-        <div className="space-y-4 p-4">
-          <h2 className="text-lg font-bold">좌석 정보</h2>
-          <div className="space-y-2">
+        <div className="space-y-4 p-1">
+          <h2 className="text-lg font-bold pl-1 text-gray-800">좌석 정보</h2>
+          <div className="border p-3 text-gray-800 rounded-lg space-y-2">
             <p>구역: {selectedSeat.area}</p>
             <p>열: {selectedSeat.row}</p>
             <p>번호: {selectedSeat.number}</p>
@@ -84,9 +84,7 @@ const ReservationSeatInfo = () => {
           <div className="text-center">
             <Button
               onClick={() => void handleReservationSubmit()}
-              className="p-4 w-full"
-              // className="w-[80%] py-3 bg-blue-500 text-white rounded-lg
-              //                hover:bg-blue-600 transition-colors"
+              className="p-4 w-full transition-colors"
             >
               예매하기
             </Button>
