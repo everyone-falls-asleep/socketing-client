@@ -11,7 +11,10 @@ import { createNewReservation } from "../../../api/reservations/reservationsApi"
 import { useSeatStatus } from "../../../hooks/useSeatStatus";
 import { postReservationErrorMessages } from "../../../constants/errorMessages";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
+
 const ReservationSeatInfo = () => {
+  const navigate = useNavigate();
   const { selectedSeat, eventId, eventDateId, socket } =
     useContext(ReservationContext);
 
@@ -25,8 +28,11 @@ const ReservationSeatInfo = () => {
     AxiosError<ApiErrorResponse>,
     NewReservation
   >(createNewReservation, {
-    onSuccess: () => {
-      
+    onSuccess: (response: NewReservationResponse) => {
+      if (response.data?.id) {
+        navigate(`/reservation-confirmation/${response.data.id}`);
+      }
+      reserveSeat();
     },
 
     onError: (error: AxiosError<ApiErrorResponse>) => {
@@ -56,12 +62,7 @@ const ReservationSeatInfo = () => {
           eventDateId,
           seatId: selectedSeat.id,
         };
-        const response =
-          await createReservationMutation.mutateAsync(reservation);
-        console.log(response);
-        if (response.message == "Success") {
-          reserveSeat();
-        }
+        await createReservationMutation.mutateAsync(reservation);
       }
     } catch (error) {
       console.log(error);

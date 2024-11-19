@@ -8,6 +8,7 @@ export interface NewReservation {
   seatId: string;
 }
 export interface NewReservationResponseData {
+  id: string;
   user: UserResponseData;
   eventDate: EventDate;
   seat: Seat;

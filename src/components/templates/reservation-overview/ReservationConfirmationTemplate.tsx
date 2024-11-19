@@ -1,7 +1,7 @@
 import MainLayout from "../../layout/MainLayout";
 import Title from "../../atoms/titles/title/Title";
 import Font from "../../atoms/fonts/Font";
-
+// import { NewReservationData } from "../../../types/api/reservation";
 interface ReservationData {
   user: {
     nickname: string;
@@ -26,12 +26,12 @@ interface ReservationData {
 }
 
 interface ReservationConfirmProps {
-  title: string;
+  // title: string;
   reservation: ReservationData;
+  //content : 유기체.
 }
 
-const ReservationOverviewTemplate = ({
-  title,
+const ReservationConfirmationTemplate = ({
   reservation,
 }: ReservationConfirmProps) => {
   const formatDate = (dateString: string) => {
@@ -49,7 +49,7 @@ const ReservationOverviewTemplate = ({
   return (
     <MainLayout>
       <div className="max-w-3xl mx-auto p-6">
-        <Title className="text-center mb-8">{title}</Title>
+        <Title className="text-center mb-8">{"예매가 완료되었습니다."}</Title>
 
         <div className="bg-white rounded-lg shadow-lg overflow-hidden">
           {/* Header Section with Event Image */}
@@ -132,4 +132,4 @@ const ReservationOverviewTemplate = ({
   );
 };
 
-export default ReservationOverviewTemplate;
+export default ReservationConfirmationTemplate;

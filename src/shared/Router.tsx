@@ -31,7 +31,7 @@ const Router = () => {
         {/* 검색 결과 페이지 */}
         <Route path="waiting" element={<WaitingRoomPage />} />
         <Route
-          path="reservation-confirmation"
+          path="reservation-confirmation/:reservationId"
           element={<ReservationConfirmationPage />}
         />
         <Route
