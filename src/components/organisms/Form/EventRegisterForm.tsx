@@ -75,9 +75,12 @@ const EventRegisterForm = () => {
   };
 
   return (
-    <form onSubmit={(e) => void handleSubmit(onSubmit)(e)}>
-      <div>
-        <Container width="2000px" className="flex items-start">
+    <form
+      onSubmit={(e) => void handleSubmit(onSubmit)(e)}
+      className="w-full h-full"
+    >
+      <div className="w-full h-full flex items-center">
+        <Container width="2000px" className="flex items-start ">
           <div className="flex flex-col items-start mr-4">
             <label>공연 이름:</label>
             <Input
@@ -144,8 +147,7 @@ const EventRegisterForm = () => {
               <span className="text-red-500">{errors.ageLimit.message}</span>
             )}
           </div>
-        </Container>
-        <Container width="2000px" className="flex items-start mt-4">
+
           <div className="flex flex-col items-start mr-4">
             <label>공연 날짜:</label>
             <Controller

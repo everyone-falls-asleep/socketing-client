@@ -83,3 +83,8 @@ export interface NewSeatResponseData {
 }
 
 export type NewSeatResponse = ApiResponse<NewSeatResponseData>;
+
+export interface Point {
+  x: number;
+  y: number;
+}
