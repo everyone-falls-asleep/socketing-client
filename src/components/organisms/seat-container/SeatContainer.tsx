@@ -1,7 +1,8 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useContext } from "react";
 import { Seat } from "../../../types/api/event";
 import SeatObj from "../../atoms/seats/SeatObj";
 import SvgWrapper from "../../../utils/SvgWrapper";
+import { ReservationContext } from "../../../store/ReservationContext";
 
 interface Point {
   x: number;
@@ -19,11 +20,32 @@ const SeatContainer: React.FC<SeatContainerProps> = ({
   svg,
   viewBox = "0 0 10240 7680",
 }) => {
+  const { socket } = useContext(ReservationContext);
+
   const containerRef = useRef<HTMLDivElement>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [startPoint, setStartPoint] = useState<Point>({ x: 0, y: 0 });
   const [translate, setTranslate] = useState<Point>({ x: 0, y: 0 });
   const [scale, setScale] = useState(1);
+  const [serverTime, setServerTime] = useState("");
+  const [connectedUserNum, setConnectedUserNum] = useState(0);
+
+  useEffect(() => {
+    if (!socket) return;
+
+    socket.on("serverTime", (data) => {
+      const formattedTime = new Date(data).toLocaleString();
+      setServerTime(formattedTime);
+    });
+
+    socket.on("userList", (data) => {
+      setConnectedUserNum(data.count);
+    });
+
+    return () => {
+      socket.off("serverTime");
+    };
+  }, [socket]);
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -104,7 +126,14 @@ const SeatContainer: React.FC<SeatContainerProps> = ({
           viewBox={viewBox}
         />
       </div>
-
+      <h2>Server Time: </h2>
+      {serverTime ? <p>{serverTime}</p> : <p>Waiting for server time...</p>}
+      <h2>접속중인 사용자 수: </h2>
+      {connectedUserNum ? (
+        <p>{connectedUserNum}</p>
+      ) : (
+        <p>Waiting for number of connected users...</p>
+      )}
       <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-white rounded-lg shadow-lg p-2 flex gap-2">
         <button
           onClick={() => setScale((prev) => Math.min(prev + 0.2, 3))}

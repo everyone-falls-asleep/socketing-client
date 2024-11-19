@@ -1,8 +1,6 @@
 import React, { PropsWithChildren, createContext, useState } from "react";
 import { Seat } from "../types/api/event";
-import { createMockSocket } from "../mocks/mockSocket";
-
-type MockSocketType = ReturnType<typeof createMockSocket>;
+import { SocketType } from "../types/api/socket";
 
 interface ReservationContextType {
   selectedSeat: Seat | null;
@@ -11,8 +9,8 @@ interface ReservationContextType {
   setEventId: (eventId: string | null) => void;
   eventDateId: string | null;
   setEventDateId: (eventDateId: string | null) => void;
-  socket: MockSocketType | null;
-  setSocket: (socket: MockSocketType | null) => void;
+  socket: SocketType | null;
+  setSocket: (socket: SocketType | null) => void;
 }
 
 export const ReservationContext = createContext<ReservationContextType>({
@@ -32,7 +30,7 @@ export const ReservationProvider: React.FC<PropsWithChildren> = ({
   const [selectedSeat, setSelectedSeat] = useState<Seat | null>(null);
   const [eventId, setEventId] = useState<string | null>("");
   const [eventDateId, setEventDateId] = useState<string | null>("");
-  const [socket, setSocket] = useState<MockSocketType | null>(null);
+  const [socket, setSocket] = useState<SocketType | null>(null);
 
   return (
     <ReservationContext.Provider

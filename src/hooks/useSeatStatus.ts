@@ -1,11 +1,9 @@
 import { useState, useEffect, useCallback } from "react";
 import { SeatStatus } from "../types/api/socket";
-import { createMockSocket } from "../mocks/mockSocket";
-
-type MockSocketType = ReturnType<typeof createMockSocket>;
+import { SocketType } from "../types/api/socket";
 
 interface UseSeatStatusProps {
-  socket: MockSocketType | null;
+  socket: SocketType | null;
   seatId: string;
 }
 

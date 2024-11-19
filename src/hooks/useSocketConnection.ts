@@ -1,14 +1,22 @@
 import { useEffect, useRef, useState } from "react";
-import { createMockSocket } from "../mocks/mockSocket";
-
-type MockSocketType = ReturnType<typeof createMockSocket>;
+import { io, Socket } from "socket.io-client";
+import { SOCKET_SERVER_URL } from "../constants/socket";
+import {
+  ServerToClientEvents,
+  ClientToServerEvents,
+} from "../types/api/socket";
 
 export const useSocketConnection = () => {
   const [isConnected, setIsConnected] = useState(false);
-  const socketRef = useRef<MockSocketType | null>(null);
+  const socketRef = useRef<Socket<
+    ServerToClientEvents,
+    ClientToServerEvents
+  > | null>(null);
 
   useEffect(() => {
-    socketRef.current = createMockSocket();
+    socketRef.current = io(SOCKET_SERVER_URL, {
+      transports: ["websocket"],
+    });
 
     socketRef.current.on("connect", () => {
       console.log("Socket connected!");
