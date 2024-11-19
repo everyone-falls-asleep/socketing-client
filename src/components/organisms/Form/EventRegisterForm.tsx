@@ -28,7 +28,7 @@ const EventRegisterForm = () => {
       ageLimit: 12,
       eventDates: [new Date().toISOString().slice(0, 16)],
       svg: "",
-      ticketingStartTime: new Date().toISOString().slice(0, 16),
+      ticketingStartTime: new Date().toISOString(),
     },
   });
 
@@ -57,6 +57,7 @@ const EventRegisterForm = () => {
   });
 
   const onSubmit = (data: NewEvent) => {
+    console.log("submitted data", data);
     createEventMutation.mutate(data);
   };
 

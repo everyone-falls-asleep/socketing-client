@@ -37,6 +37,7 @@ const createNewEvent = async ({
   ageLimit,
   eventDates,
   svg,
+  ticketingStartTime,
 }: NewEvent): Promise<NewEventResponse> => {
   const response = await api.post<NewEventResponse>(API_URL, {
     title,
@@ -46,6 +47,7 @@ const createNewEvent = async ({
     ageLimit,
     eventDates,
     svg,
+    ticketingStartTime,
   });
   return response.data;
 };
