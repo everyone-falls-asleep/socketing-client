@@ -1,6 +1,6 @@
 import { useEventDetail } from "../../../store/EventDetailContext";
 
-const EventDetailAbout = () => {
+const EventDetailAboutTab = () => {
   const { event } = useEventDetail();
 
   if (!event) {
@@ -47,4 +47,4 @@ const EventDetailAbout = () => {
   );
 };
 
-export default EventDetailAbout;
+export default EventDetailAboutTab;
