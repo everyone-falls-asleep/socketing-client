@@ -76,7 +76,7 @@ const Header = () => {
           <HeaderLogo />
         </div>
         {/* 검색창 */}
-        <div className="hidden md:flex md:w-[55%] lg:w-[55%] justify-center pl-4">
+        <div className="hidden pl-10 lg:flex md:w-[30%] lg:w-[50%] justify-center">
           <div className="flex items-center w-full bg-white rounded-lg overflow-hidden">
             <Input
               type="text"
@@ -95,7 +95,7 @@ const Header = () => {
           </div>
         </div>
         {/* 로그인/로그아웃 상태에 따른 버튼 */}
-        <div className="flex space-x-4 w-[45%] md:w-[45%] lg:w-[45%] justify-end">
+        <div className="flex space-x-4 sm:w-full md:w-[70%] lg:w-[50%] justify-end">
           {!isLogin ? (
             <>
               <Button
@@ -108,7 +108,9 @@ const Header = () => {
           ) : (
             <>
               <div className="flex items-center space-x-4">
-                <span className="text-white">{name}님, 안녕하세요</span>
+                <span className="text-white">
+                  <span className="font-bold">{name}</span>님, 안녕하세요
+                </span>
                 <Button variant="primary" onClick={handleLogout}>
                   로그아웃
                 </Button>
