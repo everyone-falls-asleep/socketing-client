@@ -1,29 +1,21 @@
 import MainLayout from "../../layout/MainLayout";
-import Title from "../../atoms/titles/title/Title";
+import SubTitle from "../../atoms/titles/subtitle/SubTitle";
 import Font from "../../atoms/fonts/Font";
 import { NewReservationResponseData } from "../../../types/api/reservation";
 import { fetchErrorMessages } from "../../../constants/errorMessages";
 
 interface ReservationConfirmProps {
-  // title: string;
   reservation: NewReservationResponseData;
-  //content : 유기체.
+  //content : 다중 예매 시 업데이트 필요
 }
 
 const ReservationConfirmationTemplate = ({
   reservation,
 }: ReservationConfirmProps) => {
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleString("ko-KR", {
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: true,
-    });
-  };
+  const formattedDate = new Date(reservation.eventDate.date)
+    .toISOString()
+    .replace("T", " ")
+    .slice(0, 16);
 
   if (!reservation.eventDate.event) {
     return <div>{fetchErrorMessages.noReservationData}</div>;
@@ -33,7 +25,9 @@ const ReservationConfirmationTemplate = ({
   return (
     <MainLayout>
       <div className="max-w-3xl mx-auto p-6">
-        <Title className="text-center mb-8">{"예매가 완료되었습니다."}</Title>
+        <SubTitle className="text-center mb-8">
+          {"예매가 완료되었습니다."}
+        </SubTitle>
 
         <div className="bg-white rounded-lg shadow-lg overflow-hidden">
           {/* Header Section with Event Image */}
@@ -44,7 +38,9 @@ const ReservationConfirmationTemplate = ({
               className="w-full h-full object-cover opacity-50"
             />
             <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/60">
-              <Title className="text-white mb-2">{reservationData.title}</Title>
+              <SubTitle className="!text-white font-bold mb-2">
+                {reservationData.title}
+              </SubTitle>
               <Font className="text-white/90">
                 출연진: {reservationData.cast}
               </Font>
@@ -57,12 +53,12 @@ const ReservationConfirmationTemplate = ({
             <div className="flex items-center space-x-4 p-4 bg-gray-50 rounded-lg">
               <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center">
                 <span className="text-purple-600 font-bold">
-                  {reservation.user.nickname.slice(0, 1).toUpperCase()}
+                  {reservation.user.email.slice(0, 1)}
                 </span>
               </div>
               <div>
                 <Font className="font-bold text-gray-800">
-                  {reservation.user.nickname}
+                  {reservation.user.email.slice(0, 3)}
                 </Font>
               </div>
             </div>
@@ -73,9 +69,7 @@ const ReservationConfirmationTemplate = ({
                 <div className="w-6 text-gray-400">📅</div>
                 <div>
                   <Font className="font-bold text-gray-700">일시</Font>
-                  <Font className="text-gray-600">
-                    {formatDate(reservation.eventDate.date)}
-                  </Font>
+                  <Font className="text-gray-600">{formattedDate}</Font>
                 </div>
               </div>
 
