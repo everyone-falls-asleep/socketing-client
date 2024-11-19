@@ -9,17 +9,23 @@ interface ScheduleListProps {
 const ScheduleList = ({ filteredEvent, selectedDates }: ScheduleListProps) => {
   const filteredSchedules =
     selectedDates.length === 0
-      ? filteredEvent.eventDates
-      : filteredEvent.eventDates.filter((schedule: EventDate) => {
-          const scheduleDate = new Date(schedule.date);
-          return selectedDates.some((selectedDate) => {
-            return (
-              selectedDate.getDate() === scheduleDate.getDate() &&
-              selectedDate.getMonth() === scheduleDate.getMonth() &&
-              selectedDate.getFullYear() === scheduleDate.getFullYear()
-            );
-          });
-        });
+      ? [...filteredEvent.eventDates].sort(
+          (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
+        )
+      : filteredEvent.eventDates
+          .filter((schedule: EventDate) => {
+            const scheduleDate = new Date(schedule.date);
+            return selectedDates.some((selectedDate) => {
+              return (
+                selectedDate.getDate() === scheduleDate.getDate() &&
+                selectedDate.getMonth() === scheduleDate.getMonth() &&
+                selectedDate.getFullYear() === scheduleDate.getFullYear()
+              );
+            });
+          })
+          .sort(
+            (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
+          );
 
   return (
     <div className="schedule-list">
