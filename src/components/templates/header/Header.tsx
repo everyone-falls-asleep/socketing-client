@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Button from "../../atoms/buttons/Button";
 import { useNavigate } from "react-router-dom";
 import Input from "../../atoms/inputs/Input";
@@ -9,7 +9,17 @@ const Header = () => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [isLogin, setIsLogin] = useState(false);
+
   const name = localStorage.getItem("name");
+
+  useEffect(() => {
+    if (localStorage.getItem("authToken")) {
+      setIsLogin(true);
+    } else {
+      setIsLogin(false);
+    }
+  });
 
   const handleSearch = () => {
     if (searchQuery.trim() !== "") {
@@ -24,6 +34,12 @@ const Header = () => {
     if (event.key === "Enter") {
       handleSearch();
     }
+  };
+
+  const handleLogout = () => {
+    localStorage.setItem("authToken", "");
+    localStorage.removeItem("nickname");
+    localStorage.removeItem("name");
   };
 
   return (
@@ -56,7 +72,7 @@ const Header = () => {
             </button>
           </div>
         </div>
-        {!name ? (
+        {!isLogin ? (
           <div className="flex space-x-4 w-[15%] justify-end">
             <Button variant="primary" onClick={() => setIsLoginModalOpen(true)}>
               로그인
@@ -75,6 +91,9 @@ const Header = () => {
             <div className="flex items-center space-x-4">
               <span className="text-white">{name}님, 안녕하세요</span>
             </div>
+            <Button variant="primary" onClick={handleLogout}>
+              로그아웃
+            </Button>
           </div>
         )}
       </header>
