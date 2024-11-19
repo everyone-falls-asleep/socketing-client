@@ -22,6 +22,7 @@ export const fetchErrorMessages = {
   noEventData: "오류 발생: 공연 정보를 불러올 수 없습니다.",
   noSeatsData: "오류 발생: 좌석 정보를 불러올 수 없습니다.",
   noSvgData: "오류 발생: 좌석 배치도를 불러올 수 없습니다.",
+  noReservationData: "오류 발생: 예약 정보를 불러올 수 없습니다.",
 };
 
 const tokenErrorMessage = "로그인 세션이 만료되었습니다. 다시 로그인해주세요.";

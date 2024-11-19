@@ -1,33 +1,12 @@
 import MainLayout from "../../layout/MainLayout";
 import Title from "../../atoms/titles/title/Title";
 import Font from "../../atoms/fonts/Font";
-// import { NewReservationData } from "../../../types/api/reservation";
-interface ReservationData {
-  user: {
-    nickname: string;
-    email: string;
-    profileImage: string | null;
-  };
-  eventDate: {
-    date: string;
-    event: {
-      title: string;
-      thumbnail: string;
-      place: string;
-      cast: string;
-      ageLimit: number;
-    };
-  };
-  seat: {
-    area: number;
-    row: number;
-    number: number;
-  };
-}
+import { NewReservationResponseData } from "../../../types/api/reservation";
+import { fetchErrorMessages } from "../../../constants/errorMessages";
 
 interface ReservationConfirmProps {
   // title: string;
-  reservation: ReservationData;
+  reservation: NewReservationResponseData;
   //content : 유기체.
 }
 
@@ -46,6 +25,11 @@ const ReservationConfirmationTemplate = ({
     });
   };
 
+  if (!reservation.eventDate.event) {
+    return <div>{fetchErrorMessages.noReservationData}</div>;
+  }
+  const reservationData = reservation.eventDate.event;
+
   return (
     <MainLayout>
       <div className="max-w-3xl mx-auto p-6">
@@ -55,16 +39,14 @@ const ReservationConfirmationTemplate = ({
           {/* Header Section with Event Image */}
           <div className="relative h-48 bg-gradient-to-r from-purple-600 to-blue-600">
             <img
-              src={reservation.eventDate.event.thumbnail}
-              alt={reservation.eventDate.event.title}
+              src={reservationData.thumbnail}
+              alt={reservationData.title}
               className="w-full h-full object-cover opacity-50"
             />
             <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/60">
-              <Title className="text-white mb-2">
-                {reservation.eventDate.event.title}
-              </Title>
+              <Title className="text-white mb-2">{reservationData.title}</Title>
               <Font className="text-white/90">
-                출연진: {reservation.eventDate.event.cast}
+                출연진: {reservationData.cast}
               </Font>
             </div>
           </div>
@@ -101,9 +83,7 @@ const ReservationConfirmationTemplate = ({
                 <div className="w-6 text-gray-400">📍</div>
                 <div>
                   <Font className="font-bold text-gray-700">장소</Font>
-                  <Font className="text-gray-600">
-                    {reservation.eventDate.event.place}
-                  </Font>
+                  <Font className="text-gray-600">{reservationData.place}</Font>
                 </div>
               </div>
 

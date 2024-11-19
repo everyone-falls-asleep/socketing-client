@@ -24,6 +24,15 @@ const createNewReservation = async ({
   return response.data;
 };
 
+const fetchOneReservation = async (
+  reservation_id: string
+): Promise<NewReservationResponse> => {
+  const response = await api.get<NewReservationResponse>(
+    API_URL + reservation_id
+  );
+  return response.data;
+};
+
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("authToken");
@@ -40,4 +49,4 @@ api.interceptors.request.use(
   }
 );
 
-export { createNewReservation };
+export { createNewReservation, fetchOneReservation };

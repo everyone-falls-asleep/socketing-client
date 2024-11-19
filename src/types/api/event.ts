@@ -17,7 +17,7 @@ export interface Event {
 export interface EventDate {
   id: string;
   date: string;
-  event?: EventsResponse;
+  event?: NewEventResponseData;
   createdAt?: string;
   updatedAt?: string;
 }
