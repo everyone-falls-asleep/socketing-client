@@ -40,6 +40,11 @@ const Header = () => {
     localStorage.setItem("authToken", "");
     localStorage.removeItem("nickname");
     localStorage.removeItem("name");
+    setIsLogin(false);
+  };
+
+  const handleRegister = () => {
+    navigate("/register");
   };
 
   return (
@@ -54,8 +59,8 @@ const Header = () => {
           </HeaderLogo>
         </div>
         {/* 검색창 */}
-        <div className="flex-grow hidden md:flex justify-center">
-          <div className="flex items-center w-[55%] bg-white rounded-lg overflow-hidden">
+        <div className="hidden md:flex md:w-[55%] lg:w-[55%] justify-center pl-4">
+          <div className="flex items-center w-full bg-white rounded-lg overflow-hidden">
             <Input
               type="text"
               placeholder="공연 검색"
@@ -72,33 +77,35 @@ const Header = () => {
             </button>
           </div>
         </div>
-        {!isLogin ? (
-          <div className="flex space-x-4 w-[15%] justify-end">
-            <Button variant="primary" onClick={() => setIsLoginModalOpen(true)}>
-              로그인
-            </Button>
-            {/* <Button
-              variant="primary"
-              onClick={() => {
-                navigate("/join");
-              }}
-            >
-              회원가입
-            </Button> */}
-          </div>
-        ) : (
-          <div className="flex space-x-4 w-[15%] justify-end">
-            <div className="flex items-center space-x-4">
-              <span className="text-white">{name}님, 안녕하세요</span>
-            </div>
-            <Button variant="primary" onClick={handleLogout}>
-              로그아웃
-            </Button>
-          </div>
-        )}
+        {/* 로그인/로그아웃 상태에 따른 버튼 */}
+        <div className="flex space-x-4 w-[45%] md:w-[45%] lg:w-[45%] justify-end">
+          {!isLogin ? (
+            <>
+              <Button
+                variant="primary"
+                onClick={() => setIsLoginModalOpen(true)}
+              >
+                로그인
+              </Button>
+            </>
+          ) : (
+            <>
+              <div className="flex items-center space-x-4">
+                <span className="text-white">{name}님, 안녕하세요</span>
+                <Button variant="primary" onClick={handleLogout}>
+                  로그아웃
+                </Button>
+              </div>
+              <div className="hidden md:block">
+                <Button variant="primary" onClick={handleRegister}>
+                  공연 등록하기
+                </Button>
+              </div>
+            </>
+          )}
+        </div>
       </header>
 
-      {/* 로그인 모달 */}
       <LoginModal
         isOpen={isLoginModalOpen}
         onClose={() => setIsLoginModalOpen(false)}
