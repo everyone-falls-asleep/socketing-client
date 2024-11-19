@@ -27,11 +27,11 @@
 }
 
 .tab-content-title-container {
-  @apply text-start p-2;
+  @apply text-start p-2 mb-2;
 }
 
 .tab-content-title {
-  @apply text-2xl font-bold bg-white;
+  @apply text-2xl font-bold text-black;
 }
 
 .selected-date-label {

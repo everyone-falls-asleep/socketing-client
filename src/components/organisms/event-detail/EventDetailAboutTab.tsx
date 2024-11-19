@@ -7,14 +7,32 @@ const EventDetailAboutTab = () => {
     return null;
   }
 
+  const formatDateTime = (date: string) => {
+    const formattedDate = new Date(date)
+      .toISOString()
+      .replace("T", " ")
+      .slice(0, 16);
+
+    const year = formattedDate.slice(0, 4);
+    const month = formattedDate.slice(5, 7);
+    const day = formattedDate.slice(8, 10);
+    const hour = formattedDate.slice(11, 13);
+    const minute = formattedDate.slice(14, 16);
+
+    return `${year}년 ${month}월 ${day}일 ${hour}시 ${minute}분`;
+  };
+
   return (
-    <div className="px-2">
+    <>
       <div id="event-content-title" className="tab-content-title-container">
         <h2 className="tab-content-title">공연 소개</h2>
       </div>
-      <div id="event-about" className="content-container bg-slate-400">
-        <div key={event.id} className="event-details p-2 flex">
-          <div className="h-full flex justify-center w-1/2">
+      <div id="event-about" className="content-container">
+        <div
+          key={event.id}
+          className="event-details p-2 flex justify-start gap-10"
+        >
+          <div className="h-96 flex justify-center">
             <img
               src={event.thumbnail}
               alt={event.title}
@@ -22,28 +40,38 @@ const EventDetailAboutTab = () => {
             />
           </div>
 
-          <div className="w-1/2 pl-4">
-            <h2 className="text-2xl font-bold">{event.title}</h2>
-            <p className="text-gray-600 text-lg">{event.place}</p>
-            <p className="text-gray-600 text-lg">출연: {event.cast}</p>
-            <p className="text-gray-600 text-lg">
-              연령 제한: {event.ageLimit}세 이상
-            </p>
-
-            <div className="mt-4">
-              <h3 className="text-xl font-semibold">공연 일정</h3>
-              <ul className="list-disc pl-6">
-                {event.eventDates.map((schedule) => (
-                  <li key={schedule.id} className="text-gray-600 text-lg">
-                    {new Date(schedule.date).toLocaleString()}
-                  </li>
-                ))}
-              </ul>
+          <div id="event-detail-about-content">
+            <h2 className="text-2xl font-bold mb-2">{event.title}</h2>
+            <div className="pl-2 flex flex-col">
+              <div className="flex gap-2">
+                <p className="text-gray-600 text-lg w-24">장소</p>
+                <p className="text-gray-600 text-lg">{event.place}</p>
+              </div>
+              <div className="flex gap-2">
+                <p className="text-gray-600 text-lg w-24">출연</p>
+                <p className="text-gray-600 text-lg">{event.cast}</p>
+              </div>
+              <div className="flex gap-2">
+                <p className="text-gray-600 text-lg w-24">연령 제한</p>
+                <p className="text-gray-600 text-lg">{event.ageLimit}세 이상</p>
+              </div>
+              <div className="flex gap-2">
+                <p className="text-gray-600 text-lg w-24">공연 일정</p>
+                <p>
+                  <ul className="list-disc pl-6">
+                    {event.eventDates.map((schedule) => (
+                      <li key={schedule.id} className="text-gray-600 text-lg">
+                        {formatDateTime(schedule.date)}
+                      </li>
+                    ))}
+                  </ul>
+                </p>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

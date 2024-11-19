@@ -18,20 +18,26 @@ const EventDetailScheduleTab = () => {
   };
 
   return (
-    <div id="event-schedule" className="p-2">
+    <>
       <div className="tab-content-title-container">
         <h2 className="tab-content-title">공연 일정</h2>
       </div>
-      <ScheduleHeader
-        validDates={validDates}
-        selectedDates={selectedDates}
-        onDateSelect={onDateSelect}
-      />
-      <ScheduleList
-        filteredEvent={filteredEvent}
-        selectedDates={selectedDates}
-      />
-    </div>
+      <div className="flex px-4">
+        <div className="w-[50%]">
+          <ScheduleHeader
+            validDates={validDates}
+            selectedDates={selectedDates}
+            onDateSelect={onDateSelect}
+          />
+        </div>
+        <div className="w-[50%]">
+          <ScheduleList
+            filteredEvent={filteredEvent}
+            selectedDates={selectedDates}
+          />
+        </div>
+      </div>
+    </>
   );
 };
 
