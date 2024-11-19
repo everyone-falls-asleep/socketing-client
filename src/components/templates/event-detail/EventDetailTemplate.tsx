@@ -23,8 +23,12 @@ const EventDetailTemplate = ({
   return (
     <div>
       <div className="relative w-full h-36">{eventDetailHeader}</div>
-      <div id="event-detail-contents" className="px-10 py-5">
-        <TabLayout tabs={["일정", "공연 정보"]} tabContents={tabContents} />
+      <div id="event-detail-contents" className="px-20 py-5">
+        <TabLayout
+          className=""
+          tabs={["일정", "공연 정보"]}
+          tabContents={tabContents}
+        />
       </div>
     </div>
   );

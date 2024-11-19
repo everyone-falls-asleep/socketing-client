@@ -18,7 +18,7 @@ const TabLayout = ({ tabs, tabContents, className }: TabLayoutProps) => {
   return (
     <div className={className}>
       <TabMenu tabs={tabs} activeTab={activeTab} onTabClick={handleTabClick} />
-      <TabContent className="" content={tabContents[activeTab]} />
+      <TabContent className="mt-2" content={tabContents[activeTab]} />
     </div>
   );
 };
