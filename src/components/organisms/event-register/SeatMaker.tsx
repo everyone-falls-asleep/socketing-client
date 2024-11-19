@@ -107,11 +107,8 @@ const SeatMaker: React.FC<SeatMakerProps> = ({
 
     const newSeat: Seat = {
       id: `temp-${Date.now()}`,
-      seat_id: `${Date.now()}`,
       cx: Math.round(coordinates.x),
       cy: Math.round(coordinates.y),
-      x: Math.round(coordinates.x),
-      y: Math.round(coordinates.y),
       area: currentArea,
       row: currentRow,
       number: currentNumber,
@@ -123,16 +120,21 @@ const SeatMaker: React.FC<SeatMakerProps> = ({
 
   const handleSeatClick = (seatId: string): void => {
     if (!isEditMode) return;
-    setSeats((prev) => prev.filter((seat) => seat.seat_id !== seatId));
+    setSeats((prev) => {
+      return prev.filter((seat) => {
+        const result = seat.id !== seatId;
+        return result;
+      });
+    });
   };
 
   const renderSeat = (seat: Seat): JSX.Element => (
     <g
-      key={seat.id || seat.seat_id}
-      transform={`translate(${seat.cx || seat.x},${seat.cy || seat.y})`}
+      key={seat.id}
+      transform={`translate(${seat.cx},${seat.cy})`}
       onClick={(e) => {
         e.stopPropagation();
-        handleSeatClick(seat.id || seat.seat_id!);
+        handleSeatClick(seat.id);
       }}
       style={{ cursor: isEditMode ? "pointer" : "default" }}
     >
@@ -144,7 +146,6 @@ const SeatMaker: React.FC<SeatMakerProps> = ({
       />
     </g>
   );
-
   return (
     <div
       ref={containerRef}
