@@ -25,7 +25,13 @@ const CardList = ({ events }: EventListProps) => {
             <div className="p-4">
               <h3 className="text-xl font-semibold mb-2">{event.title}</h3>
               <div className="space-y-1 text-sm text-gray-600">
-                <p>일시: {event.eventDates[0].date}</p>
+                <p>
+                  일시:{" "}
+                  {new Date(event.eventDates[0].date)
+                    .toISOString()
+                    .replace("T", " ")
+                    .slice(0, 16)}
+                </p>
                 <p>장소: {event.place}</p>
               </div>
             </div>

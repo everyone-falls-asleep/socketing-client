@@ -106,7 +106,7 @@ const MainBanner = ({ events }: EventListProps) => {
                     ? new Date(event.ticketingStartTime)
                         .toISOString()
                         .replace("T", " ")
-                        .slice(0, 19)
+                        .slice(0, 16)
                     : "정보 없음"}
                 </p>
                 <button

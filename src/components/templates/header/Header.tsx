@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import Input from "../../atoms/inputs/Input";
 import LoginModal from "../../organisms/auth/LoginModal";
 import HeaderLogo from "../../molecules/header-logo/HeaderLogo";
+import { toast } from "react-toastify";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -26,7 +27,7 @@ const Header = () => {
       navigate(`/search-results/${encodeURIComponent(searchQuery)}`);
       setSearchQuery("");
     } else {
-      alert("검색어를 입력해주세요");
+      toast.error("검색어를 입력해주세요");
     }
   };
 

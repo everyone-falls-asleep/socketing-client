@@ -16,7 +16,10 @@ const ReservationCalendarSideBar: React.FC<DateProps> = ({ dateData }) => {
             className="w-full p-3 text-left rounded-lg hover:bg-blue-50 
               transition-colors border hover:border-blue-500"
           >
-            {dateData.date}
+            {new Date(dateData.date)
+              .toISOString()
+              .replace("T", " ")
+              .slice(0, 16)}
           </button>
         ))}
       </div>
