@@ -14,7 +14,7 @@ const ReservationMinimap = () => {
           </div>
           <div className="flex items-center space-x-3">
             <div className="w-5 h-5 rounded-full border border-gray-400 bg-[#FBBF24]"></div>
-            <span className="text-gray-600">다른 사람이 점유 중인 좌석</span>
+            <span className="text-gray-600">다른 사람이 선택한 좌석</span>
           </div>
         </div>
       </div>

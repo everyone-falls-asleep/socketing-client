@@ -2,30 +2,44 @@ import { Event } from "../../../types/api/event";
 
 const ReservationUpperEvent = (eventData: Event) => {
   return (
-    <div className="flex gap-6 h-full p-5 space-x-6">
+    <div className="flex gap-6 h-full px-5 py-2 space-x-6">
       <img
         src={eventData.thumbnail}
         alt="공연 포스터"
         className="h-full object-cover rounded-lg"
       />
 
-      <div className="flex flex-col space-y-1">
+      <div className="flex flex-col justify-center space-y-1">
         <div>
-          <h1 className="text-2xl font-bold mb-2">{eventData.title}</h1>
+          <div className="flex items-end mb-2 gap-2">
+            <h1 className="text-2xl font-bold">{eventData.title}</h1>
+            <p className="text-base font-bold text-gray-700">99,000원</p>
+          </div>
           <div className="space-y-1 text-gray-700">
-            <p>{eventData.place}</p>
-            <p>
-              {new Date(eventData.eventDates[0].date)
-                .toISOString()
-                .replace("T", " ")
-                .slice(0, 16)}{" "}
-              외 {eventData.eventDates.length - 1}회
-            </p>
-            <p>{String(eventData.ageLimit)}세 이상</p>
-            <p>출연: {eventData.cast}</p>
+            <div className="flex gap-3">
+              <div className="flex gap-2">
+                <p className="font-bold">장소</p>
+                <p>{eventData.place}</p>
+              </div>
+              <div className="flex gap-2">
+                <p className="font-bold">시간</p>
+                <p>
+                  {new Date(eventData.eventDates[0].date)
+                    .toISOString()
+                    .replace("T", " ")
+                    .slice(0, 16)}{" "}
+                  {eventData.eventDates.length > 1 &&
+                    ` 외 ${eventData.eventDates.length - 1}회`}{" "}
+                </p>
+              </div>
+              <div className="flex gap-2">
+                <p className="font-bold">출연</p>
+                <p>{eventData.cast}</p>
+              </div>
+              {/* <p>{String(eventData.ageLimit)}세 이상</p> */}
+            </div>
           </div>
         </div>
-        <p className="text-xl font-bold text-gray-800">가격: 99,000원</p>
       </div>
     </div>
   );
