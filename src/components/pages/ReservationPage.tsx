@@ -1,6 +1,5 @@
 import React, { useContext, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import MainLayout from "../layout/MainLayout";
 import FourSectionLayout from "../layout/FourSectionLayout";
 import ReservationUpperEvent from "../organisms/reservation/ReservationUpperEvent";
 import ReservationCalendarSideBar from "../organisms/reservation/ReservationCalendarSideBar";
@@ -62,24 +61,22 @@ const ReservationPage: React.FC = () => {
   if (!eventData.data.svg) return <div>{fetchErrorMessages.noSvgData}</div>;
 
   return (
-    <MainLayout>
-      <FourSectionLayout
-        topContent={<ReservationUpperEvent {...eventData.data} />}
-        leftSidebarContent={
-          <ReservationCalendarSideBar dateData={eventData.data.eventDates} />
-        }
-        centerContent={
-          <ReservationSeatContainer
-            seatsData={seatsData.data}
-            svg={eventData.data.svg}
-          />
-        }
-        rightTopContent={<ReservationMinimap />}
-        rightBottomContent={<ReservationSeatInfo />}
-        isLeftSidebarOpen={isLeftSidebarOpen}
-        toggleSidebar={() => setIsLeftSidebarOpen(!isLeftSidebarOpen)}
-      />
-    </MainLayout>
+    <FourSectionLayout
+      topContent={<ReservationUpperEvent {...eventData.data} />}
+      leftSidebarContent={
+        <ReservationCalendarSideBar dateData={eventData.data.eventDates} />
+      }
+      centerContent={
+        <ReservationSeatContainer
+          seatsData={seatsData.data}
+          svg={eventData.data.svg}
+        />
+      }
+      rightTopContent={<ReservationMinimap />}
+      rightBottomContent={<ReservationSeatInfo />}
+      isLeftSidebarOpen={isLeftSidebarOpen}
+      toggleSidebar={() => setIsLeftSidebarOpen(!isLeftSidebarOpen)}
+    />
   );
 };
 
