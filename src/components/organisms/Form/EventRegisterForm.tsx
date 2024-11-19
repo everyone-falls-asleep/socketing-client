@@ -28,7 +28,7 @@ const EventRegisterForm = () => {
       ageLimit: 12,
       eventDates: [new Date().toISOString().slice(0, 16)],
       svg: "",
-      ticketingStartTime: [], // 티켓팅 시작 날짜 추가
+      ticketingStartTime: new Date().toISOString().slice(0, 16),
     },
   });
 
@@ -154,11 +154,11 @@ const EventRegisterForm = () => {
               </label>
               <Controller
                 control={control}
-                name="eventDates.0"
-                rules={{ required: "공연 날짜는 필수 항목입니다." }}
+                name="ticketingStartTime"
+                rules={{ required: "티켓팅 날짜는 필수 항목입니다." }}
                 render={({ field }) => (
                   <Input
-                    className="w-[235px]"
+                    className="w-[235px] h-6"
                     type="datetime-local"
                     {...field}
                   />
@@ -180,7 +180,7 @@ const EventRegisterForm = () => {
                 rules={{ required: "공연 날짜는 필수 항목입니다." }}
                 render={({ field }) => (
                   <Input
-                    className="w-[235px]"
+                    className="w-[235px] h-6"
                     type="datetime-local"
                     {...field}
                   />
