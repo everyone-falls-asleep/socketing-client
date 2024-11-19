@@ -7,8 +7,8 @@ interface DateProps {
 
 const ReservationCalendarSideBar: React.FC<DateProps> = ({ dateData }) => {
   return (
-    <div className="h-full flex items-center justify-center">
-      <div className="p-4 space-y-2">
+    <div className="h-full flex justify-center">
+      <div className="p-5 space-y-2">
         <h2 className="text-lg font-bold mb-4">공연 일정</h2>
         {dateData.map((dateData, index) => (
           <button
