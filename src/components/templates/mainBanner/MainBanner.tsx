@@ -1,6 +1,12 @@
 import { useState, useEffect } from "react";
 import { EventListProps } from "../../organisms/event-lists/EventList";
 import { useNavigate } from "react-router-dom";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 const MainBanner = ({ events }: EventListProps) => {
   const navigate = useNavigate();
@@ -15,15 +21,21 @@ const MainBanner = ({ events }: EventListProps) => {
   //   return () => clearInterval(interval); // 컴포넌트 언마운트 시 interval 해제
   // }, [events]);
 
-  const now = new Date().getTime(); // 현재 시간
+  // const now = new Date().getTime(); // 현재 시간
+
   const filteredEvents = events
+    .filter((event) => event.ticketingStartTime) // null/undefined 제거, // ticketingStartTime을 기준으로 정렬
     .map((event) => ({
       ...event,
-      ticketingStartTime: new Date(event.ticketingStartTime!).getTime(), // 값이 있다고 가정 // ticketingStartTime을 기준으로 정렬
+      ticketingStartTime: dayjs(event.ticketingStartTime)
+        .tz("Asia/Seoul")
+        .valueOf(),
     }))
-    .filter((event) => event.ticketingStartTime > now) // 현재 시간 이후의 이벤트만 필터링
-    .sort((a, b) => a.ticketingStartTime - b.ticketingStartTime) // 가까운 날짜 순으로 정렬
-    .slice(0, 1); // 가장 가까운 이벤트 1개만 선택
+    // .filter((event) => event.ticketingStartTime > now) // 현재 시간 이후의 이벤트만 필터링
+    .sort((a, b) => {
+      return a.ticketingStartTime - b.ticketingStartTime;
+    })
+    .slice(0, 1);
 
   // 남은 시간 계산
   useEffect(() => {
@@ -33,8 +45,7 @@ const MainBanner = ({ events }: EventListProps) => {
     }
     const calculateTimeLeft = () => {
       const now = new Date().getTime();
-      const targetTime =
-        filteredEvents[0].ticketingStartTime - 9 * 60 * 60 * 1000; // 한국 시간으로 변경;
+      const targetTime = filteredEvents[0].ticketingStartTime; // 한국 시간으로 변경;
       const difference = targetTime - now;
 
       if (difference <= 0) {
@@ -103,10 +114,9 @@ const MainBanner = ({ events }: EventListProps) => {
                 <p className="text-2xl md:text-3xl font-bold text-white mb-6 text-center">
                   티켓팅 시작:{" "}
                   {event.ticketingStartTime
-                    ? new Date(event.ticketingStartTime)
-                        .toISOString()
-                        .replace("T", " ")
-                        .slice(0, 16)
+                    ? dayjs(event.ticketingStartTime)
+                        .tz("Asia/Seoul")
+                        .format("YYYY년 MM월 DD일 HH시 mm분")
                     : "정보 없음"}
                 </p>
                 <button
