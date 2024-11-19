@@ -1,44 +1,32 @@
-import React, { useState } from "react";
-import TabMenu from "../../molecules/menus/TabMenu";
+import TabLayout from "../../layout/tab-menu/TabLayout";
 
 interface EventDetailTemplateProps {
   eventDetailHeader: React.ReactNode;
-  eventDetailSchedule: React.ReactNode;
-  eventDetailAbout: React.ReactNode;
+  eventDetailScheduleTab: React.ReactNode;
+  eventDetailAboutTab: React.ReactNode;
 }
 
 const EventDetailTemplate = ({
   eventDetailHeader,
-  eventDetailSchedule,
-  eventDetailAbout,
+  eventDetailScheduleTab,
+  eventDetailAboutTab,
 }: EventDetailTemplateProps) => {
-  const [activeTab, setActiveTab] = useState(0);
-
-  const handleTabClick = (index: number) => {
-    setActiveTab(index);
-  };
-
   const tabContents = [
-    <div key="event-schedule" id="event-schedule" className="p-2">
-      {eventDetailSchedule}
+    <div key="event-schedule" id="event-schedule">
+      {eventDetailScheduleTab}
     </div>,
-    <div key="event-about" id="event-about" className="p-2">
-      {eventDetailAbout}
+    <div key="event-about" id="event-about">
+      {eventDetailAboutTab}
     </div>,
   ];
 
   return (
-    <>
-      <div>{eventDetailHeader}</div>
-      <div id="event-detail-contents" className="p-2">
-        <TabMenu
-          tabs={["일정", "공연 정보"]}
-          activeTab={activeTab}
-          onTabClick={handleTabClick}
-        />
-        <div className="tab-content mt-4">{tabContents[activeTab]}</div>
+    <div>
+      <div className="relative w-full h-36">{eventDetailHeader}</div>
+      <div id="event-detail-contents" className="px-10 py-5">
+        <TabLayout tabs={["일정", "공연 정보"]} tabContents={tabContents} />
       </div>
-    </>
+    </div>
   );
 };
 

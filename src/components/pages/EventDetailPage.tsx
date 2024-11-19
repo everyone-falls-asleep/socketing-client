@@ -6,10 +6,10 @@ import { SingleEventResponse } from "../../types/api/event";
 import { fetchOneEvent } from "../../api/events/eventsApi";
 import { useParams } from "react-router-dom";
 import { useEventDetail } from "../../store/EventDetailContext";
-import EventDetailHeader from "../organisms/event-detail/EventDetailHeader";
-import EventDetailSchedule from "../organisms/event-detail/EventDetailSchedule";
-import EventDetailAbout from "../organisms/event-detail/EventDetailAbout";
 import { fetchErrorMessages } from "../../constants/errorMessages";
+import EventDetailHeader from "../organisms/event-detail/EventDetailHeader";
+import EventDetailScheduleTab from "../organisms/event-detail/EventDetailScheduleTab";
+import EventDetailAboutTab from "../organisms/event-detail/EventDetailAboutTab";
 
 const EventDetailPage = () => {
   const { id } = useParams();
@@ -50,8 +50,8 @@ const EventDetailPage = () => {
     <MainLayout>
       <EventDetailTemplate
         eventDetailHeader={<EventDetailHeader />}
-        eventDetailSchedule={<EventDetailSchedule />}
-        eventDetailAbout={<EventDetailAbout />}
+        eventDetailScheduleTab={<EventDetailScheduleTab />}
+        eventDetailAboutTab={<EventDetailAboutTab />}
       />
     </MainLayout>
   );

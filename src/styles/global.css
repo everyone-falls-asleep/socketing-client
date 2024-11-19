@@ -27,7 +27,7 @@
 }
 
 .tab-content-title-container {
-  @apply text-start p-2 bg-red-300;
+  @apply text-start p-2;
 }
 
 .tab-content-title {
