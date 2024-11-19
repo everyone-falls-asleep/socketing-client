@@ -32,6 +32,12 @@ export const postEventErrorMessages = {
   general: "공연 등록에 실패하였습니다. 다시 시도해주세요.",
 };
 
+export const deleteEventErrorMessages = {
+  invalidToken: tokenErrorMessage,
+  inValidevent: "이벤트 정보가 유효하지 않습니다.",
+  general: "공연 삭제에 실패하였습니다. 다시 시도해주세요.",
+};
+
 export const postSeatErrorMessages = {
   invalidToken: tokenErrorMessage,
   general: "좌석 정보 등록에 실패하였습니다. 다시 시도해주세요.",

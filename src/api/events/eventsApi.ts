@@ -8,6 +8,7 @@ import {
   NewSeat,
   NewSeatResponse,
   SeatResponse,
+  EventDeleteResponse,
 } from "../../types/api/event";
 
 const API_URL = baseURL + "events/";
@@ -46,6 +47,11 @@ const createNewEvent = async ({
     eventDates,
     svg,
   });
+  return response.data;
+};
+
+const deleteEvent = async (event_id: string): Promise<EventDeleteResponse> => {
+  const response = await api.delete<EventDeleteResponse>(`${event_id}`);
   return response.data;
 };
 
@@ -97,4 +103,5 @@ export {
   createNewEvent,
   createNewSeat,
   fetchAllSeats,
+  deleteEvent,
 };

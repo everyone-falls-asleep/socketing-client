@@ -61,6 +61,8 @@ export interface Seat {
   number: number;
 }
 
+export type EventDeleteResponse = ApiResponse<null>;
+
 export type SeatResponse = ApiResponse<Seat[]>;
 
 export interface NewSeat {
