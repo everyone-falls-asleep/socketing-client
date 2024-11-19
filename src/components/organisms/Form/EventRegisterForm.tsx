@@ -1,6 +1,5 @@
 import { useForm, Controller } from "react-hook-form";
 import { NewEvent } from "../../../types/api/event";
-import Container from "../../layout/Container";
 import Input from "../../atoms/inputs/Input";
 import Button from "../../atoms/buttons/Button";
 import { createNewEvent } from "../../../api/events/eventsApi";
@@ -29,6 +28,7 @@ const EventRegisterForm = () => {
       ageLimit: 12,
       eventDates: [new Date().toISOString().slice(0, 16)],
       svg: "",
+      ticketingStartTime: [], // 티켓팅 시작 날짜 추가
     },
   });
 
@@ -80,11 +80,11 @@ const EventRegisterForm = () => {
       className="w-full h-full"
     >
       <div className="w-full h-full flex items-center">
-        <Container width="2000px" className="flex items-start ">
-          <div className="flex flex-col items-start mr-4">
-            <label>공연 이름:</label>
+        <div className="px-8 gap-6 flex items-center">
+          <div className="flex flex-col items-start">
+            <label className="font-bold mb-1">공연 이름</label>
             <Input
-              className="w-[200px]"
+              className=""
               type="text"
               {...register("title", {
                 required: "공연 이름은 필수 항목입니다.",
@@ -95,10 +95,10 @@ const EventRegisterForm = () => {
             )}
           </div>
 
-          <div className="flex flex-col items-start mr-4">
-            <label>포스터 URL:</label>
+          <div className="flex flex-col items-start">
+            <label className="font-bold mb-1">포스터 URL</label>
             <Input
-              className="w-[200px]"
+              className=""
               type="text"
               {...register("thumbnail", {
                 required: "포스터 URL은 필수 항목입니다.",
@@ -109,10 +109,10 @@ const EventRegisterForm = () => {
             )}
           </div>
 
-          <div className="flex flex-col items-start mr-4">
-            <label>장소:</label>
+          <div className="flex flex-col items-start">
+            <label className="font-bold mb-1">장소</label>
             <Input
-              className="w-[200px]"
+              className=""
               type="text"
               {...register("place", { required: "장소는 필수 항목입니다." })}
             />
@@ -121,10 +121,10 @@ const EventRegisterForm = () => {
             )}
           </div>
 
-          <div className="flex flex-col items-start mr-4">
-            <label>가수:</label>
+          <div className="flex flex-col items-start">
+            <label className="font-bold mb-1">아티스트</label>
             <Input
-              className="w-[200px]"
+              className=""
               type="text"
               {...register("cast", { required: "가수는 필수 항목입니다." })}
             />
@@ -133,10 +133,10 @@ const EventRegisterForm = () => {
             )}
           </div>
 
-          <div className="flex flex-col items-start mr-4">
-            <label>연령 제한:</label>
+          <div className="flex w-[130px] flex-col items-start">
+            <label className="font-bold mb-1">연령 제한</label>
             <Input
-              className="w-[200px]"
+              className=""
               type="number"
               {...register("ageLimit", {
                 required: "연령 제한은 필수 항목입니다.",
@@ -147,26 +147,55 @@ const EventRegisterForm = () => {
               <span className="text-red-500">{errors.ageLimit.message}</span>
             )}
           </div>
-
-          <div className="flex flex-col items-start mr-4">
-            <label>공연 날짜:</label>
-            <Controller
-              control={control}
-              name="eventDates.0"
-              rules={{ required: "공연 날짜는 필수 항목입니다." }}
-              render={({ field }) => (
-                <Input className="w-[250px]" type="datetime-local" {...field} />
+          <div className="space-y-2">
+            <div className="flex flex-col items-start">
+              <label className="font-bold mb-1">
+                <span className="text-rose-400">티켓팅</span> 날짜
+              </label>
+              <Controller
+                control={control}
+                name="eventDates.0"
+                rules={{ required: "공연 날짜는 필수 항목입니다." }}
+                render={({ field }) => (
+                  <Input
+                    className="w-[235px]"
+                    type="datetime-local"
+                    {...field}
+                  />
+                )}
+              />
+              {errors.eventDates?.[0] && (
+                <span className="text-red-500">
+                  {errors.eventDates[0]?.message}
+                </span>
               )}
-            />
-            {errors.eventDates?.[0] && (
-              <span className="text-red-500">
-                {errors.eventDates[0]?.message}
-              </span>
-            )}
+            </div>
+            <div className="flex flex-col items-start">
+              <label className="font-bold mb-1">
+                <span className="text-rose-400">공연</span> 날짜
+              </label>
+              <Controller
+                control={control}
+                name="eventDates.0"
+                rules={{ required: "공연 날짜는 필수 항목입니다." }}
+                render={({ field }) => (
+                  <Input
+                    className="w-[235px]"
+                    type="datetime-local"
+                    {...field}
+                  />
+                )}
+              />
+              {errors.eventDates?.[0] && (
+                <span className="text-red-500">
+                  {errors.eventDates[0]?.message}
+                </span>
+              )}
+            </div>
           </div>
 
-          <div className="flex flex-col items-start mr-4">
-            <label>배치도 업로드:</label>
+          <div className="flex flex-col items-start">
+            <label className="font-bold mb-1">배치도 업로드</label>
             <Controller
               control={control}
               name="svg"
@@ -188,7 +217,7 @@ const EventRegisterForm = () => {
           <Button variant="primary" type="submit" className="mt-6">
             공연 등록
           </Button>
-        </Container>
+        </div>
       </div>
     </form>
   );

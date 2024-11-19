@@ -34,6 +34,7 @@ export interface NewEvent {
   ageLimit: number;
   eventDates: string[];
   svg: string;
+  ticketingStartTime: string[];
 }
 
 export interface NewEventResponseData {

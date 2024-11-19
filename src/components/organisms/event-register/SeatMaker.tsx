@@ -165,7 +165,7 @@ const SeatMaker: React.FC<SeatMakerProps> = ({
   return (
     <div
       ref={containerRef}
-      className={`relative w-full h-full overflow-hidden bg-gray-100 transition-all duration-300 
+      className={`relative w-full h-full overflow-hidden bg-[#fcf8f8] transition-all duration-300 
                  ${isDateSidebarOpen ? "ml-1/5" : ""}`}
       onMouseDown={handleMouseDown}
       style={{ touchAction: "none" }}

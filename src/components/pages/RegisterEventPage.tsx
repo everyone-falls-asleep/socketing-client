@@ -55,8 +55,18 @@ const RegisterEventPage: React.FC = () => {
             setSnapToGrid={setSnapToGrid}
           />
         }
-        rightTopContent={<div>rightT</div>}
-        rightBottomContent={<div>rightB</div>}
+        rightTopContent={
+          <div className="bg-gray-100 shadow-md rounded-lg p-4">
+            <h2 className="text-lg font-semibold">우측 상단 콘텐츠</h2>
+            <p>이곳에 필요한 내용을 추가하세요.</p>
+          </div>
+        }
+        rightBottomContent={
+          <div className="bg-gray-50 shadow-md rounded-lg p-4">
+            <h2 className="text-lg font-semibold">우측 하단 콘텐츠</h2>
+            <p>여기도 마찬가지로 내용을 입력하세요.</p>
+          </div>
+        }
         isLeftSidebarOpen={isLeftSidebarOpen}
         toggleSidebar={() => setIsLeftSidebarOpen(!isLeftSidebarOpen)}
       />

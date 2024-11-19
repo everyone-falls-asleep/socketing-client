@@ -8,6 +8,7 @@ import { AxiosError } from "axios";
 import { ApiErrorResponse } from "../../../types/api/common";
 import { NewSeat, NewSeatResponse } from "../../../types/api/event";
 import { postSeatErrorMessages } from "../../../constants/errorMessages";
+import Button from "../../atoms/buttons/Button";
 
 interface SeatControlPanelProps {
   seats: Seat[];
@@ -111,25 +112,26 @@ const SeatControlPanel: React.FC<SeatControlPanelProps> = ({
   };
 
   return (
-    <div>
-      <div>
-        <button
+    <div className="h-full p-6">
+      <div className="space-y-1">
+        <Button
           onClick={() => setIsEditMode(!isEditMode)}
-          className={`w-full px-4 py-2 rounded ${
+          className={`w-full px-4 py-2 rounded mb-3 ${
             isEditMode
               ? "bg-red-500 hover:bg-red-600 text-white"
               : "bg-blue-500 hover:bg-blue-600 text-white"
           }`}
         >
-          {isEditMode ? "좌석 수정 마치기" : "클릭으로 좌석 생성하기"}
-        </button>
+          {isEditMode ? "좌석 수정 마치기" : "좌석 생성하기"}
+        </Button>
         {!isEditMode && (
-          <button
+          <Button
+            variant="dark"
             onClick={() => void handleComplete()}
-            className="bg-green-500 text-white rounded hover:bg-green-600"
+            className="w-full"
           >
-            현재 상태로 좌석 등록하기
-          </button>
+            좌석 등록 완료
+          </Button>
         )}
       </div>
 
