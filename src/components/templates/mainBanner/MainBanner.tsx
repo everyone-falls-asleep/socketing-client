@@ -69,9 +69,9 @@ const MainBanner = ({ events }: EventListProps) => {
   return (
     <>
       {/* 남은 시간 표시 */}
-      <div className="w-full h-6"></div>
-      <div className="w-full bg-black text-white text-center py-2 text-3xl">
-        <h1 className="text-[24px] font-bold border-t border-b p-1">
+      {/* <div className="w-full h-6"></div> */}
+      <div className="w-full bg-black text-white text-center pb-2 text-3xl">
+        <h1 className="text-[24px] font-bold border-t-2 border-b-2 p-1">
           {filteredEvents.length > 0
             ? "곧 티켓팅이 시작됩니다!"
             : "예정된 티켓팅이 없습니다."}
@@ -106,7 +106,7 @@ const MainBanner = ({ events }: EventListProps) => {
                     ? new Date(event.ticketingStartTime)
                         .toISOString()
                         .replace("T", " ")
-                        .slice(0, 19)
+                        .slice(0, 16)
                     : "정보 없음"}
                 </p>
                 <button

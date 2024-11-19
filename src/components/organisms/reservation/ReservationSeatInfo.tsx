@@ -12,6 +12,7 @@ import { useSeatStatus } from "../../../hooks/useSeatStatus";
 import { postReservationErrorMessages } from "../../../constants/errorMessages";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import Button from "../../atoms/buttons/Button";
 
 const ReservationSeatInfo = () => {
   const navigate = useNavigate();
@@ -72,7 +73,7 @@ const ReservationSeatInfo = () => {
   return (
     <div>
       {selectedSeat ? (
-        <div className="space-y-4">
+        <div className="space-y-4 p-4">
           <h2 className="text-lg font-bold">좌석 정보</h2>
           <div className="space-y-2">
             <p>구역: {selectedSeat.area}</p>
@@ -80,13 +81,16 @@ const ReservationSeatInfo = () => {
             <p>번호: {selectedSeat.number}</p>
             <p>가격: 99,000원</p>
           </div>
-          <button
-            onClick={() => void handleReservationSubmit()}
-            className="w-full py-3 bg-blue-500 text-white rounded-lg
-                           hover:bg-blue-600 transition-colors"
-          >
-            예매하기
-          </button>
+          <div className="text-center">
+            <Button
+              onClick={() => void handleReservationSubmit()}
+              className="p-4 w-full"
+              // className="w-[80%] py-3 bg-blue-500 text-white rounded-lg
+              //                hover:bg-blue-600 transition-colors"
+            >
+              예매하기
+            </Button>
+          </div>
         </div>
       ) : (
         <div className="h-full flex items-center justify-center text-gray-500">

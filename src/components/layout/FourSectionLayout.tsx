@@ -22,9 +22,7 @@ const FourSectionLayout: React.FC<FourSectionLayoutProps> = ({
 }) => {
   return (
     <div className="h-screen flex flex-col">
-      <div className="h-16 flex-none">
-        <Header />
-      </div>
+      <Header />
 
       <div className="flex-1 flex flex-col min-h-0">
         <div className="h-1/4 w-full bg-white border-b">{topContent}</div>

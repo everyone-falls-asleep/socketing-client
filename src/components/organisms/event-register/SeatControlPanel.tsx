@@ -22,6 +22,8 @@ interface SeatControlPanelProps {
   currentPrice: string;
   setCurrentPrice: (value: string) => void;
   onComplete: (updatedSeats: Seat[]) => void;
+  snapToGrid: boolean;
+  setSnapToGrid: (value: boolean) => void;
 }
 
 const SeatControlPanel: React.FC<SeatControlPanelProps> = ({
@@ -36,6 +38,8 @@ const SeatControlPanel: React.FC<SeatControlPanelProps> = ({
   setCurrentNumber,
   currentPrice,
   setCurrentPrice,
+  snapToGrid,
+  setSnapToGrid,
 }) => {
   const { event } = useEventCreate();
 
@@ -177,6 +181,23 @@ const SeatControlPanel: React.FC<SeatControlPanelProps> = ({
               onChange={(e) => setCurrentPrice(e.target.value)}
               className="mt-1 w-full border rounded p-2"
             />
+          </div>
+          <div className="mt-4 space-y-2">
+            <label className="block text-sm font-medium text-gray-700">
+              격자 설정
+            </label>
+            <div className="flex items-center space-x-2">
+              <input
+                type="checkbox"
+                checked={snapToGrid}
+                onChange={(e) => setSnapToGrid(e.target.checked)}
+                id="snapToGrid"
+                className="rounded border-gray-300"
+              />
+              <label htmlFor="snapToGrid" className="text-sm text-gray-600">
+                격자 스냅
+              </label>
+            </div>
           </div>
         </>
       )}

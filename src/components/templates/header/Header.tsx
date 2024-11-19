@@ -46,7 +46,7 @@ const Header = () => {
       navigate(`/search-results/${encodeURIComponent(searchQuery)}`);
       setSearchQuery("");
     } else {
-      alert("검색어를 입력해주세요");
+      toast.error("검색어를 입력해주세요");
     }
   };
 
@@ -73,11 +73,7 @@ const Header = () => {
       <header className="flex items-center justify-between px-6 py-4 bg-black text-white">
         {/* 로고 */}
         <div className="flex items-center flex-shrink-0">
-          <HeaderLogo>
-            <a href="/" className="text-2xl font-bold">
-              SocKeTing
-            </a>
-          </HeaderLogo>
+          <HeaderLogo />
         </div>
         {/* 검색창 */}
         <div className="hidden md:flex md:w-[55%] lg:w-[55%] justify-center pl-4">
