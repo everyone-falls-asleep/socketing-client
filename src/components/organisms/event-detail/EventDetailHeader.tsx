@@ -2,6 +2,7 @@ import { useEventDetail } from "../../../store/EventDetailContext";
 import { deleteEvent } from "../../../api/events/eventsApi";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+
 const EventDetailHeader = () => {
   const navigate = useNavigate();
   const { event } = useEventDetail();

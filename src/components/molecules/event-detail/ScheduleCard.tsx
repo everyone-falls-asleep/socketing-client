@@ -1,5 +1,11 @@
 import { useNavigate } from "react-router-dom";
 import Button from "../../atoms/buttons/Button";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 interface ScheduleCardProps {
   eventId: string;
@@ -8,13 +14,10 @@ interface ScheduleCardProps {
 }
 
 const ScheduleCard = ({ eventId, eventDateId, date }: ScheduleCardProps) => {
-  const formattedDate = date.toISOString().replace("T", " ").slice(0, 16);
+  const formattedDateandTime = dayjs(date).tz("Asia/Seoul");
 
-  const year = formattedDate.slice(0, 4);
-  const month = formattedDate.slice(5, 7);
-  const day = formattedDate.slice(8, 10);
-  const hour = formattedDate.slice(11, 13);
-  const minute = formattedDate.slice(14, 16);
+  const formattedDate = formattedDateandTime.format("YYYY년 MM월 DD일");
+  const formattedTime = formattedDateandTime.format("HH시 mm분");
 
   const navigate = useNavigate();
 
@@ -29,14 +32,10 @@ const ScheduleCard = ({ eventId, eventDateId, date }: ScheduleCardProps) => {
           id="schedule-date"
           className=" text-lg font-semibold text-gray-800 flex items-end"
         >
-          <p>
-            {year}년 {month}월 {day}일
-          </p>
+          <p>{formattedDate}</p>
         </div>
         <div className="schedule-time text-base text-gray-600 flex items-end">
-          <p className="">
-            {hour}시 {minute}분
-          </p>
+          <p>{formattedTime}</p>
         </div>
       </div>
 

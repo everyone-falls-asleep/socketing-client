@@ -10,6 +10,12 @@ import { fetchErrorMessages } from "../../constants/errorMessages";
 import EventDetailHeader from "../organisms/event-detail/EventDetailHeader";
 import EventDetailScheduleTab from "../organisms/event-detail/EventDetailScheduleTab";
 import EventDetailAboutTab from "../organisms/event-detail/EventDetailAboutTab";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 const EventDetailPage = () => {
   const { id } = useParams();
@@ -32,8 +38,8 @@ const EventDetailPage = () => {
           eventData.eventDates?.filter((eventDate) =>
             eventData.eventDates?.some(
               (date) =>
-                new Date(eventDate.date).getTime() ===
-                new Date(date.date).getTime()
+                dayjs(eventDate.date).tz("Asia/Seoul").valueOf() ===
+                dayjs(date.date).tz("Asia/Seoul").valueOf()
             )
           ) || [],
       };

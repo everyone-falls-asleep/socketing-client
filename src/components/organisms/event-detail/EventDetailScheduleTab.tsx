@@ -1,6 +1,12 @@
 import ScheduleHeader from "../../molecules/event-detail/ScheduleHeader";
 import ScheduleList from "../../molecules/event-detail/ScheduleList";
 import { useEventDetail } from "../../../store/EventDetailContext";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 const EventDetailScheduleTab = () => {
   const { filteredEvent, selectedDates, setSelectedDates } = useEventDetail();
@@ -10,8 +16,9 @@ const EventDetailScheduleTab = () => {
   }
 
   const validDates =
-    filteredEvent.eventDates?.map((eventDate) => new Date(eventDate.date)) ||
-    [];
+    filteredEvent.eventDates?.map((eventDate) =>
+      dayjs(eventDate.date).tz("Asia/Seoul").toDate()
+    ) || [];
 
   const onDateSelect = (dates: Date[]) => {
     setSelectedDates(dates);

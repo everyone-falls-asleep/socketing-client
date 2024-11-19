@@ -1,5 +1,11 @@
 import ScheduleCard from "./ScheduleCard";
 import { Event, EventDate } from "../../../types/api/event";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 interface ScheduleListProps {
   filteredEvent: Event;
@@ -10,21 +16,26 @@ const ScheduleList = ({ filteredEvent, selectedDates }: ScheduleListProps) => {
   const filteredSchedules =
     selectedDates.length === 0
       ? [...filteredEvent.eventDates].sort(
-          (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
+          (a, b) =>
+            dayjs(a.date).tz("Asia/Seoul").valueOf() -
+            dayjs(b.date).tz("Asia/Seoul").valueOf()
         )
       : filteredEvent.eventDates
           .filter((schedule: EventDate) => {
-            const scheduleDate = new Date(schedule.date);
+            const scheduleDate = dayjs(schedule.date).tz("Asia/Seoul");
             return selectedDates.some((selectedDate) => {
+              const selected = dayjs(selectedDate).tz("Asia/Seoul");
               return (
-                selectedDate.getDate() === scheduleDate.getDate() &&
-                selectedDate.getMonth() === scheduleDate.getMonth() &&
-                selectedDate.getFullYear() === scheduleDate.getFullYear()
+                selected.date() === scheduleDate.date() &&
+                selected.month() === scheduleDate.month() &&
+                selected.year() === scheduleDate.year()
               );
             });
           })
           .sort(
-            (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
+            (a, b) =>
+              dayjs(a.date).tz("Asia/Seoul").valueOf() -
+              dayjs(b.date).tz("Asia/Seoul").valueOf()
           );
 
   return (
@@ -35,7 +46,7 @@ const ScheduleList = ({ filteredEvent, selectedDates }: ScheduleListProps) => {
             key={schedule.id}
             eventId={filteredEvent.id}
             eventDateId={schedule.id}
-            date={new Date(schedule.date)}
+            date={dayjs(schedule.date).tz("Asia/Seoul").toDate()}
           />
         ))
       ) : (
