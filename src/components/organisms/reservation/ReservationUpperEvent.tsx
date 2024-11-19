@@ -1,4 +1,5 @@
 import { Event } from "../../../types/api/event";
+import { formatToKoreanDateAndTime } from "../../../utils/dateUtils";
 
 const ReservationUpperEvent = (eventData: Event) => {
   return (
@@ -24,10 +25,7 @@ const ReservationUpperEvent = (eventData: Event) => {
               <div className="flex gap-2">
                 <p className="font-bold">시간</p>
                 <p>
-                  {new Date(eventData.eventDates[0].date)
-                    .toISOString()
-                    .replace("T", " ")
-                    .slice(0, 16)}{" "}
+                  {formatToKoreanDateAndTime(eventData.eventDates[0].date)}
                   {eventData.eventDates.length > 1 &&
                     ` 외 ${eventData.eventDates.length - 1}회`}{" "}
                 </p>

@@ -3,6 +3,7 @@ import SubTitle from "../../atoms/titles/subtitle/SubTitle";
 import Font from "../../atoms/fonts/Font";
 import { NewReservationResponseData } from "../../../types/api/reservation";
 import { fetchErrorMessages } from "../../../constants/errorMessages";
+import { formatToKoreanDateAndTime } from "../../../utils/dateUtils";
 
 interface ReservationConfirmProps {
   reservation: NewReservationResponseData;
@@ -12,11 +13,6 @@ interface ReservationConfirmProps {
 const ReservationConfirmationTemplate = ({
   reservation,
 }: ReservationConfirmProps) => {
-  const formattedDate = new Date(reservation.eventDate.date)
-    .toISOString()
-    .replace("T", " ")
-    .slice(0, 16);
-
   if (!reservation.eventDate.event) {
     return <div>{fetchErrorMessages.noReservationData}</div>;
   }
@@ -69,7 +65,9 @@ const ReservationConfirmationTemplate = ({
                 <div className="w-6 text-gray-400">📅</div>
                 <div>
                   <Font className="font-bold text-gray-700">일시</Font>
-                  <Font className="text-gray-600">{formattedDate}</Font>
+                  <Font className="text-gray-600">
+                    {formatToKoreanDateAndTime(reservation.eventDate.date)}
+                  </Font>
                 </div>
               </div>
 
