@@ -2,7 +2,7 @@ import ScheduleHeader from "../../molecules/event-detail/ScheduleHeader";
 import ScheduleList from "../../molecules/event-detail/ScheduleList";
 import { useEventDetail } from "../../../store/EventDetailContext";
 
-const EventDetailSchedule = () => {
+const EventDetailScheduleTab = () => {
   const { filteredEvent, selectedDates, setSelectedDates } = useEventDetail();
 
   if (!filteredEvent) {
@@ -35,4 +35,4 @@ const EventDetailSchedule = () => {
   );
 };
 
-export default EventDetailSchedule;
+export default EventDetailScheduleTab;

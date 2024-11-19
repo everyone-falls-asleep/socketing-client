@@ -36,7 +36,7 @@ const ScheduleHeader = ({
   };
 
   return (
-    <div className="border border-gray-300 mb-4 rounded-lg bg-gray-100 w-full">
+    <div className="border border-gray-300 mt-2 mb-4 rounded-sm bg-gray-100 w-full">
       <div className="flex items-center p-4">
         <div className="flex flex-wrap items-center ml-4">
           {renderSelectedDates()}
