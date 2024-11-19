@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 import Input from "../../atoms/inputs/Input";
 import LoginModal from "../../organisms/auth/LoginModal";
 import HeaderLogo from "../../molecules/header-logo/HeaderLogo";
+import { toast } from "react-toastify";
+import { jwtDecode, JwtPayload } from "jwt-decode";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -14,12 +16,30 @@ const Header = () => {
   const name = localStorage.getItem("name");
 
   useEffect(() => {
-    if (localStorage.getItem("authToken")) {
-      setIsLogin(true);
-    } else {
+    const token = localStorage.getItem("authToken");
+    if (!token) {
       setIsLogin(false);
+      return;
     }
-  });
+    if (isTokenExpired(token)) {
+      handleLogout();
+    } else {
+      setIsLogin(true);
+    }
+  }, []);
+
+  const isTokenExpired = (token: string): boolean => {
+    try {
+      const { exp } = jwtDecode<JwtPayload>(token);
+      if (!exp) return true;
+
+      const currentTime = Math.floor(Date.now() / 1000);
+      return currentTime > exp;
+    } catch (error) {
+      console.error("Invalid token:", error);
+      return true;
+    }
+  };
 
   const handleSearch = () => {
     if (searchQuery.trim() !== "") {
@@ -41,6 +61,7 @@ const Header = () => {
     localStorage.removeItem("nickname");
     localStorage.removeItem("name");
     setIsLogin(false);
+    toast.success("로그아웃되었습니다. 다시 로그인해주세요.");
   };
 
   const handleRegister = () => {
