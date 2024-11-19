@@ -26,6 +26,10 @@ const Header = () => {
     }
   };
 
+  const handleRegister = () => {
+    navigate("/register");
+  };
+
   return (
     <>
       <header className="flex items-center justify-between px-6 py-4 bg-black text-white">
@@ -38,8 +42,8 @@ const Header = () => {
           </HeaderLogo>
         </div>
         {/* 검색창 */}
-        <div className="flex-grow hidden md:flex justify-center">
-          <div className="flex items-center w-[55%] bg-white rounded-lg overflow-hidden">
+        <div className="hidden md:flex md:w-[55%] lg:w-[55%] justify-center pl-4">
+          <div className="flex items-center w-full bg-white rounded-lg overflow-hidden">
             <Input
               type="text"
               placeholder="공연 검색"
@@ -56,12 +60,16 @@ const Header = () => {
             </button>
           </div>
         </div>
-        {!name ? (
-          <div className="flex space-x-4 w-[15%] justify-end">
-            <Button variant="primary" onClick={() => setIsLoginModalOpen(true)}>
-              로그인
-            </Button>
-            {/* <Button
+        <div className="flex space-x-4 w-[45%] md:w-[45%] lg:w-[45%] justify-end">
+          {!name ? (
+            <>
+              <Button
+                variant="primary"
+                onClick={() => setIsLoginModalOpen(true)}
+              >
+                로그인
+              </Button>
+              {/* <Button
               variant="primary"
               onClick={() => {
                 navigate("/join");
@@ -69,17 +77,27 @@ const Header = () => {
             >
               회원가입
             </Button> */}
-          </div>
-        ) : (
-          <div className="flex space-x-4 w-[15%] justify-end">
-            <div className="flex items-center space-x-4">
-              <span className="text-white">{name}님, 안녕하세요</span>
-            </div>
-          </div>
-        )}
+            </>
+          ) : (
+            <>
+              <div className="flex items-center justify-center gap-x-2">
+                <img
+                  src="../../../../public/user_icon.svg"
+                  height=""
+                  width="24px"
+                />
+                <span className="text-white">{name} 님</span>
+              </div>
+              <div className="hidden md:block">
+                <Button variant="primary" onClick={() => handleRegister()}>
+                  공연 등록하기
+                </Button>
+              </div>
+            </>
+          )}
+        </div>
       </header>
 
-      {/* 로그인 모달 */}
       <LoginModal
         isOpen={isLoginModalOpen}
         onClose={() => setIsLoginModalOpen(false)}
