@@ -158,9 +158,30 @@ const EventRegisterForm = () => {
                 rules={{ required: "티켓팅 날짜는 필수 항목입니다." }}
                 render={({ field }) => (
                   <Input
+                    {...field}
                     className="w-[235px] h-6"
                     type="datetime-local"
-                    {...field}
+                    onChange={(e) => {
+                      // UTC 시간으로 변환
+                      const localDate = new Date(e.target.value);
+                      const utcDate = localDate.toISOString();
+                      field.onChange(utcDate);
+                    }}
+                    // 화면에 보여줄 때는 다시 로컬 시간으로 변환
+                    value={
+                      field.value
+                        ? new Date(field.value)
+                            .toLocaleString("sv-SE", {
+                              year: "numeric",
+                              month: "2-digit",
+                              day: "2-digit",
+                              hour: "2-digit",
+                              minute: "2-digit",
+                              hour12: false,
+                            })
+                            .replace(" ", "T")
+                        : ""
+                    }
                   />
                 )}
               />
@@ -180,9 +201,30 @@ const EventRegisterForm = () => {
                 rules={{ required: "공연 날짜는 필수 항목입니다." }}
                 render={({ field }) => (
                   <Input
+                    {...field}
                     className="w-[235px] h-6"
                     type="datetime-local"
-                    {...field}
+                    onChange={(e) => {
+                      // UTC 시간으로 변환
+                      const localDate = new Date(e.target.value);
+                      const utcDate = localDate.toISOString();
+                      field.onChange(utcDate);
+                    }}
+                    // 화면에 보여줄 때는 다시 로컬 시간으로 변환
+                    value={
+                      field.value
+                        ? new Date(field.value)
+                            .toLocaleString("sv-SE", {
+                              year: "numeric",
+                              month: "2-digit",
+                              day: "2-digit",
+                              hour: "2-digit",
+                              minute: "2-digit",
+                              hour12: false,
+                            })
+                            .replace(" ", "T")
+                        : ""
+                    }
                   />
                 )}
               />
