@@ -5,15 +5,25 @@ import {
   formatDateToKoreanTime,
 } from "../../../utils/dateUtils";
 import { toast } from "react-toastify";
+import { useCurrentTime } from "../../../hooks/useCurrentTime";
 
 interface ScheduleCardProps {
   eventId: string;
   eventDateId: string;
   date: Date;
+  ticketingStartTime?: number; // ticketingStartTime 추가
 }
 
-const ScheduleCard = ({ eventId, eventDateId, date }: ScheduleCardProps) => {
+const ScheduleCard = ({
+  eventId,
+  eventDateId,
+  date,
+  ticketingStartTime,
+}: ScheduleCardProps) => {
   const navigate = useNavigate();
+  const now = useCurrentTime();
+
+  const isDisabled = !ticketingStartTime || ticketingStartTime > now;
 
   const handleScheduleClick = () => {
     const userId = localStorage.getItem("userId");
@@ -29,7 +39,7 @@ const ScheduleCard = ({ eventId, eventDateId, date }: ScheduleCardProps) => {
       <div className="schedule-info flex gap-4">
         <div
           id="schedule-date"
-          className=" text-lg font-semibold text-gray-800 flex items-end"
+          className="text-lg font-semibold text-gray-800 flex items-end"
         >
           <p>{formatDateToKoreanDate(date)}</p>
         </div>
@@ -38,8 +48,12 @@ const ScheduleCard = ({ eventId, eventDateId, date }: ScheduleCardProps) => {
         </div>
       </div>
 
-      <Button variant="primary" onClick={handleScheduleClick}>
-        예약하기
+      <Button
+        variant="primary"
+        onClick={handleScheduleClick}
+        disabled={isDisabled}
+      >
+        {isDisabled ? "준비중" : "예약하기"}
       </Button>
     </div>
   );

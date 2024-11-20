@@ -1,55 +1,17 @@
-import { useState, useEffect } from "react";
-import dayjs from "dayjs";
-import utc from "dayjs/plugin/utc";
-import timezone from "dayjs/plugin/timezone";
-import { formatToKoreanDateAndTime } from "../../../utils/dateUtils";
 import { CustomEventsProps } from "../../../types/api/event";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-
-dayjs.extend(utc);
-dayjs.extend(timezone);
+import { useCurrentTime } from "../../../hooks/useCurrentTime";
+import { getTimeLeft } from "../../../utils/countdownTimer";
+import { formatToKoreanDateAndTime } from "../../../utils/dateUtils";
 
 interface MainBannerProps {
   event: CustomEventsProps | undefined;
-  now: number;
 }
 
-const MainBanner = ({ event, now }: MainBannerProps) => {
+const MainBanner = ({ event }: MainBannerProps) => {
   const navigate = useNavigate();
-  const [timeLeft, setTimeLeft] = useState<string>("");
-
-  // 남은 시간 계산
-  useEffect(() => {
-    if (!event) {
-      setTimeLeft("예정된 티켓팅이 없습니다.");
-      return;
-    }
-
-    const calculateTimeLeft = () => {
-      const currentTime = new Date().getTime();
-      const difference = event.ticketingStartTime - currentTime;
-
-      if (difference <= 0) {
-        setTimeLeft("예매가 시작되었습니다!");
-        return;
-      }
-
-      const days = Math.floor(difference / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((difference / (1000 * 60 * 60)) % 24);
-      const minutes = Math.floor((difference / (1000 * 60)) % 60);
-      const seconds = Math.floor((difference / 1000) % 60);
-
-      setTimeLeft(
-        `${days > 0 ? `${days}일 ` : ""} ${hours}시간 ${minutes}분 ${seconds}초`
-      );
-    };
-
-    const timer = setInterval(calculateTimeLeft, 1000);
-    calculateTimeLeft();
-
-    return () => clearInterval(timer);
-  }, [event]);
+  const now = useCurrentTime();
 
   if (!event) {
     return (
@@ -67,6 +29,9 @@ const MainBanner = ({ event, now }: MainBannerProps) => {
       </>
     );
   }
+
+  const isNotStarted = event.ticketingStartTime > now;
+  const timeLeft = getTimeLeft(event.ticketingStartTime, now);
 
   return (
     <>
@@ -86,15 +51,15 @@ const MainBanner = ({ event, now }: MainBannerProps) => {
             <h2 className="text-4xl md:text-6xl font-bold text-white mb-6 text-center">
               {event.title}
             </h2>
-            <p className="text-2xl md:text-3xl font-bold text-white mb-6 text-center">
-              티켓팅 시작:{" "}
+            <p className="text-2xl md:text-2xl font-bold text-white mb-6 text-center">
+              티켓 오픈:{" "}
               {event.ticketingStartTime
                 ? formatToKoreanDateAndTime(event.ticketingStartTime)
                 : "정보 없음"}
             </p>
             <button
               className={`font-bold text-white px-4 py-2 rounded ${
-                event.ticketingStartTime > now
+                isNotStarted
                   ? "bg-gray-400 cursor-not-allowed"
                   : "bg-rose-500 hover:bg-rose-600"
               }`}
@@ -110,9 +75,9 @@ const MainBanner = ({ event, now }: MainBannerProps) => {
                   );
                 }
               }}
-              disabled={event.ticketingStartTime > now}
+              disabled={isNotStarted}
             >
-              {timeLeft}
+              남은 시간: {timeLeft}
             </button>
           </div>
         </div>

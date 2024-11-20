@@ -20,7 +20,7 @@ const CardList = ({ events }: CardListProps) => {
         {events.map((event: CustomEventsProps) => (
           <div
             key={event.id}
-            className="bg-white shadow-lg rounded-lg overflow-hidden hover:shadow-xl transition-shadow"
+            className="bg-white shadow-lg rounded-lg overflow-hidden hover:shadow-md active:bg-gray-100 transition-shadow"
           >
             <div className="relative h-[200px]">
               {" "}
@@ -34,7 +34,7 @@ const CardList = ({ events }: CardListProps) => {
             <div className="p-4">
               <div className="flex justify-between items-start">
                 <div className="flex-1">
-                  <h3 className="text-xl font-bold text-gray-900 mb-2 line-clamp-2">
+                  <h3 className="text-xl font-bold text-gray-900 mb-2 line-clamp-2 h-[60px]">
                     {event.title}
                   </h3>
                   <div className="space-y-1 text-sm text-gray-600">
