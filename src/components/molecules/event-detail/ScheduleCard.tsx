@@ -26,8 +26,6 @@ const ScheduleCard = ({
   const isTicketingStarted = ticketingStartTime && now >= ticketingStartTime;
   const isDisabled = !isTicketingStarted;
 
-  console.log({ ticketingStartTime, now });
-
   const handleScheduleClick = () => {
     const userId = localStorage.getItem("userId");
     if (userId) {
