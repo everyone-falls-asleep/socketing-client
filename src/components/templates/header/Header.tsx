@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Button from "../../atoms/buttons/Button";
 import { useNavigate } from "react-router-dom";
 import Input from "../../atoms/inputs/Input";
@@ -6,6 +6,7 @@ import LoginModal from "../../organisms/auth/LoginModal";
 import HeaderLogo from "../../molecules/header-logo/HeaderLogo";
 import { toast } from "react-toastify";
 import { jwtDecode, JwtPayload } from "jwt-decode";
+import { UserContext } from "../../../store/UserContext";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -13,6 +14,7 @@ const Header = () => {
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isLogin, setIsLogin] = useState(false);
   const [name, setName] = useState("");
+  const { setUserId } = useContext(UserContext);
 
   // 로그인 상태를 체크하는 함수
   const checkLoginStatus = () => {
@@ -70,11 +72,12 @@ const Header = () => {
     localStorage.setItem("authToken", "");
     localStorage.removeItem("nickname");
     localStorage.removeItem("name");
-    localStorage.removeItem("userId");
+    setUserId(null);
 
     setIsLogin(false);
     setName("");
     toast.success("로그아웃되었습니다. 다시 로그인해주세요.");
+    navigate("/");
   };
 
   const handleLoginSuccess = () => {

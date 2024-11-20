@@ -5,6 +5,7 @@ import timezone from "dayjs/plugin/timezone";
 import { formatToKoreanDateAndTime } from "../../../utils/dateUtils";
 import { CustomEventsProps } from "../../../types/api/event";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -97,13 +98,18 @@ const MainBanner = ({ event, now }: MainBannerProps) => {
                   ? "bg-gray-400 cursor-not-allowed"
                   : "bg-rose-500 hover:bg-rose-600"
               }`}
-              onClick={() =>
-                navigate(
-                  `/reservation/${event.id}/${
-                    event.eventDates?.[0]?.id || "error"
-                  }`
-                )
-              }
+              onClick={() => {
+                const userId = localStorage.getItem("userId");
+                if (userId) {
+                  navigate(
+                    `/reservation/${event.id}/${event.eventDates?.[0]?.id || "error"}`
+                  );
+                } else {
+                  toast.success(
+                    "예약 페이지에 접근하기 위해서는 로그인이 필요합니다."
+                  );
+                }
+              }}
               disabled={event.ticketingStartTime > now}
             >
               {timeLeft}
