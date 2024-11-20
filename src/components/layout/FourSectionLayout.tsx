@@ -3,12 +3,12 @@ import Header from "../templates/header/Header";
 
 interface FourSectionLayoutProps {
   topContent: React.ReactNode;
-  leftSidebarContent: React.ReactNode;
+  leftSidebarContent?: React.ReactNode;
   centerContent: React.ReactNode;
   rightTopContent: React.ReactNode;
   rightBottomContent: React.ReactNode;
   isLeftSidebarOpen?: boolean;
-  toggleSidebar: () => void;
+  toggleSidebar?: () => void;
 }
 
 const FourSectionLayout: React.FC<FourSectionLayoutProps> = ({

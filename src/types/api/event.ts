@@ -9,8 +9,8 @@ export interface Event {
   cast: string;
   ageLimit: number;
   svg?: string;
-  createdAt: string;
-  updatedAt: string;
+  createdAt?: string;
+  updatedAt?: string;
   ticketingStartTime?: string;
 }
 
@@ -98,4 +98,9 @@ export interface CustomEventsProps extends Omit<Event, "ticketingStartTime"> {
 
 export interface CardListProps {
   events: CustomEventsProps[] | null;
+}
+
+export interface UserSeat {
+  user_id: string;
+  seats: Seat[];
 }
