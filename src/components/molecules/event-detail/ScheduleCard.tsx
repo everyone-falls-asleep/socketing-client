@@ -1,11 +1,9 @@
 import { useNavigate } from "react-router-dom";
 import Button from "../../atoms/buttons/Button";
-import dayjs from "dayjs";
-import utc from "dayjs/plugin/utc";
-import timezone from "dayjs/plugin/timezone";
-
-dayjs.extend(utc);
-dayjs.extend(timezone);
+import {
+  formatDateToKoreanDate,
+  formatDateToKoreanTime,
+} from "../../../utils/dateUtils";
 
 interface ScheduleCardProps {
   eventId: string;
@@ -14,11 +12,6 @@ interface ScheduleCardProps {
 }
 
 const ScheduleCard = ({ eventId, eventDateId, date }: ScheduleCardProps) => {
-  const formattedDateandTime = dayjs(date).tz("Asia/Seoul");
-
-  const formattedDate = formattedDateandTime.format("YYYY년 MM월 DD일");
-  const formattedTime = formattedDateandTime.format("HH시 mm분");
-
   const navigate = useNavigate();
 
   const handleScheduleClick = () => {
@@ -32,10 +25,10 @@ const ScheduleCard = ({ eventId, eventDateId, date }: ScheduleCardProps) => {
           id="schedule-date"
           className=" text-lg font-semibold text-gray-800 flex items-end"
         >
-          <p>{formattedDate}</p>
+          <p>{formatDateToKoreanDate(date)}</p>
         </div>
         <div className="schedule-time text-base text-gray-600 flex items-end">
-          <p>{formattedTime}</p>
+          <p>{formatDateToKoreanTime(date)}</p>
         </div>
       </div>
 

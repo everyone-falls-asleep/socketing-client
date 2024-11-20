@@ -1,4 +1,5 @@
 import { useEventDetail } from "../../../store/EventDetailContext";
+import { formatToKoreanDateAndTime } from "../../../utils/dateUtils";
 
 const EventDetailAboutTab = () => {
   const { event } = useEventDetail();
@@ -6,21 +7,6 @@ const EventDetailAboutTab = () => {
   if (!event) {
     return null;
   }
-
-  const formatDateTime = (date: string) => {
-    const formattedDate = new Date(date)
-      .toISOString()
-      .replace("T", " ")
-      .slice(0, 16);
-
-    const year = formattedDate.slice(0, 4);
-    const month = formattedDate.slice(5, 7);
-    const day = formattedDate.slice(8, 10);
-    const hour = formattedDate.slice(11, 13);
-    const minute = formattedDate.slice(14, 16);
-
-    return `${year}년 ${month}월 ${day}일 ${hour}시 ${minute}분`;
-  };
 
   return (
     <>
@@ -65,7 +51,7 @@ const EventDetailAboutTab = () => {
                   <ul className="list-disc pl-6">
                     {event.eventDates.map((schedule) => (
                       <li key={schedule.id} className="text-gray-600 text-lg">
-                        {formatDateTime(schedule.date)}
+                        {formatToKoreanDateAndTime(schedule.date)}
                       </li>
                     ))}
                   </ul>

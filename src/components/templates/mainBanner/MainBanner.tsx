@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
+import { formatToKoreanDateAndTime } from "../../../utils/dateUtils";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -114,9 +115,7 @@ const MainBanner = ({ events }: EventListProps) => {
                 <p className="text-2xl md:text-3xl font-bold text-white mb-6 text-center">
                   티켓팅 시작:{" "}
                   {event.ticketingStartTime
-                    ? dayjs(event.ticketingStartTime)
-                        .tz("Asia/Seoul")
-                        .format("YYYY년 MM월 DD일 HH시 mm분")
+                    ? formatToKoreanDateAndTime(event.ticketingStartTime)
                     : "정보 없음"}
                 </p>
                 <button

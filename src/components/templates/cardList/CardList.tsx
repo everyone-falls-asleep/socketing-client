@@ -1,11 +1,6 @@
+import { formatToKoreanDateAndTime } from "../../../utils/dateUtils";
 import { EventListProps } from "../../organisms/event-lists/EventList";
 import { useNavigate } from "react-router-dom";
-import dayjs from "dayjs";
-import utc from "dayjs/plugin/utc";
-import timezone from "dayjs/plugin/timezone";
-
-dayjs.extend(utc);
-dayjs.extend(timezone);
 
 const CardList = ({ events }: EventListProps) => {
   const navigate = useNavigate();
@@ -32,10 +27,7 @@ const CardList = ({ events }: EventListProps) => {
               <h3 className="text-xl font-semibold mb-2">{event.title}</h3>
               <div className="space-y-1 text-sm text-gray-600">
                 <p>
-                  일시:{" "}
-                  {dayjs(event.eventDates[0].date)
-                    .tz("Asia/Seoul")
-                    .format("YYYY년 MM월 DD일 HH시 mm분")}
+                  일시: {formatToKoreanDateAndTime(event.eventDates[0].date)}
                 </p>
                 <p>장소: {event.place}</p>
               </div>
