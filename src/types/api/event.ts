@@ -91,3 +91,11 @@ export interface Point {
   x: number;
   y: number;
 }
+
+export interface CustomEventsProps extends Omit<Event, "ticketingStartTime"> {
+  ticketingStartTime: number;
+}
+
+export interface CardListProps {
+  events: CustomEventsProps[] | null;
+}

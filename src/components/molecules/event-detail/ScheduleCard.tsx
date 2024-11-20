@@ -19,7 +19,7 @@ const ScheduleCard = ({ eventId, eventDateId, date }: ScheduleCardProps) => {
   };
 
   return (
-    <div className="event-card h-22 flex items-center justify-between px-8 py-4 mx-2 mb-2 rounded-lg border shadow-lg hover:bg-gray-100 transition">
+    <div className="event-card h-20 flex items-center justify-between px-8 py-4 mx-2 mb-2 rounded-lg border shadow-lg hover:bg-gray-100 transition">
       <div className="schedule-info flex gap-4">
         <div
           id="schedule-date"
