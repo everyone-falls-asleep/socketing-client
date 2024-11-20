@@ -1,7 +1,5 @@
 import FourSectionLayout from "../layout/FourSectionLayout";
-import ReservationMinimap from "../organisms/reservation/ReservationMinimap";
 import AdminReservationSeatContainer from "../organisms/admin/AdminReservationSeatContainer";
-import ReservationSeatInfo from "../organisms/reservation/ReservationSeatInfo";
 import ReservationUpperEvent from "../organisms/reservation/ReservationUpperEvent";
 import { fetchReservationsByEvent } from "../../api/reservations/reservationsApi";
 import { createResourceQuery } from "../../hooks/useCustomQuery";
@@ -62,8 +60,6 @@ const AdminDetailPage = () => {
     return <>{fetchErrorMessages.noSeatsData}</>;
   }
 
-  console.log(reservationData);
-
   const seatsByEventDate = reservationData.data.reduce(
     (acc, entry) => {
       const eventId = entry.eventDate.id;
@@ -112,8 +108,8 @@ const AdminDetailPage = () => {
           svg={eventData.data.svg ?? ""}
         />
       }
-      rightTopContent={<ReservationMinimap />}
-      rightBottomContent={<ReservationSeatInfo />}
+      rightTopContent={<></>}
+      rightBottomContent={<></>}
       isLeftSidebarOpen={isLeftSidebarOpen}
       toggleSidebar={() => setIsLeftSidebarOpen(!isLeftSidebarOpen)}
     />
