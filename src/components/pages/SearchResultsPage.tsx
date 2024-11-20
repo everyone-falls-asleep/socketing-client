@@ -6,6 +6,12 @@ import { fetchAllEvents } from "../../api/events/eventsApi";
 import { createResourceQuery } from "../../hooks/useCustomQuery";
 import { EventsResponse } from "../../types/api/event";
 import { fetchErrorMessages } from "../../constants/errorMessages";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 const SearchResultsPage = () => {
   const searchTerm = useParams<{ searchTerm: string }>().searchTerm ?? ""; // URL 경로에서 검색어 가져오기
@@ -31,6 +37,13 @@ const SearchResultsPage = () => {
     );
   });
 
+  const processedEvents = filterEvents.map((event) => ({
+    ...event,
+    ticketingStartTime: event.ticketingStartTime
+      ? dayjs(event.ticketingStartTime).tz("Asia/Seoul").valueOf()
+      : 0, // 또는 다른 기본값
+  }));
+
   return (
     <MainLayout>
       <div className="min-h-screen bg-gray-100 px-6 py-8">
@@ -40,7 +53,7 @@ const SearchResultsPage = () => {
             : "검색어가 입력되지 않았습니다."}
         </h1>
         {filterEvents.length > 0 ? (
-          <CardList events={filterEvents} /> // 검색 결과를 CardList에 전달
+          <CardList events={processedEvents} /> // 검색 결과를 CardList에 전달
         ) : (
           <p className="text-center text-gray-600">
             검색어와 관련된 공연이 없습니다.
