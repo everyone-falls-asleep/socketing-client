@@ -77,7 +77,7 @@ const LoginModal: React.FC<LoginModalProps> = ({
       email: `${data.email.trim()}@jungle.com`,
       password: "123456",
     };
-
+    localStorage.setItem("name", data.email);
     mutation.mutate(loginData);
   };
 
