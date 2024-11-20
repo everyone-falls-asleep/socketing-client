@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Seat } from "../types/api/socket";
+import { Seat } from "../types/api/event";
 
 interface SvgWrapperProps {
   svgString: string;
@@ -11,7 +11,7 @@ interface SvgWrapperProps {
   viewBox?: string;
 }
 
-function SvgWrapper({
+function SvgWrapperApi({
   svgString,
   onClick,
   seats,
@@ -52,4 +52,4 @@ function SvgWrapper({
   );
 }
 
-export default SvgWrapper;
+export default SvgWrapperApi;

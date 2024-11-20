@@ -1,6 +1,6 @@
 import React, { useRef, useEffect } from "react";
 import { useEventCreate } from "../../../store/EventCreateContext";
-import SvgWrapper from "../../../utils/SvgWrapper";
+import SvgWrapperApi from "../../../utils/SvgWrapperApi";
 import { Seat } from "../../../types/api/event";
 import { Point } from "../../../types/api/event";
 
@@ -178,7 +178,7 @@ const SeatMaker: React.FC<SeatMakerProps> = ({
           transition: isDragging ? "none" : "transform 0.1s ease-out",
         }}
       >
-        <SvgWrapper
+        <SvgWrapperApi
           svgString={event?.svg || ""}
           onClick={handleSvgClick}
           seats={seats}

@@ -7,58 +7,43 @@ import ReservationSeatContainer from "../organisms/reservation/ReservationSeatCo
 import ReservationMinimap from "../organisms/reservation/ReservationMinimap";
 import ReservationSeatInfo from "../organisms/reservation/ReservationSeatInfo";
 import { ReservationContext } from "../../store/ReservationContext";
-import { fetchAllSeats, fetchOneEvent } from "../../api/events/eventsApi";
+import { fetchOneEvent } from "../../api/events/eventsApi";
 import { createResourceQuery } from "../../hooks/useCustomQuery";
-import { useSocketConnection } from "../../hooks/useSocketConnection";
-import { SingleEventResponse, SeatResponse } from "../../types/api/event";
+import { SingleEventResponse } from "../../types/api/event";
 import { fetchErrorMessages } from "../../constants/errorMessages";
 
 const ReservationPage: React.FC = () => {
-  const { setEventId, setEventDateId, setSocket } =
+  const { eventId: urlEventId, eventDateId: urlEventDateId } = useParams();
+  const { setEventId, setEventDateId, seats, isConnected } =
     useContext(ReservationContext);
-  const { eventId, eventDateId } = useParams();
-  const { socket: newSocket } = useSocketConnection();
+
   const [isLeftSidebarOpen, setIsLeftSidebarOpen] =
     React.useState<boolean>(true);
 
-  useEffect(() => {
-    if (newSocket) {
-      setSocket(newSocket);
-      return () => {
-        newSocket.disconnect();
-        setSocket(null);
-      };
-    }
-  }, [newSocket, setSocket]);
-
-  useEffect(() => {
-    if (eventId) setEventId(eventId);
-    if (eventDateId) setEventDateId(eventDateId);
-  }, [eventId, eventDateId, setEventId, setEventDateId]);
-
+  // Event Data Query
   const useEvent = createResourceQuery<SingleEventResponse>(
     "single-event",
     fetchOneEvent
   );
-  const useSeat = createResourceQuery<SeatResponse>("seats", fetchAllSeats);
 
   const {
     data: eventData,
     isLoading: eventLoading,
     isError: eventError,
-  } = useEvent(eventId ?? "default-id");
-  const {
-    data: seatsData,
-    isLoading: seatsLoading,
-    isError: seatsError,
-  } = useSeat(eventId ?? "default-id");
+  } = useEvent(urlEventId ?? "default-id");
 
-  if (eventLoading || seatsLoading)
-    return <p>{fetchErrorMessages.isLoading}</p>;
-  if (eventError || seatsError) return <p>{fetchErrorMessages.general}</p>;
+  // Set Event and EventDate IDs in Context when URL params change
+  useEffect(() => {
+    if (urlEventId) setEventId(urlEventId);
+    if (urlEventDateId) setEventDateId(urlEventDateId);
+  }, [urlEventId, urlEventDateId, setEventId, setEventDateId]);
+
+  // Loading States
+  if (eventLoading) return <p>{fetchErrorMessages.isLoading}</p>;
+  if (eventError) return <p>{fetchErrorMessages.general}</p>;
   if (!eventData?.data) return <p>{fetchErrorMessages.noEventData}</p>;
-  if (!seatsData?.data) return <p>{fetchErrorMessages.noSeatsData}</p>;
   if (!eventData.data.svg) return <div>{fetchErrorMessages.noSvgData}</div>;
+  if (!isConnected) return <p>Connecting to server...</p>;
 
   return (
     <FourSectionLayout
@@ -68,7 +53,7 @@ const ReservationPage: React.FC = () => {
       }
       centerContent={
         <ReservationSeatContainer
-          seatsData={seatsData.data}
+          seatsData={seats} // Now using seats from Context instead of API
           svg={eventData.data.svg}
         />
       }

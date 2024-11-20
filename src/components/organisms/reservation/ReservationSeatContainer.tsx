@@ -1,4 +1,4 @@
-import { Seat } from "../../../types/api/event";
+import { Seat } from "../../../types/api/socket";
 import SeatContainer from "../seat-container/SeatContainer";
 
 interface ReservationSeatContainerProps {

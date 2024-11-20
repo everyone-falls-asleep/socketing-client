@@ -8,7 +8,6 @@ import {
 import { AxiosError } from "axios";
 import { ApiErrorResponse } from "../../../types/api/common";
 import { createNewReservation } from "../../../api/reservations/reservationsApi";
-import { useSeatStatus } from "../../../hooks/useSeatStatus";
 import { postReservationErrorMessages } from "../../../constants/errorMessages";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
@@ -16,13 +15,7 @@ import Button from "../../atoms/buttons/Button";
 
 const ReservationSeatInfo = () => {
   const navigate = useNavigate();
-  const { selectedSeat, eventId, eventDateId, socket } =
-    useContext(ReservationContext);
-
-  const { reserveSeat } = useSeatStatus({
-    socket,
-    seatId: selectedSeat?.id ?? "",
-  });
+  const { selectedSeat, eventId, eventDateId } = useContext(ReservationContext);
 
   const createReservationMutation = usePostMutation<
     NewReservationResponse,
@@ -33,7 +26,6 @@ const ReservationSeatInfo = () => {
       if (response.data?.id) {
         navigate(`/reservation-confirmation/${response.data.id}`);
       }
-      reserveSeat();
     },
 
     onError: (error: AxiosError<ApiErrorResponse>) => {
