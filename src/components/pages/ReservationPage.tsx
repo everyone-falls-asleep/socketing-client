@@ -10,6 +10,7 @@ import { fetchOneEvent } from "../../api/events/eventsApi";
 import { createResourceQuery } from "../../hooks/useCustomQuery";
 import { SingleEventResponse } from "../../types/api/event";
 import { fetchErrorMessages } from "../../constants/errorMessages";
+import ReservationSeatInfo from "../organisms/reservation/ReservationSeatInfo";
 
 const ReservationPage: React.FC = () => {
   const { eventId: urlEventId, eventDateId: urlEventDateId } = useParams();
@@ -52,7 +53,7 @@ const ReservationPage: React.FC = () => {
       }
       centerContent={<ReservationSeatContainer svg={eventData.data.svg} />}
       rightTopContent={<ReservationMinimap />}
-      rightBottomContent={<div>reservation info</div>}
+      rightBottomContent={<ReservationSeatInfo />}
       isLeftSidebarOpen={isLeftSidebarOpen}
       toggleSidebar={() => setIsLeftSidebarOpen(!isLeftSidebarOpen)}
     />

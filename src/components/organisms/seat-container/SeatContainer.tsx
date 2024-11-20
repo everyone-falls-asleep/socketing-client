@@ -57,38 +57,54 @@ const SeatContainer: React.FC<SeatContainerProps> = ({
     };
   }, [socket, isConnected]);
 
-  const handleMouseMove = (e: MouseEvent) => {
-    if (isDragging && containerRef.current) {
-      const deltaX = e.clientX - startPoint.x;
-      const deltaY = e.clientY - startPoint.y;
-      setTranslate((prev) => ({
-        x: prev.x + deltaX,
-        y: prev.y + deltaY,
-      }));
-      setStartPoint({ x: e.clientX, y: e.clientY });
-    }
-  };
-
   useEffect(() => {
-    document.addEventListener("mousemove", handleMouseMove);
-    document.addEventListener("mouseup", () => setIsDragging(false));
-    containerRef.current?.addEventListener("wheel", (e: WheelEvent) => {
+    const handleMouseMove = (e: MouseEvent): void => {
+      if (isDragging && containerRef.current) {
+        const deltaX = e.clientX - startPoint.x;
+        const deltaY = e.clientY - startPoint.y;
+
+        setTranslate((prev) => ({
+          x: prev.x + deltaX,
+          y: prev.y + deltaY,
+        }));
+
+        setStartPoint({
+          x: e.clientX,
+          y: e.clientY,
+        });
+      }
+    };
+
+    const handleMouseUp = (): void => {
+      setIsDragging(false);
+    };
+
+    const handleWheel = (e: WheelEvent): void => {
       e.preventDefault();
       const delta = e.deltaY * -0.001;
-      setScale((prev) => Math.min(Math.max(0.5, prev + delta), 3));
-    });
+      const newScale = Math.min(Math.max(0.5, scale + delta), 3);
+      setScale(newScale);
+    };
+
+    document.addEventListener("mousemove", handleMouseMove);
+    document.addEventListener("mouseup", handleMouseUp);
+    containerRef.current?.addEventListener("wheel", handleWheel);
 
     return () => {
       document.removeEventListener("mousemove", handleMouseMove);
-      document.removeEventListener("mouseup", () => setIsDragging(false));
+      document.removeEventListener("mouseup", handleMouseUp);
+      containerRef.current?.removeEventListener("wheel", handleWheel);
     };
-  }, [isDragging]);
+  }, [isDragging, startPoint, scale]);
 
-  const handleMouseDown = (e: React.MouseEvent) => {
+  const handleMouseDown = (e: React.MouseEvent): void => {
     if (e.button === 0) {
       e.preventDefault();
       setIsDragging(true);
-      setStartPoint({ x: e.clientX, y: e.clientY });
+      setStartPoint({
+        x: e.clientX,
+        y: e.clientY,
+      });
     }
   };
 
@@ -97,7 +113,7 @@ const SeatContainer: React.FC<SeatContainerProps> = ({
       <div
         ref={containerRef}
         className="relative flex-1 overflow-hidden bg-gray-100"
-        style={{ height: "100%" }}
+        style={{ height: "100%", touchAction: "none" }}
         onMouseDown={handleMouseDown}
       >
         <div
@@ -119,6 +135,36 @@ const SeatContainer: React.FC<SeatContainerProps> = ({
             viewBox={viewBox}
           />
         </div>
+      </div>
+
+      <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-white rounded-lg shadow-lg p-2 flex gap-2">
+        <button
+          onClick={() => {
+            const newScale = Math.min(scale + 0.2, 3);
+            setScale(newScale);
+          }}
+          className="px-3 py-1 border rounded-lg hover:bg-gray-100"
+        >
+          +
+        </button>
+        <button
+          onClick={() => {
+            setScale(1);
+            setTranslate({ x: 0, y: 0 });
+          }}
+          className="px-2 py-1 border rounded-lg hover:bg-gray-100 text-sm"
+        >
+          Reset
+        </button>
+        <button
+          onClick={() => {
+            const newScale = Math.max(scale - 0.2, 0.5);
+            setScale(newScale);
+          }}
+          className="px-3 py-1 border rounded-lg hover:bg-gray-100"
+        >
+          -
+        </button>
       </div>
 
       <div className="absolute bottom-0 left-0 right-0 bg-white p-2 text-sm flex justify-between items-center h-10 border-t">

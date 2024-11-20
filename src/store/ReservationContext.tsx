@@ -36,6 +36,8 @@ interface ReservationContextType {
   joinRoom: (eventId: string, eventDateId: string) => void;
   selectSeat: (seatId: string) => void;
   currentUserId: string | null;
+  selectedSeat: Seat | null;
+  setSelectedSeat: (seat: Seat | null) => void;
 }
 
 export const ReservationContext = createContext<ReservationContextType>(
@@ -50,6 +52,7 @@ export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
   const [eventDateId, setEventDateId] = useState<string | null>(null);
   const [seatsMap, setSeatsMap] = useState<Map<string, Seat>>(new Map());
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
+  const [selectedSeat, setSelectedSeat] = useState<Seat | null>(null);
 
   const updateSeat = (seatId: string, updates: Partial<Seat>) => {
     setSeatsMap((prev) => {
@@ -59,7 +62,6 @@ export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
         newMap.set(seatId, {
           ...currentSeat,
           ...updates,
-          // Ensure selectedBy is explicitly set from server data
           selectedBy: updates.selectedBy,
         });
       }
@@ -74,6 +76,10 @@ export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
   const selectSeat = (seatId: string) => {
     if (!socket || !eventId || !eventDateId) return;
     // Only emit the event, don't update state directly
+    const seat = seatsMap.get(seatId);
+    if (seat) {
+      setSelectedSeat(seat);
+    }
     socket.emit("selectSeat", { seatId, eventId, eventDateId });
   };
 
@@ -132,6 +138,8 @@ export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
     joinRoom,
     selectSeat,
     currentUserId,
+    selectedSeat,
+    setSelectedSeat,
   };
 
   return (
