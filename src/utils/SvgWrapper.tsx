@@ -6,8 +6,6 @@ interface SvgWrapperProps {
   onClick?: (e: React.MouseEvent<SVGSVGElement>) => void;
   seats: Seat[];
   renderSeat: (seat: Seat) => React.ReactNode;
-  scale?: number;
-  isDateSidebarOpen?: boolean;
   viewBox?: string;
 }
 
@@ -16,7 +14,7 @@ function SvgWrapper({
   onClick,
   seats,
   renderSeat,
-  viewBox = "0 0 1024 768",
+  viewBox = "0 0 10240 7680", // 기존 viewBox로 수정
 }: SvgWrapperProps) {
   const [svgContent, setSvgContent] = useState<string>("");
 
@@ -27,7 +25,6 @@ function SvgWrapper({
     const doc = parser.parseFromString(svgString, "image/svg+xml");
     const svg = doc.documentElement;
 
-    // 내부 콘텐츠만 추출
     const innerContent = Array.from(svg.children)
       .map((child) => child.outerHTML)
       .join("");
@@ -45,9 +42,10 @@ function SvgWrapper({
         maxWidth: "100%",
         maxHeight: "100%",
       }}
+      preserveAspectRatio="xMidYMid meet" // 추가: SVG가 컨테이너에 맞게 조정되도록
     >
       <g dangerouslySetInnerHTML={{ __html: svgContent }} />
-      {seats.map(renderSeat)}
+      {seats?.map(renderSeat)}
     </svg>
   );
 }

@@ -1,4 +1,4 @@
-import React, { useContext, useMemo } from "react";
+import React, { useContext } from "react";
 import { ReservationContext } from "../../../store/ReservationContext";
 import { Seat } from "../../../types/api/socket";
 
@@ -6,113 +6,74 @@ interface SeatProps {
   seatData: Seat;
 }
 
+type SeatStatus = "available" | "reserved" | "temporary_hold" | "selected";
+
+const getSeatStatus = (
+  seatData: Seat,
+  eventDateId: string | null,
+  currentUserId: string | null
+): SeatStatus => {
+  if (!eventDateId) return "available";
+
+  const isReserved = seatData.reservations.some(
+    (reservation) => reservation.eventDate.id === eventDateId
+  );
+
+  if (isReserved) return "reserved";
+  if (seatData.selectedBy) {
+    if (
+      seatData.expirationTime &&
+      new Date(seatData.expirationTime) < new Date()
+    ) {
+      return "available";
+    }
+    return seatData.selectedBy === currentUserId
+      ? "selected"
+      : "temporary_hold";
+  }
+
+  return "available";
+};
+
+const getStatusColor = (status: SeatStatus) => {
+  switch (status) {
+    case "available":
+      return "#FFFFFF";
+    case "reserved":
+      return "#9CA3AF";
+    case "selected":
+      return "#60A5FA";
+    case "temporary_hold":
+      return "#FBBF24";
+    default:
+      return "#9CA3AF";
+  }
+};
+
+const getHoverClass = (status: string) => {
+  if (status === "available" || status === "selected") {
+    return "hover:opacity-80 cursor-pointer";
+  }
+  return "cursor-not-allowed";
+};
+
 const SeatObj: React.FC<SeatProps> = ({ seatData }) => {
-  const {
-    socket,
-    isConnected,
-    selectSeat,
-    selectedSeat,
-    eventDateId,
-    setSelectedSeat,
-  } = useContext(ReservationContext);
+  const { eventDateId, selectSeat, socket, isConnected, currentUserId } =
+    useContext(ReservationContext);
 
-  // Compute seat status
-  const seatStatus = useMemo(() => {
-    // If seat is reserved for current event date
-    const isReserved = seatData.reservations.some(
-      (reservation) => reservation.eventDate.id === eventDateId
-    );
+  const seatStatus = getSeatStatus(seatData, eventDateId, currentUserId);
+  const statusColor = getStatusColor(seatStatus);
+  const hoverClass = getHoverClass(seatStatus);
 
-    // If seat is currently selected by this user
-    const isSelectedByMe = selectedSeat?.id === seatData.id;
-
-    // If seat is selected by another user
-    const isSelectedByOther = seatData.selectedBy && !isSelectedByMe;
-
-    // Selection is expired
-    const isExpired =
-      seatData.expirationTime && new Date(seatData.expirationTime) < new Date();
-
-    if (isReserved) return "reserved";
-    if (isSelectedByMe) return "selected";
-    if (isSelectedByOther && !isExpired) return "temporary_hold";
-    return "available";
-  }, [seatData, eventDateId, selectedSeat]);
-
-  // Get color based on status
-  const getStatusColor = () => {
-    switch (seatStatus) {
-      case "available":
-        return "#FFFFFF";
-      case "reserved":
-        return "#9CA3AF";
-      case "selected":
-        return "#60A5FA";
-      case "temporary_hold":
-        return "#FBBF24";
-      default:
-        return "#9CA3AF";
-    }
-  };
-
-  // Get hover state class based on availability
-  const getHoverClass = () => {
-    if (seatStatus === "available") {
-      return "hover:opacity-80 cursor-pointer";
-    }
-    if (seatStatus === "selected") {
-      return "hover:opacity-80 cursor-pointer";
-    }
-    return "cursor-not-allowed";
-  };
-
-  // Handle seat click
-  const handleSeatClick = (e: React.MouseEvent) => {
+  const handleClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-
-    if (!isConnected || !socket) {
-      console.warn("Socket not connected");
-      return;
-    }
-
-    if (seatStatus === "reserved" || seatStatus === "temporary_hold") {
-      return;
-    }
-
-    // If clicking already selected seat, deselect it
-    if (seatStatus === "selected") {
-      selectSeat(seatData.id); // This will trigger a deselect on the server
-      setSelectedSeat(null);
-      return;
-    }
-
-    // Select new seat
-    if (seatStatus === "available") {
-      selectSeat(seatData.id);
-      setSelectedSeat(seatData);
-    }
-  };
-
-  // Tooltip content
-  const getTooltipContent = () => {
-    const base = `Seat ${seatData.area}-${seatData.row}-${seatData.number}`;
-    switch (seatStatus) {
-      case "available":
-        return `${base} (Available)`;
-      case "reserved":
-        return `${base} (Reserved)`;
-      case "selected":
-        return `${base} (Selected by you)`;
-      case "temporary_hold":
-        return `${base} (Selected by another user)`;
-      default:
-        return base;
-    }
+    if (!isConnected || !socket) return;
+    if (seatStatus === "reserved" || seatStatus === "temporary_hold") return;
+    selectSeat(seatData.id);
   };
 
   return (
-    <g onClick={handleSeatClick} className="seat-group">
-      {/* Selection Indicator (larger circle for selected seats) */}
+    <g onClick={handleClick} className="seat-group">
       {seatStatus === "selected" && (
         <circle
           r="18"
@@ -123,24 +84,14 @@ const SeatObj: React.FC<SeatProps> = ({ seatData }) => {
         />
       )}
 
-      {/* Base Seat Circle */}
       <circle
         r="15"
-        fill={getStatusColor()}
+        fill={statusColor}
         stroke="#1F2937"
         strokeWidth="2"
-        className={`
-          seat 
-          transition-colors 
-          duration-200 
-          ${getHoverClass()}
-        `}
+        className={`seat transition-colors duration-200 ${hoverClass}`}
       />
 
-      {/* Tooltip */}
-      <title>{getTooltipContent()}</title>
-
-      {/* Timer for temporary holds */}
       {seatStatus === "temporary_hold" && seatData.expirationTime && (
         <circle
           r="15"
@@ -159,9 +110,18 @@ const SeatObj: React.FC<SeatProps> = ({ seatData }) => {
           />
         </circle>
       )}
+
+      {seatStatus === "available" && !seatData.selectedBy && (
+        <circle
+          r="15"
+          fill="none"
+          stroke="#FFF"
+          strokeWidth="2"
+          strokeDasharray="100"
+        ></circle>
+      )}
     </g>
   );
 };
 
-// Memoize the component to prevent unnecessary re-renders
-export default React.memo(SeatObj);
+export default SeatObj;

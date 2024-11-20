@@ -15,7 +15,7 @@ export interface Seat {
       date: string;
     };
   }>;
-  selectedBy: string | null;
+  selectedBy?: string | null;
   updatedAt: string | null;
   expirationTime: string | null;
 }
@@ -80,4 +80,11 @@ export type SeatStatus =
 export interface Point {
   x: number;
   y: number;
+}
+
+export interface SeatSelectedResponse {
+  seatId: string;
+  selectedBy: string | null;
+  updatedAt: string;
+  expirationTime: string | null;
 }

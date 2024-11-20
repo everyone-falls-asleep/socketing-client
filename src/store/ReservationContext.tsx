@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect, useCallback } from "react";
+import React, { createContext, useState, useEffect } from "react";
 import { Socket } from "socket.io-client";
 import { useSocketConnection } from "../hooks/useSocketConnection";
 
@@ -19,132 +19,106 @@ interface Seat {
   row: number;
   number: number;
   reservations: Reservation[];
-  selectedBy: string | null;
+  selectedBy?: string | null;
   updatedAt: string | null;
   expirationTime: string | null;
 }
 
 interface ReservationContextType {
-  // Socket
   socket: Socket | null;
   isConnected: boolean;
-
-  // Room/Event Info
   eventId: string | null;
   setEventId: (id: string) => void;
   eventDateId: string | null;
   setEventDateId: (id: string) => void;
-
-  // Seats State
-  seats: Seat[];
-  setSeats: (seats: Seat[]) => void;
-  selectedSeat: Seat | null;
-  setSelectedSeat: (seat: Seat | null) => void;
-
-  // Actions
+  seatsMap: Map<string, Seat>;
+  updateSeat: (seatId: string, updates: Partial<Seat>) => void;
   joinRoom: (eventId: string, eventDateId: string) => void;
   selectSeat: (seatId: string) => void;
+  currentUserId: string | null;
 }
 
-const defaultContext: ReservationContextType = {
-  socket: null,
-  isConnected: false,
-  eventId: null,
-  setEventId: () => {},
-  eventDateId: null,
-  setEventDateId: () => {},
-  seats: [],
-  setSeats: () => {},
-  selectedSeat: null,
-  setSelectedSeat: () => {},
-  joinRoom: () => {},
-  selectSeat: () => {},
-};
-
-export const ReservationContext =
-  createContext<ReservationContextType>(defaultContext);
+export const ReservationContext = createContext<ReservationContextType>(
+  {} as ReservationContextType
+);
 
 export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  // Socket Connection
   const { socket, isConnected } = useSocketConnection();
-
-  // Basic State
   const [eventId, setEventId] = useState<string | null>(null);
   const [eventDateId, setEventDateId] = useState<string | null>(null);
-  const [seats, setSeats] = useState<Seat[]>([]);
-  const [selectedSeat, setSelectedSeat] = useState<Seat | null>(null);
+  const [seatsMap, setSeatsMap] = useState<Map<string, Seat>>(new Map());
+  const [currentUserId, setCurrentUserId] = useState<string | null>(null);
 
-  // Room Join Handler
-  const joinRoom = useCallback(
-    (eventId: string, eventDateId: string) => {
-      if (!socket) return;
+  const updateSeat = (seatId: string, updates: Partial<Seat>) => {
+    setSeatsMap((prev) => {
+      const newMap = new Map(prev);
+      const currentSeat = newMap.get(seatId);
+      if (currentSeat) {
+        newMap.set(seatId, {
+          ...currentSeat,
+          ...updates,
+          // Ensure selectedBy is explicitly set from server data
+          selectedBy: updates.selectedBy,
+        });
+      }
+      return newMap;
+    });
+  };
 
-      socket.emit("joinRoom", { eventId, eventDateId });
-    },
-    [socket]
-  );
+  const joinRoom = (eventId: string, eventDateId: string) => {
+    socket?.emit("joinRoom", { eventId, eventDateId });
+  };
 
-  // Seat Selection Handler
-  const selectSeat = useCallback(
-    (seatId: string) => {
-      if (!socket || !eventId || !eventDateId) return;
+  const selectSeat = (seatId: string) => {
+    if (!socket || !eventId || !eventDateId) return;
+    // Only emit the event, don't update state directly
+    socket.emit("selectSeat", { seatId, eventId, eventDateId });
+  };
 
-      socket.emit("selectSeat", {
-        seatId,
-        eventId,
-        eventDateId,
-      });
-    },
-    [socket, eventId, eventDateId]
-  );
-
-  // Socket Event Listeners
   useEffect(() => {
     if (!socket) return;
 
-    // Room Joined Handler
-    socket.on("roomJoined", (data: { message: string; seats: Seat[] }) => {
-      console.log(data.message);
-      setSeats(data.seats);
+    // Get current user ID when socket connects
+    socket.on("connect", () => {
+      if (socket.id) setCurrentUserId(socket.id);
     });
 
-    // Seat Selected Handler
+    socket.on("roomJoined", (data: { seats: Seat[] }) => {
+      const newSeatsMap = new Map();
+      data.seats.forEach((seat) => newSeatsMap.set(seat.id, seat));
+      setSeatsMap(newSeatsMap);
+    });
+
     socket.on(
       "seatSelected",
       (data: {
         seatId: string;
         selectedBy: string | null;
         updatedAt: string;
+        expirationTime: string | null;
       }) => {
-        setSeats((prevSeats) =>
-          prevSeats.map((seat) =>
-            seat.id === data.seatId
-              ? {
-                  ...seat,
-                  selectedBy: data.selectedBy,
-                  updatedAt: data.updatedAt,
-                }
-              : seat
-          )
-        );
+        updateSeat(data.seatId, {
+          selectedBy: data.selectedBy,
+          updatedAt: data.updatedAt,
+          expirationTime: data.expirationTime,
+        });
       }
     );
 
-    // Cleanup
     return () => {
+      socket.off("connect");
       socket.off("roomJoined");
       socket.off("seatSelected");
     };
   }, [socket]);
 
-  // Auto Join Room Effect
   useEffect(() => {
     if (socket && eventId && eventDateId) {
       joinRoom(eventId, eventDateId);
     }
-  }, [socket, eventId, eventDateId, joinRoom]);
+  }, [socket, eventId, eventDateId]);
 
   const value = {
     socket,
@@ -153,12 +127,11 @@ export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
     setEventId,
     eventDateId,
     setEventDateId,
-    seats,
-    setSeats,
-    selectedSeat,
-    setSelectedSeat,
+    seatsMap,
+    updateSeat,
     joinRoom,
     selectSeat,
+    currentUserId,
   };
 
   return (

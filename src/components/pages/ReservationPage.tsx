@@ -5,7 +5,6 @@ import ReservationUpperEvent from "../organisms/reservation/ReservationUpperEven
 import ReservationCalendarSideBar from "../organisms/reservation/ReservationCalendarSideBar";
 import ReservationSeatContainer from "../organisms/reservation/ReservationSeatContainer";
 import ReservationMinimap from "../organisms/reservation/ReservationMinimap";
-import ReservationSeatInfo from "../organisms/reservation/ReservationSeatInfo";
 import { ReservationContext } from "../../store/ReservationContext";
 import { fetchOneEvent } from "../../api/events/eventsApi";
 import { createResourceQuery } from "../../hooks/useCustomQuery";
@@ -14,7 +13,7 @@ import { fetchErrorMessages } from "../../constants/errorMessages";
 
 const ReservationPage: React.FC = () => {
   const { eventId: urlEventId, eventDateId: urlEventDateId } = useParams();
-  const { setEventId, setEventDateId, seats, isConnected } =
+  const { setEventId, setEventDateId, isConnected } =
     useContext(ReservationContext);
 
   const [isLeftSidebarOpen, setIsLeftSidebarOpen] =
@@ -51,14 +50,9 @@ const ReservationPage: React.FC = () => {
       leftSidebarContent={
         <ReservationCalendarSideBar dateData={eventData.data.eventDates} />
       }
-      centerContent={
-        <ReservationSeatContainer
-          seatsData={seats} // Now using seats from Context instead of API
-          svg={eventData.data.svg}
-        />
-      }
+      centerContent={<ReservationSeatContainer svg={eventData.data.svg} />}
       rightTopContent={<ReservationMinimap />}
-      rightBottomContent={<ReservationSeatInfo />}
+      rightBottomContent={<div>reservation info</div>}
       isLeftSidebarOpen={isLeftSidebarOpen}
       toggleSidebar={() => setIsLeftSidebarOpen(!isLeftSidebarOpen)}
     />
