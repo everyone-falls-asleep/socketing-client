@@ -16,11 +16,16 @@ import SubTitle from "../../atoms/titles/subtitle/SubTitle";
 interface LoginModalProps {
   isOpen: boolean;
   onClose: () => void;
+  onLoginSuccess: () => void;
 }
 
 type EmailOnlyData = Pick<LoginData, "email">;
 
-const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
+const LoginModal: React.FC<LoginModalProps> = ({
+  isOpen,
+  onClose,
+  onLoginSuccess,
+}) => {
   const { saveAuthInfo } = useAuth();
   const {
     register,
@@ -39,6 +44,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
       const token = response.data?.accessToken;
       if (token) {
         saveAuthInfo(token);
+        onLoginSuccess();
         onClose();
         toast.success("로그인되었습니다.");
       }

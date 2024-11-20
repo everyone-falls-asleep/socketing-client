@@ -12,20 +12,30 @@ const Header = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isLogin, setIsLogin] = useState(false);
+  const [name, setName] = useState("");
 
-  const name = localStorage.getItem("name");
-
-  useEffect(() => {
+  // 로그인 상태를 체크하는 함수
+  const checkLoginStatus = () => {
     const token = localStorage.getItem("authToken");
+    const storedName = localStorage.getItem("name");
+
     if (!token) {
       setIsLogin(false);
+      setName("");
       return;
     }
     if (isTokenExpired(token)) {
       handleLogout();
     } else {
+      if (storedName) {
+        setName(storedName);
+      }
       setIsLogin(true);
     }
+  };
+
+  useEffect(() => {
+    checkLoginStatus();
   }, []);
 
   const isTokenExpired = (token: string): boolean => {
@@ -60,8 +70,16 @@ const Header = () => {
     localStorage.setItem("authToken", "");
     localStorage.removeItem("nickname");
     localStorage.removeItem("name");
+    localStorage.removeItem("userId");
+
     setIsLogin(false);
+    setName("");
     toast.success("로그아웃되었습니다. 다시 로그인해주세요.");
+  };
+
+  const handleLoginSuccess = () => {
+    checkLoginStatus();
+    setIsLoginModalOpen(false);
   };
 
   const handleRegister = () => {
@@ -128,6 +146,7 @@ const Header = () => {
       <LoginModal
         isOpen={isLoginModalOpen}
         onClose={() => setIsLoginModalOpen(false)}
+        onLoginSuccess={handleLoginSuccess}
       />
     </>
   );

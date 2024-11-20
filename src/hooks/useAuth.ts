@@ -12,11 +12,11 @@ export const useAuth = () => {
     localStorage.setItem("authToken", token);
 
     const decodedToken = jwtDecode<{ sub: string }>(token);
-    const userId = decodedToken.sub;
+    const decodedUserId = decodedToken.sub;
 
-    if (userId) {
-      setUserId(userId);
-      void fetchUserInfo(userId);
+    if (decodedUserId) {
+      setUserId(decodedUserId); // userId가 변경되면 UserProvider에서 localStorage에 저장됨
+      void fetchUserInfo(decodedUserId);
     } else {
       console.error("토큰에서 userID를 찾을 수 없습니다.");
     }
