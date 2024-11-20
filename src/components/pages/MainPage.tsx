@@ -54,8 +54,7 @@ const MainPage = () => {
         .valueOf(),
     }))
     .filter(
-      (event) =>
-        event.ticketingStartTime && event.ticketingStartTime >= now - 60 * 1000
+      (event) => event.ticketingStartTime && event.ticketingStartTime >= now
     )
     .sort((a, b) => {
       return a.ticketingStartTime - b.ticketingStartTime;
@@ -84,7 +83,10 @@ const MainPage = () => {
         .tz("Asia/Seoul")
         .valueOf(),
     }))
-    .filter((event) => event.ticketingStartTime > now)
+    .filter((event) => {
+      // ticketingStartTime으로부터 5분(300000ms)이 지나지 않은 이벤트만 포함
+      return event.ticketingStartTime > now - 300000;
+    })
     .sort((a, b) => a.ticketingStartTime - b.ticketingStartTime)
     .slice(0, 1);
 
