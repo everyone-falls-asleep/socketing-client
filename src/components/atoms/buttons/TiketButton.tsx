@@ -5,9 +5,10 @@ import { getTimeLeft } from "../../../utils/countdownTimer";
 
 interface TicketButtonProps {
   event: CustomEventsProps;
+  className?: string;
 }
 
-const TicketButton = ({ event }: TicketButtonProps) => {
+const TicketButton = ({ event, className }: TicketButtonProps) => {
   const navigate = useNavigate();
   const now = useCurrentTime();
 
@@ -22,7 +23,7 @@ const TicketButton = ({ event }: TicketButtonProps) => {
   return (
     <div className="relative group inline-block">
       <button
-        className={`px-6 py-3 font-bold rounded-lg transition-colors ${
+        className={`${className} px-6 py-3 font-bold rounded-lg transition-colors ${
           isNotStarted
             ? "bg-gray-400 cursor-not-allowed hover:bg-gray-400"
             : "bg-rose-500 hover:bg-rose-600"

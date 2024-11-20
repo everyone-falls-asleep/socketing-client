@@ -115,6 +115,16 @@ const MainPage = () => {
                       <div className="space-y-1 text-sm text-gray-600">
                         <p className="flex items-center gap-2">
                           <span className="inline-block w-16 font-semibold">
+                            티켓 오픈
+                          </span>
+                          <span>
+                            {formatToKoreanDateAndTime(
+                              event.ticketingStartTime
+                            )}
+                          </span>
+                        </p>
+                        {/* <p className="flex items-center gap-2">
+                          <span className="inline-block w-16 font-semibold">
                             공연 일자
                           </span>
                           <span>
@@ -122,17 +132,7 @@ const MainPage = () => {
                               event.eventDates[0].date
                             )}
                           </span>
-                        </p>
-                        <p className="flex items-center gap-2">
-                          <span className="inline-block w-16 font-semibold">
-                            티켓 오픈
-                          </span>
-                          <span>
-                            {formatToKoreanDateAndTime(
-                              event.eventDates[0].date
-                            )}
-                          </span>
-                        </p>
+                        </p> */}
                         <p className="flex items-center gap-2">
                           <span className="inline-block w-16 font-semibold">
                             장소
