@@ -77,7 +77,7 @@ const MainPage = () => {
     <MainLayout>
       <MainBanner event={nextTicketingEvent[0]} />
 
-      <div className="px-20 pt-8 pb-20 bg-gray-50">
+      <div className="px-6 md:px-20 pt-8 pb-20 bg-gray-50">
         <div className="max-w-7xl mx-auto">
           <h2 className="text-3xl font-bold text-center mb-8">
             티켓팅 오픈 예정 공연
@@ -87,7 +87,7 @@ const MainPage = () => {
               impendingTicketingEvents.map((event: CustomEventsProps) => (
                 <div
                   key={event.id}
-                  className="bg-white flex items-center justify-between px-8 py-6 rounded-xl border border-gray-200 shadow-sm 
+                  className="bg-white flex flex-col md:flex-row items-center justify-between px-8 py-6 rounded-xl border border-gray-200 shadow-sm 
     hover:shadow-md  
     active:bg-gray-100 
     transition-all duration-300 cursor-pointer"
@@ -100,8 +100,8 @@ const MainPage = () => {
                     }
                   }}
                 >
-                  <div className="flex items-center gap-6">
-                    <div className="w-24 h-32 flex-shrink-0">
+                  <div className="flex flex-col md:flex-row items-center gap-6">
+                    <div className="h-48 md:w-24 md:h-32 flex-shrink-0">
                       <img
                         src={event.thumbnail}
                         alt={event.title}
@@ -142,7 +142,7 @@ const MainPage = () => {
                       </div>
                     </div>
                   </div>
-                  <div className="flex flex-col items-end gap-3">
+                  <div className="flex mt-4 md:mt-0 flex-col items-end gap-3">
                     <TicketButton event={event} />
                   </div>
                 </div>
