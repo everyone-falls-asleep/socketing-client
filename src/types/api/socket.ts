@@ -18,6 +18,7 @@ export interface Seat {
   selectedBy?: string | null;
   updatedAt: string | null;
   expirationTime: string | null;
+  reservedBy?: string | null;
 }
 
 export interface UserList {
@@ -65,6 +66,11 @@ export interface ClientToServerEvents {
     eventDateId: string;
   }) => void;
   "seat:temporary_hold": (seatId: string) => void;
+  reserveSeat: (params: {
+    seatId: string;
+    eventId: string;
+    eventDateId: string;
+  }) => void;
 }
 
 // Main Socket Type
@@ -87,4 +93,5 @@ export interface SeatSelectedResponse {
   selectedBy: string | null;
   updatedAt: string;
   expirationTime: string | null;
+  reservedBy: string | null;
 }

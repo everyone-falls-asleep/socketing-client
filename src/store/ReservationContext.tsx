@@ -22,6 +22,7 @@ interface Seat {
   selectedBy?: string | null;
   updatedAt: string | null;
   expirationTime: string | null;
+  reservedBy?: string | null;
 }
 
 interface ReservationContextType {
@@ -38,6 +39,7 @@ interface ReservationContextType {
   currentUserId: string | null;
   selectedSeat: Seat | null;
   setSelectedSeat: (seat: Seat | null) => void;
+  reserveSeat: (seatId: string, eventId: string, eventDateId: string) => void;
 }
 
 export const ReservationContext = createContext<ReservationContextType>(
@@ -63,6 +65,7 @@ export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
           ...currentSeat,
           ...updates,
           selectedBy: updates.selectedBy,
+          reservedBy: updates.reservedBy,
         });
       }
       return newMap;
@@ -81,6 +84,11 @@ export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
       setSelectedSeat(seat);
     }
     socket.emit("selectSeat", { seatId, eventId, eventDateId });
+  };
+
+  const reserveSeat = (seatId: string) => {
+    if (!socket || !seatId || !eventId || !eventDateId) return;
+    socket.emit("reserveSeat", { seatId, eventId, eventDateId });
   };
 
   useEffect(() => {
@@ -104,11 +112,13 @@ export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
         selectedBy: string | null;
         updatedAt: string;
         expirationTime: string | null;
+        reservedBy: string | null;
       }) => {
         updateSeat(data.seatId, {
           selectedBy: data.selectedBy,
           updatedAt: data.updatedAt,
           expirationTime: data.expirationTime,
+          reservedBy: data.reservedBy,
         });
       }
     );
@@ -140,6 +150,7 @@ export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
     currentUserId,
     selectedSeat,
     setSelectedSeat,
+    reserveSeat,
   };
 
   return (

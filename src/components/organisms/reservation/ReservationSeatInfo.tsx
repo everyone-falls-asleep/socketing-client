@@ -15,14 +15,16 @@ import Button from "../../atoms/buttons/Button";
 
 const ReservationSeatInfo = () => {
   const navigate = useNavigate();
-  const { eventId, eventDateId, selectedSeat } = useContext(ReservationContext);
+  const { eventId, eventDateId, selectedSeat, reserveSeat } =
+    useContext(ReservationContext);
   const createReservationMutation = usePostMutation<
     NewReservationResponse,
     AxiosError<ApiErrorResponse>,
     NewReservation
   >(createNewReservation, {
     onSuccess: (response: NewReservationResponse) => {
-      if (response.data?.id) {
+      if (response.data?.id && selectedSeat?.id && eventId && eventDateId) {
+        reserveSeat(selectedSeat?.id, eventId, eventDateId);
         navigate(`/reservation-confirmation/${response.data.id}`);
       }
     },

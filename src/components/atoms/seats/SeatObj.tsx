@@ -31,6 +31,9 @@ const getSeatStatus = (
       ? "selected"
       : "temporary_hold";
   }
+  if (seatData.reservedBy) {
+    return "reserved";
+  }
 
   return "available";
 };
