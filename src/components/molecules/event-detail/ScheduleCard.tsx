@@ -11,7 +11,7 @@ interface ScheduleCardProps {
   eventId: string;
   eventDateId: string;
   date: Date;
-  ticketingStartTime?: number; // ticketingStartTime 추가
+  ticketingStartTime?: number;
 }
 
 const ScheduleCard = ({
@@ -23,7 +23,10 @@ const ScheduleCard = ({
   const navigate = useNavigate();
   const now = useCurrentTime();
 
-  const isDisabled = !ticketingStartTime || ticketingStartTime > now;
+  const isTicketingStarted = ticketingStartTime && now >= ticketingStartTime;
+  const isDisabled = !isTicketingStarted;
+
+  console.log({ ticketingStartTime, now });
 
   const handleScheduleClick = () => {
     const userId = localStorage.getItem("userId");

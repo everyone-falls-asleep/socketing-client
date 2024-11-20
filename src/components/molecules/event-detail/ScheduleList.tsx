@@ -47,6 +47,9 @@ const ScheduleList = ({ filteredEvent, selectedDates }: ScheduleListProps) => {
             eventId={filteredEvent.id}
             eventDateId={schedule.id}
             date={dayjs(schedule.date).tz("Asia/Seoul").toDate()}
+            ticketingStartTime={dayjs(filteredEvent.ticketingStartTime)
+              .tz("Asia/Seoul")
+              .valueOf()}
           />
         ))
       ) : (
