@@ -1,70 +1,84 @@
-// import { useState } from "react";
-// import FourSectionLayout from "../layout/FourSectionLayout";
-// import ReservationCalendarSideBar from "../organisms/reservation/ReservationCalendarSideBar";
-// import ReservationMinimap from "../organisms/reservation/ReservationMinimap";
-// import ReservationSeatContainer from "../organisms/reservation/ReservationSeatContainer";
-// import ReservationSeatInfo from "../organisms/reservation/ReservationSeatInfo";
-// import ReservationUpperEvent from "../organisms/reservation/ReservationUpperEvent";
-import { fetchReservationsByEvent } from "../../api/reservations/reservationsApi";
+import MainLayout from "../layout/MainLayout";
+import { fetchAllEvents } from "../../api/events/eventsApi";
+import { EventsResponse } from "../../types/api/event";
 import { createResourceQuery } from "../../hooks/useCustomQuery";
-import { ReservationsResponse } from "../../types/api/reservation";
 import { fetchErrorMessages } from "../../constants/errorMessages";
-import { fetchAllSeats } from "../../api/events/eventsApi";
-import { SeatResponse } from "../../types/api/event";
+import { useNavigate } from "react-router-dom";
 
 const AdminPage = () => {
-  const temp_event_id = "bcf40e9d-dc28-45f7-983e-7d98b69b422f";
-  // const [isLeftSidebarOpen, setIsLeftSidebarOpen] =
-  //   useState(true);
-
-  const useReservations = createResourceQuery<ReservationsResponse>(
-    "all-reservations-by-event",
-    fetchReservationsByEvent
+  const navigate = useNavigate();
+  const useEvents = createResourceQuery<EventsResponse>(
+    "all-events",
+    fetchAllEvents
   );
-  const useSeat = createResourceQuery<SeatResponse>("seats", fetchAllSeats);
 
-  const { data, isLoading, isError } = useReservations(temp_event_id);
-  const {
-    data: seats_data,
-    isLoading: seatsLoading,
-    isError: seatsError,
-  } = useSeat(temp_event_id);
+  const { data, isLoading, isError } = useEvents();
 
-  if (isLoading || seatsLoading) return <p>{fetchErrorMessages.isLoading}</p>;
-  if (isError || seatsError) return <p>{fetchErrorMessages.general}</p>;
-  if (!data?.data) {
-    return <>{fetchErrorMessages.noReservationData}</>;
-  }
-  if (!data.data[0].eventDate.event) {
-    return <p>{fetchErrorMessages.noReservationData}</p>;
-  }
-  const eventData = data.data[0].eventDate.event;
-  console.log(eventData);
-  if (!seats_data?.data) {
-    return <>{fetchErrorMessages.noSeatsData}</>;
-  }
-  // const seatsData = seats_data?.data;
+  if (isLoading) return <p>{fetchErrorMessages.isLoading}</p>;
+  if (isError) return <p>{fetchErrorMessages.general}</p>;
+  if (!data?.data) return <p>{fetchErrorMessages.noEventData}</p>;
 
-  // const dateData = data.data[0].eventDate;
+  const eventData = data.data;
 
   return (
-    <div></div>
-    // <FourSectionLayout
-    //   topContent={<ReservationUpperEvent {...eventData} />}
-    //   leftSidebarContent={
-    //     <ReservationCalendarSideBar dateData={[dateData]} />
-    //   }
-    //   centerContent={
-    //     <ReservationSeatContainer
-    //       seatsData={seatsData}
-    //       svg={eventData.svg ?? ""}
-    //     />
-    //   }
-    //   rightTopContent={<ReservationMinimap />}
-    //   rightBottomContent={<ReservationSeatInfo />}
-    //   isLeftSidebarOpen={isLeftSidebarOpen}
-    //   toggleSidebar={() => setIsLeftSidebarOpen(!isLeftSidebarOpen)}
-    // />
+    <MainLayout>
+      <h2 className="pt-7 text-3xl font-bold text-center mb-8">
+        내가 등록한 공연 목록
+      </h2>
+      <div className="flex flex-col gap-4">
+        {eventData.length > 0 ? (
+          eventData.map((event) => (
+            <div
+              key={event.id}
+              className="bg-white flex items-center justify-between px-8 py-6 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all duration-300"
+            >
+              <div className="flex items-center gap-6">
+                <div className="w-24 h-32 flex-shrink-0">
+                  <img
+                    src={event.thumbnail}
+                    alt={event.title}
+                    className="w-full h-full object-cover rounded-lg shadow-sm"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <h3 className="text-xl font-bold text-gray-900">
+                    {event.title}
+                  </h3>
+                  <div className="space-y-1 text-sm text-gray-600">
+                    <p className="flex items-center gap-2">
+                      <span className="inline-block w-16 font-semibold">
+                        장소
+                      </span>
+                      <span>{event.place}</span>
+                    </p>
+                    <p className="flex items-center gap-2">
+                      <span className="inline-block w-16 font-semibold">
+                        출연
+                      </span>
+                      <span>{event.cast}</span>
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div className="flex flex-col items-end gap-3">
+                <button
+                  className={`px-6 py-3 font-bold rounded-lg transition-colors ${"bg-rose-400"}`}
+                  onClick={() => navigate(`/admin/${event.id}`)}
+                >
+                  예매 현황 보기
+                </button>
+              </div>
+            </div>
+          ))
+        ) : (
+          <div className="text-center py-12 bg-white rounded-xl border border-gray-200">
+            <p className="text-gray-500 text-lg">
+              티켓팅 오픈 예정인 공연이 없습니다.
+            </p>
+          </div>
+        )}
+      </div>
+    </MainLayout>
   );
 };
 

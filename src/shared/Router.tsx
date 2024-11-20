@@ -10,6 +10,7 @@ import SearchResultsPage from "../components/pages/SearchResultsPage";
 import RegisterEventPage from "../components/pages/RegisterEventPage";
 import { WrappedReservationPage } from "../components/wrappers/WrappedReservationPage";
 import AdminPage from "../components/pages/AdminPage";
+import AdminDetailPage from "../components/pages/AdminDetailPage";
 
 const Router = () => {
   return (
@@ -40,6 +41,7 @@ const Router = () => {
           element={<ReservationConfirmationPage />}
         />
         <Route path="admin" element={<AdminPage />} />
+        <Route path="admin/:id" element={<AdminDetailPage />} />
       </Routes>
     </BrowserRouter>
   );
