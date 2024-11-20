@@ -27,23 +27,6 @@ const MainPage = () => {
 
   const eventData = data.data;
 
-  // 남은 시간 계산 -> Main Banner 컴포넌트에서 수행 중
-  // const getTimeLeft = (ticketingStartTime: number) => {
-  //   const now = new Date().getTime();
-  //   const difference = ticketingStartTime - now;
-
-  //   if (difference <= 0) {
-  //     return "예매가 시작되었습니다!";
-  //   }
-
-  //   const days = Math.floor(difference / (1000 * 60 * 60 * 24));
-  //   const hours = Math.floor((difference / (1000 * 60 * 60)) % 24);
-  //   const minutes = Math.floor((difference / (1000 * 60)) % 60);
-  //   const seconds = Math.floor((difference / 1000) % 60);
-
-  //   return `${days > 0 ? `${days}일 ` : ""}${hours}시간 ${minutes}분 ${seconds}초`;
-  // };
-
   // 티켓팅 오픈 예정 공연 목록
   const impendingTicketingEvents = eventData
     .filter((event) => event.ticketingStartTime)
