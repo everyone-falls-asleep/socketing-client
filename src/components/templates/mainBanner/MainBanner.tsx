@@ -77,7 +77,7 @@ const MainBanner = ({ event }: MainBannerProps) => {
               }}
               disabled={isNotStarted}
             >
-              남은 시간: {timeLeft}
+              {isNotStarted ? `남은 시간: ${timeLeft}` : timeLeft}
             </button>
           </div>
         </div>
