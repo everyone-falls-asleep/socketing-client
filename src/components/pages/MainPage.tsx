@@ -153,6 +153,8 @@ const MainPage = () => {
                     </button>
                     <div className="text-sm text-gray-500">
                       티켓팅까지 {getTimeLeft(event.ticketingStartTime)}
+                      오픈 시간:{" "}
+                      {formatToKoreanDateAndTime(event.ticketingStartTime)}
                     </div>
                   </div>
                 </div>
