@@ -29,7 +29,7 @@ const fetchOneReservation = async (
   reservation_id: string
 ): Promise<NewReservationResponse> => {
   const response = await api.get<NewReservationResponse>(
-    API_URL + reservation_id
+    API_URL + "/" + reservation_id
   );
   return response.data;
 };
