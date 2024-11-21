@@ -26,9 +26,15 @@ const EventRegisterForm = () => {
       place: "",
       cast: "",
       ageLimit: 12,
-      eventDates: [new Date().toISOString().slice(0, 16)],
+      eventDates: [
+        new Date(new Date().setDate(new Date().getDate() + 7))
+          .toISOString()
+          .slice(0, 16),
+      ],
       svg: "",
-      ticketingStartTime: new Date().toISOString(),
+      ticketingStartTime: new Date(new Date().setDate(new Date().getDate() + 7))
+        .toISOString()
+        .slice(0, 16),
     },
   });
 
