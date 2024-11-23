@@ -5,33 +5,24 @@ export interface LoginData {
   password: string;
 }
 
-export interface RegisterResponseData {
-  id: string;
-  nickname: string;
-  email: string;
-  profileImage: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
-export type RegisterResponse = ApiResponse<RegisterResponseData>;
-
-export interface LoginResponseData {
-  tokenType: string;
-  expiresIn: string;
-  accessToken: string;
-}
-
-export type LoginResponse = ApiResponse<LoginResponseData>;
-
-export interface UserResponseData {
+export interface User {
   id: string;
   nickname: string;
   email: string;
   profileImage: string;
   createdAt?: string;
   updatedAt?: string;
-  role: string;
+  // role 필드 추가 예정
 }
 
-export type UserResponse = ApiResponse<UserResponseData>;
+export type RegisterResponse = ApiResponse<User>;
+
+export interface AuthTokenData {
+  tokenType: string;
+  expiresIn: string;
+  accessToken: string;
+}
+
+export type LoginResponse = ApiResponse<AuthTokenData>;
+
+export type UserResponse = ApiResponse<User>;

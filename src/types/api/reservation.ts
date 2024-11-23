@@ -1,4 +1,4 @@
-import { UserResponseData } from "./user";
+import { User } from "./user";
 import { EventDate, Seat } from "./event";
 import { ApiResponse } from "./common";
 
@@ -9,7 +9,7 @@ export interface NewReservation {
 }
 export interface Reservation {
   id: string;
-  user: UserResponseData;
+  user: User;
   eventDate: EventDate;
   seat: Seat;
 
