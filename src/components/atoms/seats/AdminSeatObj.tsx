@@ -20,7 +20,6 @@ const SelectedAdminSeatObj: React.FC<SelectedAdminSeatObjProps> = ({
       const email = data.data?.email;
       if (email) {
         const name = email.split("@")[0];
-        localStorage.setItem("name", name);
         toast.success(`예매자: ${name}`);
       }
     } catch (error) {
