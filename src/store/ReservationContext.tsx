@@ -1,6 +1,7 @@
 import React, { createContext, useState, useEffect } from "react";
 import { Socket } from "socket.io-client";
 import { useSocketConnection } from "../hooks/useSocketConnection";
+import { SeatSelectedResponse } from "../types/api/socket";
 
 // Types
 interface Reservation {
@@ -20,9 +21,9 @@ interface Seat {
   number: number;
   reservations: Reservation[];
   selectedBy?: string | null;
-  updatedAt: string | null;
-  expirationTime: string | null;
-  reservedBy?: string | null;
+  updatedAt: string;
+  expirationTime: string;
+  reservedBy?: string;
 }
 
 interface ReservationContextType {
@@ -105,23 +106,14 @@ export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
       setSeatsMap(newSeatsMap);
     });
 
-    socket.on(
-      "seatSelected",
-      (data: {
-        seatId: string;
-        selectedBy: string | null;
-        updatedAt: string;
-        expirationTime: string | null;
-        reservedBy: string | null;
-      }) => {
-        updateSeat(data.seatId, {
-          selectedBy: data.selectedBy,
-          updatedAt: data.updatedAt,
-          expirationTime: data.expirationTime,
-          reservedBy: data.reservedBy,
-        });
-      }
-    );
+    socket.on("seatSelected", (data: SeatSelectedResponse) => {
+      updateSeat(data.seatId, {
+        selectedBy: data.selectedBy,
+        updatedAt: data.updatedAt,
+        expirationTime: data.expirationTime,
+        reservedBy: data.reservedBy,
+      });
+    });
 
     return () => {
       socket.off("connect");

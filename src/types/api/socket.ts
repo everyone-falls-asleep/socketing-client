@@ -16,9 +16,9 @@ export interface Seat {
     };
   }>;
   selectedBy?: string | null;
-  updatedAt: string | null;
-  expirationTime: string | null;
-  reservedBy?: string | null;
+  updatedAt: string;
+  expirationTime: string;
+  reservedBy?: string;
 }
 
 export interface UserList {
@@ -92,6 +92,6 @@ export interface SeatSelectedResponse {
   seatId: string;
   selectedBy: string | null;
   updatedAt: string;
-  expirationTime: string | null;
-  reservedBy: string | null;
+  expirationTime: string;
+  reservedBy?: string;
 }
