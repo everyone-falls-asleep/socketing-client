@@ -7,7 +7,7 @@ export interface NewReservation {
   eventDateId: string;
   seatId: string;
 }
-export interface NewReservationResponseData {
+export interface Reservation {
   id: string;
   user: UserResponseData;
   eventDate: EventDate;
@@ -17,6 +17,6 @@ export interface NewReservationResponseData {
   update_at?: string;
 }
 
-export type NewReservationResponse = ApiResponse<NewReservationResponseData>;
+export type NewReservationResponse = ApiResponse<Reservation>;
 
-export type ReservationsResponse = ApiResponse<NewReservationResponseData[]>;
+export type ReservationsResponse = ApiResponse<Reservation[]>;

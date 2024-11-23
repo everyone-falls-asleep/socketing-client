@@ -1,12 +1,12 @@
 import MainLayout from "../../layout/MainLayout";
 import SubTitle from "../../atoms/titles/subtitle/SubTitle";
 import Font from "../../atoms/fonts/Font";
-import { NewReservationResponseData } from "../../../types/api/reservation";
+import { Reservation } from "../../../types/api/reservation";
 import { fetchErrorMessages } from "../../../constants/errorMessages";
 import { formatToKoreanDateAndTime } from "../../../utils/dateUtils";
 
 interface ReservationConfirmProps {
-  reservation: NewReservationResponseData;
+  reservation: Reservation;
   //content : 다중 예매 시 업데이트 필요
 }
 
