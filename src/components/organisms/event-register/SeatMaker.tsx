@@ -2,7 +2,11 @@ import React, { useRef, useEffect } from "react";
 import { useEventCreate } from "../../../store/EventCreateContext";
 import SvgWrapperApi from "../../../utils/SvgWrapperApi";
 import { Seat } from "../../../types/api/event";
-import { Point } from "../../../types/api/event";
+
+interface Point {
+  x: number;
+  y: number;
+}
 
 interface SeatMakerProps {
   isEditMode: boolean;

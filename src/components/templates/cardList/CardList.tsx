@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Button from "../../atoms/buttons/Button";
 import { formatToKoreanDateAndTime } from "../../../utils/dateUtils";
 
-export interface CardListProps {
+interface CardListProps {
   events: CustomEventsProps[];
 }
 

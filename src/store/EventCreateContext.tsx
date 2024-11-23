@@ -4,11 +4,11 @@ import React, {
   useContext,
   useState,
 } from "react";
-import { NewEventResponseData } from "../types/api/event";
+import { Event } from "../types/api/event";
 
 interface EventCreateContextProps {
-  event: NewEventResponseData | null;
-  setEvent: (event: NewEventResponseData) => void;
+  event: Event | null;
+  setEvent: (event: Event) => void;
 }
 
 export const EventCreateContext = createContext<EventCreateContextProps>({
@@ -30,7 +30,7 @@ export const useEventCreate = () => {
 export const EventCreateProvider: React.FC<PropsWithChildren> = ({
   children,
 }) => {
-  const [event, setEvent] = useState<NewEventResponseData | null>(null);
+  const [event, setEvent] = useState<Event | null>(null);
 
   return (
     <EventCreateContext.Provider value={{ event, setEvent }}>
