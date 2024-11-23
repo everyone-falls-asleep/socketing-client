@@ -6,7 +6,7 @@ import { getUserInfo } from "../api/users/usersApi";
 import "react-toastify/dist/ReactToastify.css";
 
 export const useAuth = () => {
-  const { setUserId } = useContext(UserContext);
+  const { setUserId, setUserRole } = useContext(UserContext);
 
   const saveAuthInfo = (token: string) => {
     localStorage.setItem("authToken", token);
@@ -37,6 +37,10 @@ export const useAuth = () => {
         localStorage.setItem("name", name);
         toast.success(`안녕하세요, ${name}님!`);
         // navigate("/");
+      }
+      const role = data.data?.role;
+      if (role) {
+        setUserRole(role);
       }
     } catch (error) {
       console.error("사용자 정보 불러오기 실패:", error);

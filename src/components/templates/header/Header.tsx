@@ -14,7 +14,8 @@ const Header = () => {
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isLogin, setIsLogin] = useState(false);
   const [name, setName] = useState("");
-  const { setUserId } = useContext(UserContext);
+  const { setUserId, setUserRole } = useContext(UserContext);
+  const [isManager, setIsManager] = useState(false);
 
   // 로그인 상태를 체크하는 함수
   const checkLoginStatus = () => {
@@ -36,8 +37,18 @@ const Header = () => {
     }
   };
 
+  const checkIsManager = () => {
+    const role = localStorage.getItem("userRole");
+    if (role === "manager") {
+      setIsManager(true);
+    } else {
+      setIsManager(false);
+    }
+  };
+
   useEffect(() => {
     checkLoginStatus();
+    checkIsManager();
   }, []);
 
   const isTokenExpired = (token: string): boolean => {
@@ -73,6 +84,7 @@ const Header = () => {
     localStorage.removeItem("nickname");
     localStorage.removeItem("name");
     setUserId(null);
+    setUserRole(null);
 
     setIsLogin(false);
     setName("");
@@ -82,11 +94,16 @@ const Header = () => {
 
   const handleLoginSuccess = () => {
     checkLoginStatus();
+    checkIsManager();
     setIsLoginModalOpen(false);
   };
 
   const handleRegister = () => {
     navigate("/register");
+  };
+
+  const openMyPage = () => {
+    navigate("/mypage");
   };
 
   return (
@@ -135,10 +152,13 @@ const Header = () => {
                 <Button variant="primary" onClick={handleLogout}>
                   로그아웃
                 </Button>
-              </div>
-              <div className="hidden md:block">
-                <Button variant="primary" onClick={handleRegister}>
-                  공연 등록하기
+                {isManager && (
+                  <Button variant="primary" onClick={handleRegister}>
+                    공연 등록하기
+                  </Button>
+                )}
+                <Button variant="primary" onClick={openMyPage}>
+                  마이페이지
                 </Button>
               </div>
             </>

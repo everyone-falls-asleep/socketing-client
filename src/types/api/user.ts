@@ -12,7 +12,7 @@ export interface User {
   profileImage: string;
   createdAt?: string;
   updatedAt?: string;
-  // role 필드 추가 예정
+  role?: string;
 }
 
 export type RegisterResponse = ApiResponse<User>;
