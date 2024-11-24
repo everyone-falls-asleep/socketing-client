@@ -7,6 +7,7 @@ import HeaderLogo from "../../molecules/header-logo/HeaderLogo";
 import { toast } from "react-toastify";
 import { jwtDecode, JwtPayload } from "jwt-decode";
 import { UserContext } from "../../../store/UserContext";
+import AvatarIcon from "../../atoms/avatar/AvatarIcon";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -145,8 +146,12 @@ const Header = () => {
             </>
           ) : (
             <>
-              <div className="flex items-center space-x-4">
-                <span className="text-white">
+              <div className="flex items-center space-x-2">
+                <div className="flex rounded-full bg-gray-800 text-sm hover:ring-2 hover:ring-white ">
+                  <AvatarIcon userId=""></AvatarIcon>
+                  {/* 여기 위에 userId 연결 해주세요 by 혜다 */}
+                </div>
+                <span className="text-white pr-2">
                   <span className="font-bold">{name}</span>님, 안녕하세요
                 </span>
                 <Button variant="primary" onClick={handleLogout}>
