@@ -12,7 +12,7 @@ const MyPage = () => {
   const navigate = useNavigate();
 
   const useEvents = createResourceQuery<ReservationsResponse>(
-    "all-events-by-user",
+    "reserved-events-by-user",
     fetchReservationsByUser
   );
 
