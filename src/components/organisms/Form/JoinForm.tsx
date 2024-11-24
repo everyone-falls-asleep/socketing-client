@@ -33,7 +33,14 @@ const JoinForm = () => {
     setError,
     watch,
     formState: { errors },
-  } = useForm<JoinConfirmData>();
+  } = useForm<JoinConfirmData>({
+    defaultValues: {
+      email: "",
+      password: "",
+      passwordConfirm: "",
+      role: "user",
+    },
+  });
 
   const mutation = useMutation<
     RegisterResponse,
@@ -47,10 +54,12 @@ const JoinForm = () => {
       const loginData = {
         email: watch("email"),
         password: watch("password"),
+        role: watch("role"),
       };
 
       try {
         const loginResponse: LoginResponse = await sendLoginRequest(loginData);
+        console.log(loginResponse.data);
         const loginToken = loginResponse.data?.accessToken;
         if (loginToken) {
           saveAuthInfo(loginToken);
@@ -91,6 +100,7 @@ const JoinForm = () => {
     mutation.mutate({
       email: data.email,
       password: data.password,
+      role: data.role,
     });
   };
 
@@ -135,6 +145,36 @@ const JoinForm = () => {
             </span>
           )}
           <br />
+
+          <div>
+            <label>
+              <input
+                type="radio"
+                value="user"
+                {...register("role", {
+                  required: "사용자 유형을 선택해주세요.",
+                })}
+                className="mr-1"
+              />
+              일반 사용자
+            </label>
+            <label style={{ marginLeft: "10px" }}>
+              <input
+                type="radio"
+                value="manager"
+                {...register("role", {
+                  required: "사용자 유형을 선택해주세요.",
+                })}
+                className="mr-1"
+              />
+              판매자
+            </label>
+          </div>
+          {errors.role && (
+            <span style={{ color: "red" }}>{errors.role.message}</span>
+          )}
+          <br />
+
           <Button type="submit">회원가입</Button>
         </form>
       </Container>

@@ -3,6 +3,7 @@ import { ApiResponse } from "./common";
 export interface LoginData {
   email: string;
   password: string;
+  role?: string;
 }
 
 export interface User {

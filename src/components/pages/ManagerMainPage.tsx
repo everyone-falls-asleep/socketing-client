@@ -1,11 +1,10 @@
-import MainLayout from "../layout/MainLayout";
 import { fetchAllEvents } from "../../api/events/eventsApi";
 import { EventsResponse } from "../../types/api/event";
 import { createResourceQuery } from "../../hooks/useCustomQuery";
 import { fetchErrorMessages } from "../../constants/errorMessages";
 import { useNavigate } from "react-router-dom";
 
-const AdminPage = () => {
+const ManagerMainPage = () => {
   const navigate = useNavigate();
   const useEvents = createResourceQuery<EventsResponse>(
     "all-events",
@@ -21,7 +20,7 @@ const AdminPage = () => {
   const eventData = data.data;
 
   return (
-    <MainLayout>
+    <>
       <h2 className="pt-7 text-3xl font-bold text-center mb-8">
         내가 등록한 공연 목록
       </h2>
@@ -78,8 +77,8 @@ const AdminPage = () => {
           </div>
         )}
       </div>
-    </MainLayout>
+    </>
   );
 };
 
-export default AdminPage;
+export default ManagerMainPage;
