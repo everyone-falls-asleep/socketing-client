@@ -11,10 +11,12 @@ const API_URL = baseURL + "auth/";
 const sendRegisterRequest = async ({
   email,
   password,
+  role,
 }: LoginData): Promise<RegisterResponse> => {
   const response = await axios.post<RegisterResponse>(API_URL + "register", {
     email,
     password,
+    role,
   });
   return response.data;
 };
