@@ -5,6 +5,8 @@ interface UserContextType {
   setUserId: (userId: string | null) => void;
   userRole: string | null;
   setUserRole: (userRole: string | null) => void;
+  currentRole: string | null;
+  setcurrentRole: (currentRole: string | null) => void;
 }
 
 export const UserContext = createContext<UserContextType>({
@@ -12,6 +14,8 @@ export const UserContext = createContext<UserContextType>({
   setUserId: () => {},
   userRole: null,
   setUserRole: () => {},
+  currentRole: null,
+  setcurrentRole: () => {},
 });
 
 export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
@@ -26,6 +30,10 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
     return localStorage.getItem("userRole");
   });
 
+  const [currentRole, setcurrentRole] = useState<string | null>(() => {
+    return localStorage.getItem("userRole");
+  });
+
   useEffect(() => {
     if (userId) {
       localStorage.setItem("userId", userId);
@@ -33,14 +41,25 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
       localStorage.removeItem("userId");
     }
     if (userRole) {
+      setcurrentRole(userRole);
       localStorage.setItem("userRole", userRole);
     } else {
       localStorage.removeItem("userRole");
+      setcurrentRole(null);
     }
   }, [userId, userRole]);
 
   return (
-    <UserContext.Provider value={{ userId, setUserId, userRole, setUserRole }}>
+    <UserContext.Provider
+      value={{
+        userId,
+        setUserId,
+        userRole,
+        setUserRole,
+        currentRole,
+        setcurrentRole,
+      }}
+    >
       {children}
     </UserContext.Provider>
   );

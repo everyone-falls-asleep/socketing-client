@@ -14,7 +14,7 @@ const Header = () => {
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isLogin, setIsLogin] = useState(false);
   const [name, setName] = useState("");
-  const { setUserId, setUserRole } = useContext(UserContext);
+  const { setUserId, setUserRole, currentRole } = useContext(UserContext);
   const [isManager, setIsManager] = useState(false);
 
   // 로그인 상태를 체크하는 함수
@@ -39,17 +39,13 @@ const Header = () => {
 
   const checkIsManager = () => {
     const role = localStorage.getItem("userRole");
-    if (role === "manager") {
-      setIsManager(true);
-    } else {
-      setIsManager(false);
-    }
+    setIsManager(role === "manager");
   };
 
   useEffect(() => {
     checkLoginStatus();
     checkIsManager();
-  }, []);
+  }, [currentRole]);
 
   const isTokenExpired = (token: string): boolean => {
     try {
