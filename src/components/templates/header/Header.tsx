@@ -152,14 +152,15 @@ const Header = () => {
                 <Button variant="primary" onClick={handleLogout}>
                   로그아웃
                 </Button>
-                {isManager && (
+                {isManager ? (
                   <Button variant="primary" onClick={handleRegister}>
                     공연 등록하기
                   </Button>
+                ) : (
+                  <Button variant="primary" onClick={openMyPage}>
+                    마이페이지
+                  </Button>
                 )}
-                <Button variant="primary" onClick={openMyPage}>
-                  마이페이지
-                </Button>
               </div>
             </>
           )}
