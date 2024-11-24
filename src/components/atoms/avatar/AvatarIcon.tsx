@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { UserCircleIcon } from "@heroicons/react/24/solid";
 import { getUserInfo } from "../../../api/users/usersApi";
 import { UserResponse } from "../../../types/api/user";
@@ -10,7 +9,6 @@ interface AvatarIconProps {
 
 const AvatarIcon: React.FC<AvatarIconProps> = ({ userId }) => {
   const [profileImage, setProfileImage] = useState<string | null>(null); // 프로필 이미지 상태
-  const navigate = useNavigate();
 
   useEffect(() => {
     // 사용자 정보 가져오기
@@ -38,13 +36,11 @@ const AvatarIcon: React.FC<AvatarIconProps> = ({ userId }) => {
           src={profileImage}
           alt="User Avatar"
           className="h-8 w-8 rounded-full object-cover cursor-pointer"
-          onClick={() => navigate(`/mypage/${userId}`)} // 클릭 시 마이페이지로 이동
         />
       ) : (
         <UserCircleIcon
           aria-hidden="true"
           className="h-8 w-8 text-gray-100 cursor-pointer"
-          onClick={() => navigate(`/mypage/${userId}`)} // 클릭 시 마이페이지로 이동
         />
       )}
     </div>

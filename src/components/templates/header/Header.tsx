@@ -1,13 +1,14 @@
 import React, { useState, useEffect, useContext } from "react";
 import Button from "../../atoms/buttons/Button";
 import { useNavigate } from "react-router-dom";
-import Input from "../../atoms/inputs/Input";
 import LoginModal from "../../organisms/auth/LoginModal";
 import HeaderLogo from "../../molecules/header-logo/HeaderLogo";
 import { toast } from "react-toastify";
 import { jwtDecode, JwtPayload } from "jwt-decode";
 import { UserContext } from "../../../store/UserContext";
 import AvatarIcon from "../../atoms/avatar/AvatarIcon";
+import { MagnifyingGlassIcon } from "@heroicons/react/24/solid";
+import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -115,62 +116,79 @@ const Header = () => {
           <HeaderLogo />
         </div>
         {/* 검색창 */}
-        <div className="hidden pl-10 lg:flex md:w-[30%] lg:w-[50%] justify-center">
-          <div className="flex items-center w-full bg-white rounded-lg overflow-hidden">
-            <Input
+        <div className="hidden pl-10 mt-1 lg:flex md:w-[30%] lg:w-[50%] justify-center">
+          <div className="relative w-full max-w-lg">
+            <input
               type="text"
               placeholder="공연 검색"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               onKeyDown={handleKeyDown}
-              className="w-full p-2 rounded-r-none text-gray-700 outline-none"
+              className="w-full py-2 pl-5 pr-12 text-sm text-gray-700 rounded-full shadow-lg bg-white outline-none placeholder-gray-400 focus:ring-2 focus:ring-gray-400"
             />
-            <button
+            <MagnifyingGlassIcon
               onClick={handleSearch}
-              className="p-3 w-[100px] bg-rose-400 rounded-r-lg hover:bg-rose-500"
-            >
-              🔍
-            </button>
+              className="absolute w-5 h-5 text-gray-400 right-4 top-1/2 transform -translate-y-1/2 hover:text-gray-600 cursor-pointer"
+            />
           </div>
         </div>
         {/* 로그인/로그아웃 상태에 따른 버튼 */}
-        <div className="flex space-x-4 sm:w-full md:w-[70%] lg:w-[50%] justify-end">
+        <div className="flex space-x-2 sm:w-full md:w-[70%] lg:w-[50%] items-center justify-end">
           {!isLogin ? (
             <>
-              <Button
-                variant="primary"
-                onClick={() => setIsLoginModalOpen(true)}
-              >
+              <Button variant="dark" onClick={() => setIsLoginModalOpen(true)}>
                 로그인
               </Button>
             </>
           ) : (
             <>
-              <div className="flex items-center space-x-2">
-                <div className="flex rounded-full bg-gray-800 text-sm hover:ring-2 hover:ring-white ">
-                  <AvatarIcon userId=""></AvatarIcon>
-                  {/* 여기 위에 userId 연결 해주세요 by 혜다 */}
+              {/* Profile dropdown */}
+              <Menu as="div" className="relative">
+                <div>
+                  <MenuButton className="relative flex rounded-full bg-gray-800 text-sm hover:outline-none hover:ring-2 hover:ring-white focus:ring-offset focus:ring-offset-gray-800">
+                    <AvatarIcon userId=""></AvatarIcon>
+                    {/* 여기 위에 userId 연결 해주세요 by 혜다 */}
+                  </MenuButton>
                 </div>
-                <span className="text-white pr-2">
-                  <span className="font-bold">{name}</span>님, 안녕하세요
-                </span>
-                <Button variant="primary" onClick={handleLogout}>
-                  로그아웃
-                </Button>
-                {isManager && (
-                  <Button variant="primary" onClick={handleRegister}>
-                    공연 등록하기
-                  </Button>
-                )}
-                <Button variant="primary" onClick={openMyPage}>
-                  마이페이지
-                </Button>
-              </div>
+                <MenuItems
+                  transition
+                  className="absolute left-2 z-10 mt-3 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black/5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in"
+                >
+                  <MenuItem>
+                    <button
+                      onClick={openMyPage}
+                      className="block w-full px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:outline-none"
+                    >
+                      마이 페이지
+                    </button>
+                  </MenuItem>
+                  {isManager && (
+                    <MenuItem>
+                      <button
+                        className="block w-full px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:outline-none"
+                        onClick={handleRegister}
+                      >
+                        공연 등록하기
+                      </button>
+                    </MenuItem>
+                  )}
+                  <MenuItem>
+                    <button
+                      onClick={handleLogout}
+                      className="block w-full px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:outline-none"
+                    >
+                      로그아웃
+                    </button>
+                  </MenuItem>
+                </MenuItems>
+              </Menu>
+              <span className="text-white mg-0 pr-2">
+                <span className="font-bold">{name}</span>님, 안녕하세요
+              </span>
             </>
           )}
         </div>
       </header>
-
       <LoginModal
         isOpen={isLoginModalOpen}
         onClose={() => setIsLoginModalOpen(false)}
