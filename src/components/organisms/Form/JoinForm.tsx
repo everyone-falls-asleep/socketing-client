@@ -54,7 +54,7 @@ const JoinForm = () => {
       const loginData = {
         email: watch("email"),
         password: watch("password"),
-        role: watch("role"),
+        // role: watch("role"),
       };
 
       try {
