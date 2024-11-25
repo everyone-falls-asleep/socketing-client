@@ -23,9 +23,9 @@ const TicketButton = ({ event, className }: TicketButtonProps) => {
   return (
     <div className="relative group inline-block">
       <button
-        className={`${className} px-6 py-3 font-bold rounded-lg transition-colors ${
+        className={`${className} px-10 py-3 font-bold rounded-lg transition-colors ${
           isNotStarted
-            ? "bg-gray-400 cursor-not-allowed hover:bg-gray-400"
+            ? "bg-gray-200 hover:bg-gray-300"
             : "bg-rose-500 hover:bg-rose-600"
         }`}
         onClick={() => navigate(`/event/${event.id}`)}
