@@ -104,7 +104,7 @@ const JoinModal: React.FC<JoinModalProps> = ({
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <div className="mx-auto w-full sm:max-w-[25rem] md:max-w-[30rem] lg:max-w-[35rem] xl:max-w-[40rem] px-4">
-        <SubTitle className="text-center">로그인</SubTitle>
+        <SubTitle className="text-center">회원가입</SubTitle>
         <div className="login-form-container mt-5">
           <form onSubmit={(e) => void handleSubmit(onSubmit)(e)}>
             <LabeledInput
@@ -116,7 +116,7 @@ const JoinModal: React.FC<JoinModalProps> = ({
               <span style={{ color: "red" }}>{errors.email.message}</span>
             )}
             <br />
-            <Button type="submit">로그인</Button>
+            <Button type="submit">회원가입</Button>
           </form>
         </div>
       </div>

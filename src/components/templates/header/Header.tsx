@@ -140,11 +140,11 @@ const Header = () => {
         <div className="flex space-x-2 sm:w-full md:w-[70%] lg:w-[50%] items-center justify-end">
           {!isLogin ? (
             <>
-              {/* <Button variant="dark" onClick={() => setIsLoginModalOpen(true)}>
+              <Button variant="dark" onClick={() => setIsLoginModalOpen(true)}>
                 로그인
-              </Button> */}
+              </Button>
               <Button variant="dark" onClick={() => setIsJoinModalOpen(true)}>
-                로그인 {/* 사실 회원가입 버튼임 */}
+                회원가입 {/* 사실 회원가입 버튼임 */}
               </Button>
             </>
           ) : (
