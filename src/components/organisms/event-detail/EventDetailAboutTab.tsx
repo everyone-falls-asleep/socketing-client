@@ -16,7 +16,7 @@ const EventDetailAboutTab = () => {
       <div id="event-about" className="content-container">
         <div
           key={event.id}
-          className="event-details p-2 flex justify-start gap-10"
+          className="event-details p-2 flex flex-col justify-start gap-2"
         >
           <div className="h-96 flex justify-center">
             <img

@@ -1,4 +1,4 @@
-import ScheduleHeader from "../../molecules/event-detail/ScheduleHeader";
+// import ScheduleHeader from "../../molecules/event-detail/ScheduleHeader";
 import ScheduleList from "../../molecules/event-detail/ScheduleList";
 import { useEventDetail } from "../../../store/EventDetailContext";
 import dayjs from "dayjs";
@@ -9,35 +9,35 @@ dayjs.extend(utc);
 dayjs.extend(timezone);
 
 const EventDetailScheduleTab = () => {
-  const { filteredEvent, selectedDates, setSelectedDates } = useEventDetail();
+  const { filteredEvent, selectedDates } = useEventDetail();
 
   if (!filteredEvent) {
     return null;
   }
 
-  const validDates =
-    filteredEvent.eventDates?.map((eventDate) =>
-      dayjs(eventDate.date).tz("Asia/Seoul").toDate()
-    ) || [];
+  // const validDates =
+  //   filteredEvent.eventDates?.map((eventDate) =>
+  //     dayjs(eventDate.date).tz("Asia/Seoul").toDate()
+  //   ) || [];
 
-  const onDateSelect = (dates: Date[]) => {
-    setSelectedDates(dates);
-  };
+  // const onDateSelect = (dates: Date[]) => {
+  //   setSelectedDates(dates);
+  // };
 
   return (
     <>
       <div className="tab-content-title-container">
         <h2 className="tab-content-title">공연 일정</h2>
       </div>
-      <div className="flex px-4 gap-10">
-        <div className="w-[50%]">
+      <div className="flex px-1 gap-1">
+        {/* <div className="w-[50%]">
           <ScheduleHeader
             validDates={validDates}
             selectedDates={selectedDates}
             onDateSelect={onDateSelect}
           />
-        </div>
-        <div className="w-[50%] pt-5">
+        </div> */}
+        <div className="w-[100%] pt-1">
           <ScheduleList
             filteredEvent={filteredEvent}
             selectedDates={selectedDates}

@@ -36,7 +36,7 @@ const EventDetailHeader = () => {
         }}
       />
 
-      <div className="relative w-full h-full px-28 py-3 flex items-center bg-gray-100/50">
+      <div className="relative w-full h-full px-5 py-3 flex items-center bg-gray-100/50">
         <div id="poster-container" className="poster-box">
           <img
             className="h-full object-contain"
