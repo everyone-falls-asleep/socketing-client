@@ -48,17 +48,17 @@ const MainBanner = ({ event }: MainBannerProps) => {
             className="w-full h-full object-cover"
           />
           <div className="absolute inset-0 flex flex-col items-center justify-center bg-black bg-opacity-75">
-            <h2 className="text-4xl md:text-6xl font-bold text-white mb-6 text-center">
+            <h2 className="text-3xl md:text-5xl font-bold text-white mb-6 text-center">
               {event.title}
             </h2>
-            <p className="text-2xl md:text-2xl font-bold text-white mb-6 text-center">
+            <p className="text-lg md:text-2xl font-bold text-white mb-6 text-center">
               티켓 오픈:{" "}
               {event.ticketingStartTime
                 ? formatToKoreanDateAndTime(event.ticketingStartTime)
                 : "정보 없음"}
             </p>
             <button
-              className={`font-bold text-white px-4 py-2 rounded ${
+              className={`text-sm md:text-base font-bold text-white px-4 py-2 rounded ${
                 isNotStarted
                   ? "bg-gray-400 cursor-not-allowed"
                   : "bg-rose-500 hover:bg-rose-600"
