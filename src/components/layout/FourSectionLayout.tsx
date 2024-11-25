@@ -17,7 +17,7 @@ const FourSectionLayout: React.FC<FourSectionLayoutProps> = ({
   centerContent,
   rightTopContent,
   rightBottomContent,
-  isLeftSidebarOpen = true,
+  isLeftSidebarOpen = false,
   toggleSidebar,
 }) => {
   return (
@@ -28,10 +28,11 @@ const FourSectionLayout: React.FC<FourSectionLayoutProps> = ({
 
       <div className="flex-1 flex flex-col min-h-0">
         <div className="h-1/4 w-full bg-white border-b">{topContent}</div>
-        <div className="flex flex-1 min-h-0">
+        <div className="flex flex-1 min-h-0 flex-col md:flex-row">
           <div
-            className={`transition-transform duration-300 w-1/5 bg-white border-r relative
-              ${isLeftSidebarOpen ? "block" : "hidden"}`}
+            className={`hidden transition-transform duration-300 md:w-1/5 bg-white border-r relative ${
+              isLeftSidebarOpen ? "block" : "hidden"
+            }`}
           >
             {leftSidebarContent}
           </div>
@@ -39,7 +40,7 @@ const FourSectionLayout: React.FC<FourSectionLayoutProps> = ({
           <div className="flex-1 relative">
             <button
               onClick={toggleSidebar}
-              className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white p-2 
+              className="hidden absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white p-2 
                 rounded-r-lg shadow-md hover:bg-gray-50 transition-colors border border-l-0"
             >
               {isLeftSidebarOpen ? "◀" : "▶"}
@@ -47,10 +48,15 @@ const FourSectionLayout: React.FC<FourSectionLayoutProps> = ({
             {centerContent}
           </div>
 
-          <div className="w-1/5 flex flex-col bg-white border-l">
+          <div className="hidden md:flex md:w-1/5 flex-col bg-white border-l">
             <div className="border-b p-4 space-y-3">{rightTopContent}</div>
             <div className="flex-1 p-4 max-h-[100px]">{rightBottomContent}</div>
           </div>
+        </div>
+        {/* 아래는 모바일 반응형 */}
+        <div className="md:hidden bg-white border-t max-h-64 overflow-y-auto">
+          <div className="p-4 border-b">{rightTopContent}</div>
+          <div className="p-4">{rightBottomContent}</div>
         </div>
       </div>
     </div>
