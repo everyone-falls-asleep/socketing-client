@@ -1,71 +1,15 @@
 import React, { useContext } from "react";
 import { ReservationContext } from "../../../store/ReservationContext";
 import { Seat } from "../../../types/api/socket";
+import {
+  getHoverClass,
+  getSeatStatus,
+  getStatusColor,
+} from "../../../utils/getSeatInfo";
 
 interface SeatProps {
   seatData: Seat;
 }
-
-type SeatStatus =
-  | "available"
-  | "reserved"
-  | "temporary_hold"
-  | "selected"
-  | "adjacent";
-
-const getSeatStatus = (
-  seatData: Seat,
-  eventDateId: string | null,
-  currentUserId: string | null
-): SeatStatus => {
-  if (!eventDateId) return "available";
-
-  const isReserved = seatData.reservations.some(
-    (reservation) => reservation.eventDate.id === eventDateId
-  );
-
-  if (isReserved) return "reserved";
-  if (seatData.selectedBy) {
-    if (
-      seatData.expirationTime &&
-      new Date(seatData.expirationTime) < new Date()
-    ) {
-      return "available";
-    }
-    return seatData.selectedBy === currentUserId
-      ? "selected"
-      : "temporary_hold";
-  }
-  if (seatData.reservedBy) {
-    return "reserved";
-  }
-
-  return "available";
-};
-
-const getStatusColor = (status: SeatStatus) => {
-  switch (status) {
-    case "available":
-      return "#FFFFFF";
-    case "reserved":
-      return "#9CA3AF";
-    case "selected":
-      return "#60A5FA";
-    case "adjacent":
-      return "#0a74f5";
-    case "temporary_hold":
-      return "#FBBF24";
-    default:
-      return "#9CA3AF";
-  }
-};
-
-const getHoverClass = (status: string) => {
-  if (status === "available" || status === "selected") {
-    return "hover:opacity-80 cursor-pointer";
-  }
-  return "cursor-not-allowed";
-};
 
 const SeatObj: React.FC<SeatProps> = ({ seatData }) => {
   const { eventDateId, selectSeat, socket, isConnected, currentUserId } =
@@ -78,7 +22,12 @@ const SeatObj: React.FC<SeatProps> = ({ seatData }) => {
   const handleClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     if (!isConnected || !socket) return;
-    if (seatStatus === "reserved" || seatStatus === "temporary_hold") return;
+    if (
+      seatStatus === "reserved" ||
+      seatStatus === "temporary_hold" ||
+      seatStatus === "adjacent"
+    )
+      return;
     selectSeat(seatData.id);
   };
 
