@@ -6,6 +6,7 @@ import {
 } from "../../../utils/dateUtils";
 import { toast } from "react-toastify";
 import { useCurrentTime } from "../../../hooks/useCurrentTime";
+import { useEventDetail } from "../../../store/EventDetailContext";
 
 interface ScheduleCardProps {
   eventId: string;
@@ -20,19 +21,39 @@ const ScheduleCard = ({
   date,
   ticketingStartTime,
 }: ScheduleCardProps) => {
+  const { friends } = useEventDetail();
   const navigate = useNavigate();
   const now = useCurrentTime();
 
   const isTicketingStarted = ticketingStartTime && now >= ticketingStartTime;
   const isDisabled = !isTicketingStarted;
 
-  const handleScheduleClick = () => {
+  const checkLogin = () => {
     const userId = localStorage.getItem("userId");
-    if (userId) {
-      navigate(`/reservation/${eventId}/${eventDateId}`);
-    } else {
+    if (!userId) {
       toast.success("예약 페이지에 접근하기 위해서는 로그인이 필요합니다.");
+      return false;
     }
+    return true;
+  };
+
+  const handleDefaultReservationClick = () => {
+    if (!checkLogin()) return;
+
+    navigate(`/reservation/${eventId}/${eventDateId}`);
+  };
+
+  const handleAdjacentReservationClick = () => {
+    if (!checkLogin()) return;
+
+    if (friends.length == 0) {
+      toast.error("연석 친구를 먼저 등록해 주세요.");
+      return;
+    }
+
+    navigate(`/reservation/${eventId}/${eventDateId}`, {
+      state: { ticketsToReserve: friends.length },
+    });
   };
 
   return (
@@ -51,10 +72,17 @@ const ScheduleCard = ({
 
       <Button
         variant="primary"
-        onClick={handleScheduleClick}
+        onClick={handleDefaultReservationClick}
         disabled={isDisabled}
       >
         {isDisabled ? "준비중" : "예약하기"}
+      </Button>
+      <Button
+        variant="primary"
+        onClick={handleAdjacentReservationClick}
+        disabled={isDisabled}
+      >
+        {isDisabled ? "준비 중" : "연석 예매하기"}
       </Button>
     </div>
   );
