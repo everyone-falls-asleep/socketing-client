@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import Button from "../../atoms/buttons/Button";
 import { useNavigate } from "react-router-dom";
 import LoginModal from "../../organisms/auth/LoginModal";
+import JoinModal from "../../organisms/auth/JoinModal";
 import HeaderLogo from "../../molecules/header-logo/HeaderLogo";
 import { toast } from "react-toastify";
 import { jwtDecode, JwtPayload } from "jwt-decode";
@@ -14,6 +15,7 @@ const Header = () => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [isJoinModalOpen, setIsJoinModalOpen] = useState(false);
   const [isLogin, setIsLogin] = useState(false);
   const [name, setName] = useState("");
   const { setUserId, setUserRole, currentRole } = useContext(UserContext);
@@ -96,6 +98,12 @@ const Header = () => {
     setIsLoginModalOpen(false);
   };
 
+  // const handleJoinSuccess = () => {
+  //   // checkLoginStatus();
+  //   // checkIsManager();
+  //   // setIsJoinModalOpen(false);
+  // };
+
   const handleRegister = () => {
     navigate("/register");
   };
@@ -132,8 +140,11 @@ const Header = () => {
         <div className="flex space-x-2 sm:w-full md:w-[70%] lg:w-[50%] items-center justify-end">
           {!isLogin ? (
             <>
-              <Button variant="dark" onClick={() => setIsLoginModalOpen(true)}>
+              {/* <Button variant="dark" onClick={() => setIsLoginModalOpen(true)}>
                 로그인
+              </Button> */}
+              <Button variant="dark" onClick={() => setIsJoinModalOpen(true)}>
+                로그인 {/* 사실 회원가입 버튼임 */}
               </Button>
             </>
           ) : (
@@ -189,6 +200,10 @@ const Header = () => {
         isOpen={isLoginModalOpen}
         onClose={() => setIsLoginModalOpen(false)}
         onLoginSuccess={handleLoginSuccess}
+      />
+      <JoinModal
+        isOpen={isJoinModalOpen}
+        onClose={() => setIsJoinModalOpen(false)}
       />
     </>
   );
