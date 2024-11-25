@@ -81,7 +81,8 @@ export type SeatStatus =
   | "available"
   | "reserved"
   | "selected"
-  | "temporary_hold";
+  | "temporary_hold"
+  | "adjacent";
 
 export interface Point {
   x: number;

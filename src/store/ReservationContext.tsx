@@ -41,6 +41,8 @@ interface ReservationContextType {
   selectedSeat: Seat | null;
   setSelectedSeat: (seat: Seat | null) => void;
   reserveSeat: (seatId: string, eventId: string, eventDateId: string) => void;
+  adjacentSeats: Seat[];
+  setAdjacentSeats: (seats: Seat[]) => void;
 }
 
 export const ReservationContext = createContext<ReservationContextType>(
@@ -56,6 +58,7 @@ export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
   const [seatsMap, setSeatsMap] = useState<Map<string, Seat>>(new Map());
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
   const [selectedSeat, setSelectedSeat] = useState<Seat | null>(null);
+  const [adjacentSeats, setAdjacentSeats] = useState<Seat[]>([]);
 
   const updateSeat = (seatId: string, updates: Partial<Seat>) => {
     setSeatsMap((prev) => {
@@ -143,6 +146,8 @@ export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
     selectedSeat,
     setSelectedSeat,
     reserveSeat,
+    adjacentSeats,
+    setAdjacentSeats,
   };
 
   return (

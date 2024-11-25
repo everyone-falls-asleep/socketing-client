@@ -6,7 +6,12 @@ interface SeatProps {
   seatData: Seat;
 }
 
-type SeatStatus = "available" | "reserved" | "temporary_hold" | "selected";
+type SeatStatus =
+  | "available"
+  | "reserved"
+  | "temporary_hold"
+  | "selected"
+  | "adjacent";
 
 const getSeatStatus = (
   seatData: Seat,
@@ -46,6 +51,8 @@ const getStatusColor = (status: SeatStatus) => {
       return "#9CA3AF";
     case "selected":
       return "#60A5FA";
+    case "adjacent":
+      return "#0a74f5";
     case "temporary_hold":
       return "#FBBF24";
     default:
