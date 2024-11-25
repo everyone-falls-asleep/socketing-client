@@ -5,6 +5,7 @@ import React, {
   useState,
 } from "react";
 import { Event } from "../types/api/event";
+import { User } from "../types/api/user";
 
 interface EventDetailContextProps {
   filteredEvent: Event | null;
@@ -13,6 +14,8 @@ interface EventDetailContextProps {
   setEvent: (event: Event) => void;
   selectedDates: Date[];
   setSelectedDates: (dates: Date[]) => void;
+  friends: User[];
+  setFriends: (friends: User[]) => void;
 }
 
 export const EventDetailContext = createContext<EventDetailContextProps>({
@@ -22,6 +25,8 @@ export const EventDetailContext = createContext<EventDetailContextProps>({
   setEvent: () => {},
   selectedDates: [],
   setSelectedDates: () => {},
+  friends: [],
+  setFriends: () => {},
 });
 
 export const useEventDetail = () => {
@@ -41,6 +46,7 @@ export const EventDetailProvider: React.FC<PropsWithChildren> = ({
   const [event, setEvent] = useState<Event | null>(null);
   const [filteredEvent, setFilteredEvent] = useState<Event | null>(null);
   const [selectedDates, setSelectedDates] = useState<Date[]>([]);
+  const [friends, setFriends] = useState<User[]>([]);
 
   return (
     <EventDetailContext.Provider
@@ -51,6 +57,8 @@ export const EventDetailProvider: React.FC<PropsWithChildren> = ({
         setEvent,
         selectedDates,
         setSelectedDates,
+        friends,
+        setFriends,
       }}
     >
       {children}
