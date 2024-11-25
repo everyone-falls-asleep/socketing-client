@@ -24,7 +24,19 @@ const ReservationConfirmationTemplate = ({
         <SubTitle className="text-center mb-8">
           {"예매가 완료되었습니다."}
         </SubTitle>
-
+        <div className="flex flex-col items-center justify-center h-[100px] bg-gray-100 space-y-2">
+          <label className="text-lg font-bold text-gray-700">
+            ❗️❗️설문조사에 참여해주세요 ❗️❗️🙏
+          </label>
+          <a
+            href="https://docs.google.com/forms/d/e/1FAIpQLSc2kS5zHgkzFog7PYnzRHwRLWjPIGhBEteYToUZ9IZK1PkAFw/viewform"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="px-6 py-3 bg-gradient-to-r from-red-500 to-yellow-500 text-white font-bold rounded-lg shadow-lg hover:from-red-600 hover:to-yellow-600 transition-transform transform hover:scale-105"
+          >
+            설문조사 링크 열기
+          </a>
+        </div>
         <div className="bg-white rounded-lg shadow-lg overflow-hidden">
           {/* Header Section with Event Image */}
           <div className="relative h-48 bg-gradient-to-r from-purple-600 to-blue-600">
