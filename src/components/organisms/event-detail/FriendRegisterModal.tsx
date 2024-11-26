@@ -130,7 +130,7 @@ const FriendRegisterModal = ({ isOpen, onClose }: FriendRegisterModalProps) => {
                   {eventFriend.user.nickname} ({eventFriend.user.email})
                 </div>
                 <div className="flex gap-1">
-                  <div>승낙 상태: {eventFriend.status}</div>
+                  {/* <div>승낙 상태: {eventFriend.status}</div> */}
                   <Button
                     variant="secondary"
                     onClick={() => {
@@ -144,6 +144,19 @@ const FriendRegisterModal = ({ isOpen, onClose }: FriendRegisterModalProps) => {
             ))}
           </div>
         )}
+      </div>
+      <div className="flex">
+        <Button
+          variant="primary"
+          onClick={() => {
+            // EventFriend 테이블 get 요청 로직
+          }}
+        >
+          등록 완료된 친구 수 조회
+        </Button>
+        <div className="flex-grow flex justify-center items-center">
+          <div>1/{eventFriends.length}명</div>
+        </div>
       </div>
     </Modal>
   );
