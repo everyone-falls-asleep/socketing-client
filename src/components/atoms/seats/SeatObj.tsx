@@ -12,8 +12,15 @@ interface SeatProps {
 }
 
 const SeatObj: React.FC<SeatProps> = ({ seatData }) => {
-  const { eventDateId, selectSeat, socket, isConnected, currentUserId } =
-    useContext(ReservationContext);
+  const {
+    eventDateId,
+    selectSeat,
+    socket,
+    isConnected,
+    currentUserId,
+    ticketsToReserve,
+    selectAdjacentSeats,
+  } = useContext(ReservationContext);
 
   const seatStatus = getSeatStatus(seatData, eventDateId, currentUserId);
   const statusColor = getStatusColor(seatStatus);
@@ -28,7 +35,12 @@ const SeatObj: React.FC<SeatProps> = ({ seatData }) => {
       seatStatus === "adjacent"
     )
       return;
-    selectSeat(seatData.id);
+
+    if (ticketsToReserve === 1) {
+      selectSeat(seatData.id);
+    } else {
+      selectAdjacentSeats(seatData.id, ticketsToReserve);
+    }
   };
 
   return (

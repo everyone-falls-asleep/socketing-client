@@ -15,7 +15,7 @@ import Button from "../../atoms/buttons/Button";
 
 const ReservationSeatInfo = () => {
   const navigate = useNavigate();
-  const { eventId, eventDateId, selectedSeat, reserveSeat } =
+  const { eventId, eventDateId, selectedSeat, reserveSeat, adjacentSeats } =
     useContext(ReservationContext);
   const createReservationMutation = usePostMutation<
     NewReservationResponse,
@@ -71,6 +71,22 @@ const ReservationSeatInfo = () => {
             <p>번호: {selectedSeat.number}</p>
             <p>가격: 99,000원</p>
           </div>
+          {/* 인접 좌석이 있을 경우 인접 좌석 정보 표시 */}
+          {adjacentSeats.length > 0 && (
+            <>
+              {adjacentSeats.map((seat) => (
+                <div
+                  key={seat.id}
+                  className="border p-3 text-gray-800 rounded-lg space-y-2"
+                >
+                  <p>구역: {seat.area}</p>
+                  <p>열: {seat.row}</p>
+                  <p>번호: {seat.number}</p>
+                  <p>가격: 99,000원</p>
+                </div>
+              ))}
+            </>
+          )}
           <div className="text-center">
             <Button
               onClick={() => void handleReservationSubmit()}

@@ -1,7 +1,10 @@
 import React, { createContext, useState, useEffect, useContext } from "react";
 import { Socket } from "socket.io-client";
 import { useSocketConnection } from "../hooks/useSocketConnection";
-import { SeatSelectedResponse } from "../types/api/socket";
+import {
+  SeatSelectedResponse,
+  AdjacentSeatsResponse,
+} from "../types/api/socket";
 
 // Types
 interface Reservation {
@@ -37,6 +40,7 @@ interface ReservationContextType {
   updateSeat: (seatId: string, updates: Partial<Seat>) => void;
   joinRoom: (eventId: string, eventDateId: string) => void;
   selectSeat: (seatId: string) => void;
+  selectAdjacentSeats: (seatId: string, numberOfSeats: number) => void;
   currentUserId: string | null;
   selectedSeat: Seat | null;
   setSelectedSeat: (seat: Seat | null) => void;
@@ -89,6 +93,22 @@ export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
     });
   };
 
+  const updateSeats = (seats: SeatSelectedResponse[]) => {
+    setSeatsMap((prev) => {
+      const newMap = new Map(prev);
+      seats.forEach((seat) => {
+        const currentSeat = newMap.get(seat.seatId);
+        if (currentSeat) {
+          newMap.set(seat.seatId, {
+            ...currentSeat,
+            ...seat,
+          });
+        }
+      });
+      return newMap;
+    });
+  };
+
   const joinRoom = (eventId: string, eventDateId: string) => {
     socket?.emit("joinRoom", { eventId, eventDateId });
   };
@@ -96,11 +116,25 @@ export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
   const selectSeat = (seatId: string) => {
     if (!socket || !eventId || !eventDateId) return;
     // Only emit the event, don't update state directly
-    const seat = seatsMap.get(seatId);
-    if (seat) {
-      setSelectedSeat(seat);
-    }
+    // const seat = seatsMap.get(seatId);
+    // if (seat) {
+    //   setSelectedSeat(seat);
+    // }
     socket.emit("selectSeat", { seatId, eventId, eventDateId });
+  };
+
+  const selectAdjacentSeats = (seatId: string, numberOfSeats: number) => {
+    if (!socket || !eventId || !eventDateId) return;
+    // const seat = seatsMap.get(seatId);
+    // if (seat) {
+    //   setSelectedSeat(seat);
+    // }
+    socket.emit("selectAdjacentSeats", {
+      seatId,
+      eventId,
+      eventDateId,
+      numberOfSeats,
+    }); // 새로운 이벤트 이름을 쓰게 된다면
   };
 
   const reserveSeat = (seatId: string) => {
@@ -123,12 +157,11 @@ export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
     });
 
     socket.on("seatSelected", (data: SeatSelectedResponse) => {
-      updateSeat(data.seatId, {
-        selectedBy: data.selectedBy,
-        updatedAt: data.updatedAt,
-        expirationTime: data.expirationTime,
-        reservedBy: data.reservedBy,
-      });
+      updateSeats([data]);
+    });
+
+    socket.on("adjacentSeats", (data: AdjacentSeatsResponse) => {
+      updateSeats(data.seats);
     });
 
     return () => {
@@ -155,6 +188,7 @@ export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
     updateSeat,
     joinRoom,
     selectSeat,
+    selectAdjacentSeats,
     currentUserId,
     selectedSeat,
     setSelectedSeat,
