@@ -34,9 +34,17 @@ const CardList = ({ events }: CardListProps) => {
             <div className="p-4">
               <div className="flex justify-between items-start">
                 <div className="flex-1">
-                  <h3 className="text-xl font-bold text-gray-900 mb-2 line-clamp-2 h-[60px]">
-                    {event.title}
-                  </h3>
+                  <div className="flex justify-between items-center mb-3">
+                    <h3 className="text-xl font-bold text-gray-900 mb-2 mr-2 line-clamp-2">
+                      {event.title}
+                    </h3>
+                    <Button
+                      variant="primary"
+                      onClick={() => onClickHandler(event.id)}
+                    >
+                      상세 보기
+                    </Button>
+                  </div>
                   <div className="space-y-1 text-sm text-gray-600">
                     <p className="flex gap-2">
                       <span className="font-semibold">일시:</span>
@@ -49,14 +57,6 @@ const CardList = ({ events }: CardListProps) => {
                       <span>{event.place}</span>
                     </p>
                   </div>
-                </div>
-                <div className="ml-4">
-                  <Button
-                    variant="primary"
-                    onClick={() => onClickHandler(event.id)}
-                  >
-                    상세 보기
-                  </Button>
                 </div>
               </div>
             </div>

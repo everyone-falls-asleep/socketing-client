@@ -78,7 +78,7 @@ const UserMainPage = () => {
 
       <div className="px-6 md:px-20 pt-8 pb-20 bg-gray-50">
         <div className="max-w-7xl mx-auto">
-          <h2 className="text-3xl font-bold text-center mb-8">
+          <h2 className="text-2xl font-bold text-center mb-8">
             티켓팅 오픈 예정 공연
           </h2>
           <div className="flex flex-col gap-4">
@@ -157,7 +157,7 @@ const UserMainPage = () => {
         </div>
         {/* 예매 진행 중인 공연 목록 */}
         <div className="max-w-7xl mx-auto mt-14">
-          <h2 className="text-3xl font-bold text-center mb-6">
+          <h2 className="text-2xl font-bold text-center mb-6">
             예매 진행 중인 공연
           </h2>
           <CardList events={ongoingTicketingEvents}></CardList>

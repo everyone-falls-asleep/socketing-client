@@ -19,10 +19,10 @@
 }
 
 .tab-menu-active {
-  @apply border-b-2 border-blue-500 text-blue-500;
+  @apply border-b-2 border-rose-400 text-rose-400;
 }
 
-.tab-menu-inactiv {
+.tab-menu-inactive {
   @apply text-gray-600;
 }
 
@@ -31,7 +31,7 @@
 }
 
 .tab-content-title {
-  @apply text-2xl font-bold text-black;
+  @apply text-2xl font-bold text-gray-900;
 }
 
 .selected-date-label {

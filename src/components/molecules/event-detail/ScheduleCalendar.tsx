@@ -46,7 +46,7 @@ const ScheduleCalendar = ({
   return (
     <div
       id="calendar"
-      className="schedule-filter w-96 p-6 bg-white rounded-lg shadow-2xl"
+      className="schedule-filter w-96 p-6 bg-white rounded-lg shadow-lg md:shadow-2xl"
     >
       <div className="flex justify-between items-center mb-6">
         <button
@@ -69,7 +69,7 @@ const ScheduleCalendar = ({
         </button>
       </div>
 
-      <div className="grid grid-cols-7 gap-3">
+      <div className="grid grid-cols-7 gap-2 md:gap-3">
         {dates.map((day) => {
           const date = new Date(currentYear, currentMonth, day);
           const isHighlighted = validDatesAsDate.some(
@@ -96,9 +96,9 @@ const ScheduleCalendar = ({
                 }
               }}
               className={`
-                  flex justify-center items-center p-4 rounded-lg focus:outline-none transition-colors duration-200 text-center text-base font-medium
-                  ${isSelected ? "bg-rose-500" : "bg-gray-200 text-gray-700"}
-                  ${isHighlighted && !isSelected ? "bg-rose-300 hover:bg-rose-400" : ""}
+                  flex justify-center items-center p-2 md:p-4 rounded-lg focus:outline-none transition-colors duration-200 text-center text-base font-medium
+                  ${isSelected ? "bg-rose-500 text-white" : "bg-gray-100 text-gray-700"}
+                  ${isHighlighted && !isSelected ? "bg-rose-300 hover:bg-rose-400 text-white" : ""}
                   ${!isHighlighted && "cursor-not-allowed"}
                 `}
               disabled={!isHighlighted}

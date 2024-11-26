@@ -22,7 +22,7 @@ const MainBanner = ({ event }: MainBannerProps) => {
           </h1>
         </div>
         <div className="relative w-full h-[24rem] overflow-hidden bg-gray-100 flex items-center justify-center">
-          <p className="text-center text-gray-500">
+          <p className="text-center text-lg text-gray-500">
             티켓팅 예정 이벤트가 없습니다.
           </p>
         </div>

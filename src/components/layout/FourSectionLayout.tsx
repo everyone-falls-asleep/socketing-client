@@ -30,7 +30,7 @@ const FourSectionLayout: React.FC<FourSectionLayoutProps> = ({
         <div className="h-1/4 w-full bg-white border-b">{topContent}</div>
         <div className="flex flex-1 min-h-0 flex-col md:flex-row">
           <div
-            className={`hidden transition-transform duration-300 md:w-1/5 bg-white border-r relative ${
+            className={`transition-transform duration-300 md:w-1/5 bg-white border-r relative ${
               isLeftSidebarOpen ? "block" : "hidden"
             }`}
           >
@@ -40,7 +40,7 @@ const FourSectionLayout: React.FC<FourSectionLayoutProps> = ({
           <div className="flex-1 relative">
             <button
               onClick={toggleSidebar}
-              className="hidden absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white p-2 
+              className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white p-2 
                 rounded-r-lg shadow-md hover:bg-gray-50 transition-colors border border-l-0"
             >
               {isLeftSidebarOpen ? "◀" : "▶"}

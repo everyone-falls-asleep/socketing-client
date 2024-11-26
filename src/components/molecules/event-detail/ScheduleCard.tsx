@@ -57,36 +57,70 @@ const ScheduleCard = ({
   };
 
   return (
-    <div className="event-card h-20 flex items-center justify-between px-8 py-4 mx-2 mb-2 rounded-lg border shadow-lg hover:bg-gray-100 transition">
-      <div className="schedule-info flex gap-4">
-        <div
-          id="schedule-date"
-          className="text-lg font-semibold text-gray-800 flex items-end"
-        >
-          <p>{formatDateToKoreanDate(date)}</p>
+    <>
+      {/* lg */}
+      <div className="hidden lg:flex event-card h-20 items-center justify-between lg:px-8 py-4 mx-2 mb-2 rounded-lg border shadow-lg hover:bg-gray-100 transition">
+        <div className="schedule-info flex lg:gap-4">
+          <div
+            id="schedule-date"
+            className="text-lg font-semibold text-gray-800 flex items-end"
+          >
+            <p>{formatDateToKoreanDate(date)}</p>
+          </div>
+          <div className="schedule-time text-base text-gray-600 flex items-end">
+            <p>{formatDateToKoreanTime(date)}</p>
+          </div>
         </div>
-        <div className="schedule-time text-base text-gray-600 flex items-end">
-          <p>{formatDateToKoreanTime(date)}</p>
+        <div className="flex gap-2">
+          <Button
+            variant="dark"
+            onClick={handleAdjacentReservationClick}
+            disabled={isDisabled}
+          >
+            {isDisabled ? "준비 중" : "연석 예매하기"}
+          </Button>
+          <Button
+            variant="primary"
+            onClick={handleDefaultReservationClick}
+            disabled={isDisabled}
+          >
+            {isDisabled ? "준비중" : "예약하기"}
+          </Button>
         </div>
       </div>
-
-      <div className="flex gap-1">
-        <Button
-          variant="primary"
-          onClick={handleDefaultReservationClick}
-          disabled={isDisabled}
-        >
-          {isDisabled ? "준비중" : "예약하기"}
-        </Button>
-        <Button
-          variant="primary"
-          onClick={handleAdjacentReservationClick}
-          disabled={isDisabled}
-        >
-          {isDisabled ? "준비 중" : "연석 예매하기"}
-        </Button>
+      {/* 모바일 반응형, md */}
+      <div className="lg:hidden event-card h-20 flex items-center justify-between pl-4 pr-3 md:px-8 py-4 md:mx-2 mb-2 rounded-lg border shadow-sm md:shadow-lg hover:bg-gray-100 transition">
+        <div className="schedule-info flex flex-col">
+          <div
+            id="schedule-date"
+            className="text-base md:text-lg font-semibold text-gray-800 flex items-end"
+          >
+            <p>{formatDateToKoreanDate(date)}</p>
+          </div>
+          <div className="schedule-time text-sm md:text-base text-gray-600 flex items-end">
+            <p>{formatDateToKoreanTime(date)}</p>
+          </div>
+        </div>
+        <div className="flex gap-1 md:gap-2">
+          <Button
+            variant="dark"
+            size="sm"
+            onClick={handleAdjacentReservationClick}
+            disabled={isDisabled}
+          >
+            {isDisabled ? "준비 중" : "연석 예매"}
+          </Button>
+          <Button
+            variant="primary"
+            size="sm"
+            onClick={handleDefaultReservationClick}
+            disabled={isDisabled}
+          >
+            {isDisabled ? "준비중" : "예매"}
+          </Button>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 
