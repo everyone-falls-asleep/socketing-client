@@ -2,9 +2,9 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import Button from "../../atoms/buttons/Button";
 import Modal from "../../molecules/modal/Modal";
 import Input from "../../atoms/inputs/Input";
-import { useMockEventFriendContext } from "../../../mocks/mockEventFriendContext";
 import { mockEventFriends } from "../../../mocks/mockEventFriendData";
 import { useEffect, useState } from "react";
+import { useMockEventFriendContext } from "../../../mocks/MockEventFriendContext";
 
 interface FriendRegisterModalProps {
   isOpen: boolean;
