@@ -46,7 +46,10 @@ const ScheduleCard = ({
   const handleAdjacentReservationClick = () => {
     if (!checkLogin()) return;
 
-    // 연석 친구를 먼저 등록해 주세요 문구 띄우기
+    if (eventFriends.length < 1) {
+      toast.error("연석 친구를 먼저 등록해 주세요.");
+      return;
+    }
 
     navigate(`/reservation/${eventId}/${eventDateId}`, {
       state: { ticketsToReserve: eventFriends.length },
