@@ -2,32 +2,10 @@ import React, { createContext, useState, useEffect, useContext } from "react";
 import { Socket } from "socket.io-client";
 import { useSocketConnection } from "../hooks/useSocketConnection";
 import {
+  Seat,
   SeatSelectedResponse,
   AdjacentSeatsResponse,
 } from "../types/api/socket";
-
-// Types
-interface Reservation {
-  id: string;
-  eventDate: {
-    id: string;
-    date: string;
-  };
-}
-
-interface Seat {
-  id: string;
-  cx: number;
-  cy: number;
-  area: number;
-  row: number;
-  number: number;
-  reservations: Reservation[];
-  selectedBy?: string | null;
-  updatedAt: string;
-  expirationTime: string;
-  reservedBy?: string;
-}
 
 interface ReservationContextType {
   socket: Socket | null;
