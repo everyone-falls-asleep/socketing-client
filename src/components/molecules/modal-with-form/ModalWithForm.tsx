@@ -27,6 +27,7 @@ interface ModalWithFormProps<T extends FieldValues> {
   isOpen?: boolean;
   onClose?: () => void;
   onSuccess: (data: T) => void;
+  children?: React.ReactNode;
   fields: Field<T>[];
   errors?: FieldErrors<T>;
   formTitle?: string;
@@ -38,6 +39,7 @@ const ModalWithForm = <T extends FieldValues>({
   isOpen = false,
   onClose = () => {},
   onSuccess,
+  children,
   fields,
   errors,
   formTitle,
@@ -74,6 +76,7 @@ const ModalWithForm = <T extends FieldValues>({
               )}
             </div>
           ))}
+          {children}
           <div className="flex justify-end mt-6">
             <button
               type="button"

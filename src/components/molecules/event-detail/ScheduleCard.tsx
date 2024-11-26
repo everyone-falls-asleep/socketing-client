@@ -6,7 +6,6 @@ import {
 } from "../../../utils/dateUtils";
 import { toast } from "react-toastify";
 import { useCurrentTime } from "../../../hooks/useCurrentTime";
-import { useEventDetail } from "../../../store/EventDetailContext";
 
 interface ScheduleCardProps {
   eventId: string;
@@ -21,7 +20,6 @@ const ScheduleCard = ({
   date,
   ticketingStartTime,
 }: ScheduleCardProps) => {
-  const { friends } = useEventDetail();
   const navigate = useNavigate();
   const now = useCurrentTime();
 
@@ -46,13 +44,10 @@ const ScheduleCard = ({
   const handleAdjacentReservationClick = () => {
     if (!checkLogin()) return;
 
-    if (friends.length == 0) {
-      toast.error("연석 친구를 먼저 등록해 주세요.");
-      return;
-    }
+    // 연석 친구를 먼저 등록해 주세요 문구 띄우기
 
     navigate(`/reservation/${eventId}/${eventDateId}`, {
-      state: { ticketsToReserve: friends.length },
+      state: { ticketsToReserve: 4 },
     });
   };
 
@@ -70,20 +65,22 @@ const ScheduleCard = ({
         </div>
       </div>
 
-      <Button
-        variant="primary"
-        onClick={handleDefaultReservationClick}
-        disabled={isDisabled}
-      >
-        {isDisabled ? "준비중" : "예약하기"}
-      </Button>
-      <Button
-        variant="primary"
-        onClick={handleAdjacentReservationClick}
-        disabled={isDisabled}
-      >
-        {isDisabled ? "준비 중" : "연석 예매하기"}
-      </Button>
+      <div className="flex gap-1">
+        <Button
+          variant="primary"
+          onClick={handleDefaultReservationClick}
+          disabled={isDisabled}
+        >
+          {isDisabled ? "준비중" : "예약하기"}
+        </Button>
+        <Button
+          variant="primary"
+          onClick={handleAdjacentReservationClick}
+          disabled={isDisabled}
+        >
+          {isDisabled ? "준비 중" : "연석 예매하기"}
+        </Button>
+      </div>
     </div>
   );
 };
