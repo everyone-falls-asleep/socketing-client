@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import FourSectionLayout from "../layout/FourSectionLayout";
 import ReservationUpperEvent from "../organisms/reservation/ReservationUpperEvent";
 import ReservationCalendarSideBar from "../organisms/reservation/ReservationCalendarSideBar";
@@ -14,8 +14,22 @@ import ReservationSeatInfo from "../organisms/reservation/ReservationSeatInfo";
 
 const ReservationPage: React.FC = () => {
   const { eventId: urlEventId, eventDateId: urlEventDateId } = useParams();
-  const { setEventId, setEventDateId, isConnected } =
-    useContext(ReservationContext);
+  const {
+    setEventId,
+    setEventDateId,
+    isConnected,
+    setTicketsToReserve,
+    ticketsToReserve,
+  } = useContext(ReservationContext);
+  const location = useLocation();
+
+  useEffect(() => {
+    const state = location.state as { ticketsToReserve?: number };
+    if (state?.ticketsToReserve) {
+      setTicketsToReserve(state.ticketsToReserve);
+    }
+    console.log(ticketsToReserve);
+  }, [location.state, setTicketsToReserve]);
 
   const [isLeftSidebarOpen, setIsLeftSidebarOpen] =
     React.useState<boolean>(true);

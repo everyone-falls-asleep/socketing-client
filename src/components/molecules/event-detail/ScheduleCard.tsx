@@ -6,6 +6,7 @@ import {
 } from "../../../utils/dateUtils";
 import { toast } from "react-toastify";
 import { useCurrentTime } from "../../../hooks/useCurrentTime";
+import { useMockEventFriendContext } from "../../../mocks/MockEventFriendContext";
 
 interface ScheduleCardProps {
   eventId: string;
@@ -25,6 +26,7 @@ const ScheduleCard = ({
 
   const isTicketingStarted = ticketingStartTime && now >= ticketingStartTime;
   const isDisabled = !isTicketingStarted;
+  const { eventFriends } = useMockEventFriendContext();
 
   const checkLogin = () => {
     const userId = localStorage.getItem("userId");
@@ -47,7 +49,7 @@ const ScheduleCard = ({
     // 연석 친구를 먼저 등록해 주세요 문구 띄우기
 
     navigate(`/reservation/${eventId}/${eventDateId}`, {
-      state: { ticketsToReserve: 4 },
+      state: { ticketsToReserve: eventFriends.length },
     });
   };
 
