@@ -37,27 +37,27 @@ const FriendRegisterModal = ({ isOpen, onClose }: FriendRegisterModalProps) => {
     onClose();
   };
 
-  // Mock API request
-  const mockPostEventFriend = async (email: string) => {
-    console.log(email, "로 친구 요청 보내기");
-    await new Promise((resolve) => setTimeout(resolve, 500));
+  // // Mock API request
+  // const mockPostEventFriend = async (email: string) => {
+  //   console.log(email, "로 친구 요청 보내기");
+  //   await new Promise((resolve) => setTimeout(resolve, 500));
 
-    setEventFriendIndex(eventFriendIndex + 1);
-    console.log(eventFriendIndex);
+  //   setEventFriendIndex(eventFriendIndex + 1);
+  //   console.log(eventFriendIndex);
 
-    return {
-      code: "200",
-      message: "success",
-      data: mockEventFriends[eventFriendIndex - 1],
-    };
-  };
+  //   return {
+  //     code: "200",
+  //     message: "success",
+  //     data: mockEventFriends[eventFriendIndex - 1],
+  //   };
+  // };
 
   // 디버깅용
   useEffect(() => {
     console.log("eventFriends updated:", eventFriends);
   }, [eventFriends]);
 
-  const onSubmit: SubmitHandler<EmailOnlyData> = async (data) => {
+  const onSubmit: SubmitHandler<EmailOnlyData> = (data) => {
     if (!data.email) {
       setError("email", {
         type: "manual",
@@ -66,9 +66,6 @@ const FriendRegisterModal = ({ isOpen, onClose }: FriendRegisterModalProps) => {
 
       return;
     }
-
-    await mockPostEventFriend(data.email);
-
     const newEventFriend = mockEventFriends[eventFriendIndex];
     console.log(newEventFriend);
     addEventFriend(newEventFriend);
@@ -81,7 +78,10 @@ const FriendRegisterModal = ({ isOpen, onClose }: FriendRegisterModalProps) => {
     <Modal isOpen={isOpen} onClose={handleClose}>
       <div className="space-y-4">
         <h3 className="text-lg font-bold">연석 친구 등록하기</h3>
-        <form onSubmit={void handleSubmit(onSubmit)} className="space-y-4">
+        <form
+          onSubmit={(e) => void handleSubmit(onSubmit)(e)}
+          className="space-y-4"
+        >
           <div className="mt-4">
             <div className="flex flex-col w-full">
               <div className="flex justify-between">
