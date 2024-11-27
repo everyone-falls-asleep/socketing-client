@@ -1,1 +1,1 @@
-export const SOCKET_SERVER_URL = "https://socket.hjyoon.me/";
+export const SOCKET_SERVER_URL = "http://localhost:3000";
