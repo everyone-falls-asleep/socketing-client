@@ -77,14 +77,14 @@ const ScheduleCard = ({
             onClick={handleAdjacentReservationClick}
             disabled={isDisabled}
           >
-            {isDisabled ? "준비 중" : "연석 예매하기"}
+            {isDisabled ? "연석 준비 중" : "연석 예매하기"}
           </Button>
           <Button
             variant="primary"
             onClick={handleDefaultReservationClick}
             disabled={isDisabled}
           >
-            {isDisabled ? "준비중" : "예약하기"}
+            {isDisabled ? "일반 준비 중" : "예매하기"}
           </Button>
         </div>
       </div>
@@ -108,7 +108,7 @@ const ScheduleCard = ({
             onClick={handleAdjacentReservationClick}
             disabled={isDisabled}
           >
-            {isDisabled ? "준비 중" : "연석 예매"}
+            {isDisabled ? "연석" : "연석 예매"}
           </Button>
           <Button
             variant="primary"
@@ -116,7 +116,7 @@ const ScheduleCard = ({
             onClick={handleDefaultReservationClick}
             disabled={isDisabled}
           >
-            {isDisabled ? "준비중" : "예매"}
+            {isDisabled ? "준비 중" : "예매"}
           </Button>
         </div>
       </div>

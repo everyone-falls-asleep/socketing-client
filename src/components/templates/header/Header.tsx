@@ -138,11 +138,35 @@ const Header = () => {
         <div className="flex ml-2 space-x-1 sm:w-full md:w-[70%] lg:w-[60%] items-center justify-end">
           {!isLogin ? (
             <>
-              <Button variant="dark" onClick={() => setIsLoginModalOpen(true)}>
+              <Button
+                variant="dark"
+                onClick={() => setIsJoinModalOpen(true)}
+                className="hidden md:inline-block"
+              >
+                회원가입
+              </Button>
+              <Button
+                variant="dark"
+                onClick={() => setIsJoinModalOpen(true)}
+                size="sm"
+                className="md:hidden text-[15px]"
+              >
+                회원가입
+              </Button>
+              <Button
+                variant="secondary"
+                onClick={() => setIsLoginModalOpen(true)}
+                className="hidden md:inline-block"
+              >
                 로그인
               </Button>
-              <Button variant="dark" onClick={() => setIsJoinModalOpen(true)}>
-                회원가입
+              <Button
+                variant="secondary"
+                onClick={() => setIsLoginModalOpen(true)}
+                size="sm"
+                className="md:hidden text-[15px]"
+              >
+                로그인
               </Button>
             </>
           ) : (
@@ -150,9 +174,24 @@ const Header = () => {
               <span className="hidden md:inline text-white pr-2">
                 <span className="font-bold">{name}</span>님, 안녕하세요
               </span>
-              <Button onClick={handleLogout} variant="dark">
+              <Button
+                onClick={handleLogout}
+                variant="dark"
+                className="hidden md:inline-block"
+              >
                 로그아웃
               </Button>
+
+              {/* 모바일 */}
+              <Button
+                onClick={handleLogout}
+                variant="dark"
+                size="sm"
+                className="md:hidden text-[15px]"
+              >
+                로그아웃
+              </Button>
+
               {isManager && (
                 <Button
                   variant="dark"
@@ -162,7 +201,22 @@ const Header = () => {
                   공연 등록하기
                 </Button>
               )}
-              <Button onClick={openMyPage} variant="secondary">
+
+              <Button
+                onClick={openMyPage}
+                variant="secondary"
+                className="hidden md:inline-block"
+              >
+                마이 페이지
+              </Button>
+
+              {/* 모바일 */}
+              <Button
+                onClick={openMyPage}
+                variant="secondary"
+                size="sm"
+                className="md:hidden text-[15px]"
+              >
                 마이 페이지
               </Button>
             </>

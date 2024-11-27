@@ -16,7 +16,7 @@ const EventDetailAboutTab = () => {
       <div id="event-about" className="content-container">
         <div
           key={event.id}
-          className="event-details p-2 flex justify-start gap-10"
+          className="event-details px-2 md:p-2 flex flex-col md:flex-row justify-start md:gap-10"
         >
           <div className="h-96 flex justify-center">
             <img
@@ -26,31 +26,36 @@ const EventDetailAboutTab = () => {
             />
           </div>
 
-          <div id="event-detail-about-content">
-            <h2 className="text-2xl font-bold mb-2">{event.title}</h2>
-            <div className="pl-2 flex flex-col">
+          <div id="event-detail-about-content" className="my-4 md:my-0">
+            <div className="text-center md:text-start">
+              <h2 className="text-2xl font-bold px-1 my-2">{event.title}</h2>
+            </div>
+
+            <div className="pl-2 flex flex-col mt-5 gap-1">
               <div className="flex gap-2">
-                <p className="text-gray-600 text-lg font-bold w-24">장소</p>
-                <p className="text-gray-600 text-lg">{event.place}</p>
+                <p className="text-gray-700 text-lg font-bold w-24">장소</p>
+                <p className="text-gray-700 text-lg">{event.place}</p>
               </div>
               <div className="flex gap-2">
-                <p className="text-gray-600 text-lg font-bold w-24">출연</p>
-                <p className="text-gray-600 text-lg">{event.cast}</p>
+                <p className="text-gray-700 text-lg font-bold w-24">출연</p>
+                <p className="text-gray-700 text-lg">{event.cast}</p>
               </div>
               <div className="flex gap-2">
-                <p className="text-gray-600 text-lg font-bold w-24">
+                <p className="text-gray-700 text-lg font-bold w-24">
                   연령 제한
                 </p>
-                <p className="text-gray-600 text-lg">{event.ageLimit}세 이상</p>
+                <p className="text-gray-700 text-lg">{event.ageLimit}세 이상</p>
               </div>
-              <div className="flex gap-2">
-                <p className="text-gray-600 text-lg font-bold w-24">
+            </div>
+            <div className="pl-2 mt-6">
+              <div className="flex flex-col gap-2">
+                <p className="text-gray-700 text-lg font-bold w-24">
                   공연 일정
                 </p>
                 <p>
                   <ul className="list-disc pl-6">
                     {event.eventDates.map((schedule) => (
-                      <li key={schedule.id} className="text-gray-600 text-lg">
+                      <li key={schedule.id} className="text-gray-700 text-lg">
                         {formatToKoreanDateAndTime(schedule.date)}
                       </li>
                     ))}

@@ -33,7 +33,7 @@ const EventDetailScheduleTab = () => {
   return (
     <>
       <div className="tab-content-title-container">
-        <h2 className="tab-content-title">공연 일정</h2>
+        <h2 className="tab-content-title md:ml-2">공연 일정</h2>
       </div>
       <div className="flex flex-col items-center md:items-start lg:mt-10 md:flex-row px-4 md:gap-7 lg:gap-10">
         {/* 달력 */}

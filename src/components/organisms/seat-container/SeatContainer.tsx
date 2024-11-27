@@ -23,6 +23,7 @@ const SeatContainer: React.FC<SeatContainerProps> = ({
     userCount: 0,
     lastUpdate: "",
   });
+  const [showLegend, setShowLegend] = useState(true); // Legend 표시 여부
 
   const seatsData = Array.from(seatsMap.values());
 
@@ -112,7 +113,7 @@ const SeatContainer: React.FC<SeatContainerProps> = ({
     <div className="relative h-full">
       <div
         ref={containerRef}
-        className="relative flex-1 overflow-hidden bg-gray-100"
+        className="relative flex-1 overflow-hidden bg-gray-50"
         style={{ height: "100%", touchAction: "none" }}
         onMouseDown={handleMouseDown}
       >
@@ -137,7 +138,8 @@ const SeatContainer: React.FC<SeatContainerProps> = ({
         </div>
       </div>
 
-      <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-white rounded-lg shadow-lg p-2 flex gap-2">
+      {/* Zoom Controls */}
+      <div className="hidden md:flex absolute bottom-11 left-1/2 transform -translate-x-1/2 bg-white rounded-lg shadow-lg p-2 gap-2">
         <button
           onClick={() => {
             const newScale = Math.min(scale + 0.2, 3);
@@ -166,12 +168,42 @@ const SeatContainer: React.FC<SeatContainerProps> = ({
           -
         </button>
       </div>
-
+      {/* Server Info */}
       <div className="absolute bottom-0 left-0 right-0 bg-white p-2 text-sm flex justify-between items-center h-10 border-t">
         <div>Server Time: {serverInfo.time}</div>
         <div>Connected Users: {serverInfo.userCount}</div>
         <div>Last Update: {serverInfo.lastUpdate}</div>
       </div>
+
+      {/* 좌석 상태 토글 버튼*/}
+      <button
+        className="absolute top-0 right-0 rounded-md p-2 shadow-lg flex items-center justify-center text-sm border bg-white opacity-70"
+        onClick={() => setShowLegend((prev) => !prev)}
+      >
+        {showLegend ? "▲" : "좌석 색 정보 ▼"}
+      </button>
+
+      {/* 좌석상태 정보 */}
+      {showLegend && (
+        <div className="absolute top-10 right-0 bg-white rounded-lg shadow-lg p-4 flex flex-col text-sm space-y-2 opacity-90">
+          <div className="flex items-center space-x-3">
+            <div className="w-5 h-5 rounded-full border border-gray-400 bg-[#FFF]"></div>
+            <span className="text-gray-600 font-bold">예매 가능</span>
+          </div>
+          <div className="flex items-center space-x-3">
+            <div className="w-5 h-5 rounded-full border border-gray-400 bg-[#9CA3AF]"></div>
+            <span className="text-gray-600 font-bold">예매 완료</span>
+          </div>
+          <div className="flex items-center space-x-3">
+            <div className="w-5 h-5 rounded-full border border-gray-400 bg-[#60A5FA]"></div>
+            <span className="text-gray-600 font-bold">내가 선택</span>
+          </div>
+          <div className="flex items-center space-x-3">
+            <div className="w-5 h-5 rounded-full border border-gray-400 bg-[#FBBF24]"></div>
+            <span className="text-gray-600 font-bold">다른 사람이 선택</span>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
