@@ -1,1 +1,1 @@
-export const baseURL = "https://socketing.hjyoon.me/api/";
+export const baseURL = "http://localhost:5000/api/";
