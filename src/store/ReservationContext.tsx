@@ -16,7 +16,7 @@ interface ReservationContextType {
   setEventDateId: (id: string) => void;
   seatsMap: Map<string, Seat>;
   // updateSeat: (seatId: string, updates: Partial<Seat>) => void;
-  joinRoom: (eventId: string, eventDateId: string) => void;
+  joinRoom: () => void;
   selectSeat: (seatId: string) => void;
   requestAdjacentSeats: (seatId: string, numberOfSeats: number) => void;
   currentUserId: string | null;
@@ -25,8 +25,8 @@ interface ReservationContextType {
   reserveSeat: (seatId: string, eventId: string, eventDateId: string) => void;
   adjacentSeats: Seat[];
   setAdjacentSeats: (seats: Seat[]) => void;
-  ticketsToReserve: number;
-  setTicketsToReserve: (count: number) => void;
+  numberOfTickets: number;
+  setNumberofTickets: (count: number) => void;
 }
 
 export const ReservationContext = createContext<ReservationContextType>(
@@ -53,7 +53,7 @@ export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
   const [selectedSeat, setSelectedSeat] = useState<Seat | null>(null);
   const [adjacentSeats, setAdjacentSeats] = useState<Seat[]>([]);
-  const [ticketsToReserve, setTicketsToReserve] = useState(1);
+  const [numberOfTickets, setNumberofTickets] = useState(1);
 
   // const updateSeat = (seatId: string, updates: Partial<Seat>) => {
   //   setSeatsMap((prev) => {
@@ -87,7 +87,8 @@ export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
     });
   };
 
-  const joinRoom = (eventId: string, eventDateId: string) => {
+  const joinRoom = () => {
+    if (!socket || !eventId || !eventDateId) return;
     socket?.emit("joinRoom", { eventId, eventDateId });
   };
 
@@ -103,10 +104,10 @@ export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const requestAdjacentSeats = (seatId: string, numberOfSeats: number) => {
     if (!socket || !eventId || !eventDateId) return;
-    // const seat = seatsMap.get(seatId);
-    // if (seat) {
-    //   setSelectedSeat(seat);
-    // }
+    const seat = seatsMap.get(seatId);
+    if (seat) {
+      setSelectedSeat(seat);
+    }
     socket.emit("requestAdjacentSeats", {
       seatId,
       eventId,
@@ -151,7 +152,7 @@ export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
 
   useEffect(() => {
     if (socket && eventId && eventDateId) {
-      joinRoom(eventId, eventDateId);
+      joinRoom();
     }
   }, [socket, eventId, eventDateId]);
 
@@ -173,8 +174,8 @@ export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
     reserveSeat,
     adjacentSeats,
     setAdjacentSeats,
-    ticketsToReserve,
-    setTicketsToReserve,
+    numberOfTickets,
+    setNumberofTickets,
   };
 
   return (

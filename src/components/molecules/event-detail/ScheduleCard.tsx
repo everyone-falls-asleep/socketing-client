@@ -52,7 +52,7 @@ const ScheduleCard = ({
     }
 
     navigate(`/reservation/${eventId}/${eventDateId}`, {
-      state: { ticketsToReserve: eventFriends.length + 1 },
+      state: { numberOfTickets: eventFriends.length + 1 },
     });
   };
 

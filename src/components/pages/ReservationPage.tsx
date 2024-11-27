@@ -14,22 +14,16 @@ import ReservationSeatInfo from "../organisms/reservation/ReservationSeatInfo";
 
 const ReservationPage: React.FC = () => {
   const { eventId: urlEventId, eventDateId: urlEventDateId } = useParams();
-  const {
-    setEventId,
-    setEventDateId,
-    isConnected,
-    setTicketsToReserve,
-    ticketsToReserve,
-  } = useContext(ReservationContext);
+  const { setEventId, setEventDateId, isConnected, setNumberofTickets } =
+    useContext(ReservationContext);
   const location = useLocation();
 
   useEffect(() => {
-    const state = location.state as { ticketsToReserve?: number };
-    if (state?.ticketsToReserve) {
-      setTicketsToReserve(state.ticketsToReserve);
+    const state = location.state as { numberOfTickets?: number };
+    if (state?.numberOfTickets) {
+      setNumberofTickets(state.numberOfTickets);
     }
-    console.log(ticketsToReserve);
-  }, [location.state, setTicketsToReserve]);
+  }, [location.state, setNumberofTickets]);
 
   const [isLeftSidebarOpen, setIsLeftSidebarOpen] =
     React.useState<boolean>(true);
