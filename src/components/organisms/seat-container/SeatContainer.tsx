@@ -23,7 +23,7 @@ const SeatContainer: React.FC<SeatContainerProps> = ({
     userCount: 0,
     lastUpdate: "",
   });
-  const [showLegend, setShowLegend] = useState(true); // Legend 표시 여부
+  const [showLegend, setShowLegend] = useState(false); // 토글기능
 
   const seatsData = Array.from(seatsMap.values());
 
