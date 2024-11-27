@@ -15,7 +15,7 @@ import Button from "../../atoms/buttons/Button";
 
 const ReservationSeatInfo = () => {
   const navigate = useNavigate();
-  const { eventId, eventDateId, selectedSeat, reserveSeat } =
+  const { eventId, eventDateId, selectedSeat, reserveSeat, adjacentSeats } =
     useContext(ReservationContext);
   const createReservationMutation = usePostMutation<
     NewReservationResponse,
@@ -63,28 +63,37 @@ const ReservationSeatInfo = () => {
   return (
     <div>
       {selectedSeat ? (
-        <div className="space-y-3">
-          <Button
-            onClick={() => void handleReservationSubmit()}
-            className="p-4 w-full transition-colors "
-            variant="primary"
-          >
-            선택 좌석 예매하기
-          </Button>
-          {/* 버튼은  */}
-          <div className="border p-3 text-gray-800 bg-white rounded-lg space-y-2">
-            <p>
-              <span className="font-bold">구역:</span> {selectedSeat.area}
-            </p>
-            <p>
-              <span className="font-bold">열:</span> {selectedSeat.row}
-            </p>
-            <p>
-              <span className="font-bold">번호:</span> {selectedSeat.number}
-            </p>
-            <p>
-              <span className="font-bold">가격:</span> 99,000원
-            </p>
+        <div className="space-y-4 p-1">
+          <h2 className="text-lg font-bold pl-1 text-gray-800">좌석 정보</h2>
+          <div className="border p-3 text-gray-800 rounded-lg space-y-2">
+            <p>구역: {selectedSeat.area}</p>
+            <p>열: {selectedSeat.row}</p>
+            <p>번호: {selectedSeat.number}</p>
+            <p>가격: 99,000원</p>
+          </div>
+          {/* 인접 좌석이 있을 경우 인접 좌석 정보 표시 */}
+          {adjacentSeats.length > 0 && (
+            <>
+              {adjacentSeats.map((seat) => (
+                <div
+                  key={seat.id}
+                  className="border p-3 text-gray-800 rounded-lg space-y-2"
+                >
+                  <p>구역: {seat.area}</p>
+                  <p>열: {seat.row}</p>
+                  <p>번호: {seat.number}</p>
+                  <p>가격: 99,000원</p>
+                </div>
+              ))}
+            </>
+          )}
+          <div className="text-center">
+            <Button
+              onClick={() => void handleReservationSubmit()}
+              className="p-4 w-full transition-colors"
+            >
+              예매하기
+            </Button>
           </div>
         </div>
       ) : (
