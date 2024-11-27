@@ -59,7 +59,7 @@ export interface ServerToClientEvents {
   userList: (userList: UserList) => void;
 
   // Adjacent seat events
-  adjacentSeats: (response: AdjacentSeatsResponse) => void;
+  adjacentSeatsSelected: (response: AdjacentSeatsResponse) => void;
 }
 
 export interface ClientToServerEvents {
@@ -77,7 +77,7 @@ export interface ClientToServerEvents {
     eventDateId: string;
   }) => void;
 
-  selectAdjacentSeats: (params: {
+  requestAdjacentSeats: (params: {
     seatId: string;
     eventId: string;
     eventDateId: string;

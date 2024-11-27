@@ -19,7 +19,7 @@ const SeatObj: React.FC<SeatProps> = ({ seatData }) => {
     isConnected,
     currentUserId,
     ticketsToReserve,
-    selectAdjacentSeats,
+    requestAdjacentSeats,
   } = useContext(ReservationContext);
 
   const seatStatus = getSeatStatus(seatData, eventDateId, currentUserId);
@@ -39,7 +39,7 @@ const SeatObj: React.FC<SeatProps> = ({ seatData }) => {
     if (ticketsToReserve === 1) {
       selectSeat(seatData.id);
     } else {
-      selectAdjacentSeats(seatData.id, ticketsToReserve);
+      requestAdjacentSeats(seatData.id, ticketsToReserve);
     }
   };
 

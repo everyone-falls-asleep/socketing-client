@@ -15,10 +15,10 @@ interface ReservationContextType {
   eventDateId: string | null;
   setEventDateId: (id: string) => void;
   seatsMap: Map<string, Seat>;
-  updateSeat: (seatId: string, updates: Partial<Seat>) => void;
+  // updateSeat: (seatId: string, updates: Partial<Seat>) => void;
   joinRoom: (eventId: string, eventDateId: string) => void;
   selectSeat: (seatId: string) => void;
-  selectAdjacentSeats: (seatId: string, numberOfSeats: number) => void;
+  requestAdjacentSeats: (seatId: string, numberOfSeats: number) => void;
   currentUserId: string | null;
   selectedSeat: Seat | null;
   setSelectedSeat: (seat: Seat | null) => void;
@@ -55,21 +55,21 @@ export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
   const [adjacentSeats, setAdjacentSeats] = useState<Seat[]>([]);
   const [ticketsToReserve, setTicketsToReserve] = useState(1);
 
-  const updateSeat = (seatId: string, updates: Partial<Seat>) => {
-    setSeatsMap((prev) => {
-      const newMap = new Map(prev);
-      const currentSeat = newMap.get(seatId);
-      if (currentSeat) {
-        newMap.set(seatId, {
-          ...currentSeat,
-          ...updates,
-          selectedBy: updates.selectedBy,
-          reservedBy: updates.reservedBy,
-        });
-      }
-      return newMap;
-    });
-  };
+  // const updateSeat = (seatId: string, updates: Partial<Seat>) => {
+  //   setSeatsMap((prev) => {
+  //     const newMap = new Map(prev);
+  //     const currentSeat = newMap.get(seatId);
+  //     if (currentSeat) {
+  //       newMap.set(seatId, {
+  //         ...currentSeat,
+  //         ...updates,
+  //         selectedBy: updates.selectedBy,
+  //         reservedBy: updates.reservedBy,
+  //       });
+  //     }
+  //     return newMap;
+  //   });
+  // };
 
   const updateSeats = (seats: SeatSelectedResponse[]) => {
     setSeatsMap((prev) => {
@@ -101,13 +101,13 @@ export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
     socket.emit("selectSeat", { seatId, eventId, eventDateId });
   };
 
-  const selectAdjacentSeats = (seatId: string, numberOfSeats: number) => {
+  const requestAdjacentSeats = (seatId: string, numberOfSeats: number) => {
     if (!socket || !eventId || !eventDateId) return;
     // const seat = seatsMap.get(seatId);
     // if (seat) {
     //   setSelectedSeat(seat);
     // }
-    socket.emit("selectAdjacentSeats", {
+    socket.emit("requestAdjacentSeats", {
       seatId,
       eventId,
       eventDateId,
@@ -138,7 +138,7 @@ export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
       updateSeats([data]);
     });
 
-    socket.on("adjacentSeats", (data: AdjacentSeatsResponse) => {
+    socket.on("adjacentSeatsSelected", (data: AdjacentSeatsResponse) => {
       updateSeats(data.seats);
     });
 
@@ -163,10 +163,10 @@ export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
     eventDateId,
     setEventDateId,
     seatsMap,
-    updateSeat,
+    // updateSeat,
     joinRoom,
     selectSeat,
-    selectAdjacentSeats,
+    requestAdjacentSeats,
     currentUserId,
     selectedSeat,
     setSelectedSeat,
