@@ -50,7 +50,7 @@ const FourSectionLayout: React.FC<FourSectionLayoutProps> = ({
 
           <div className="hidden md:flex md:w-1/5 flex-col bg-white border-l">
             <div className="border-b p-4 space-y-3">{rightTopContent}</div>
-            <div className="flex-1 p-4 max-h-[100px]">{rightBottomContent}</div>
+            <div className="flex-1 p-4 ">{rightBottomContent}</div>
           </div>
         </div>
         {/* 아래는 모바일 반응형 */}

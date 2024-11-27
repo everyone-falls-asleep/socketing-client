@@ -1,18 +1,21 @@
 import { useForm, Controller } from "react-hook-form";
-import { NewEvent } from "../../../types/api/event";
+import { NewEvent, NewSeat } from "../../../types/api/event";
 import Input from "../../atoms/inputs/Input";
 import Button from "../../atoms/buttons/Button";
-import { createNewEvent } from "../../../api/events/eventsApi";
+import { createNewEvent, createNewSeat } from "../../../api/events/eventsApi";
 import { usePostMutation } from "../../../hooks/usePostMutation";
-import { NewEventResponse } from "../../../types/api/event";
+import { NewEventResponse, NewSeatResponse } from "../../../types/api/event";
 import { AxiosError } from "axios";
 import { ApiErrorResponse } from "../../../types/api/common";
 import { toast } from "react-toastify";
 import { useEventCreate } from "../../../store/EventCreateContext";
-import { postEventErrorMessages } from "../../../constants/errorMessages";
+import {
+  postEventErrorMessages,
+  postSeatErrorMessages,
+} from "../../../constants/errorMessages";
 
 const EventRegisterForm = () => {
-  const { setEvent } = useEventCreate();
+  const { setEvent, setImageUrl, contours } = useEventCreate();
 
   const {
     register,
@@ -38,17 +41,17 @@ const EventRegisterForm = () => {
     },
   });
 
+  // Event 생성을 위한 mutation
   const createEventMutation = usePostMutation<
     NewEventResponse,
     AxiosError<ApiErrorResponse>,
     NewEvent
   >(createNewEvent, {
-    onSuccess: (response: NewEventResponse) => {
-      toast.success(
-        "공연이 등록되었습니다. 이제 좌석을 배치하여 좌석 배치도를 등록해주세요."
-      );
+    onSuccess: async (response: NewEventResponse) => {
       if (response.data) {
         setEvent(response.data);
+        // Event 생성 성공 후 좌석 생성 시작
+        await handleSeatCreation(response.data.id);
       }
     },
     onError: (error: AxiosError<ApiErrorResponse>) => {
@@ -62,10 +65,12 @@ const EventRegisterForm = () => {
     },
   });
 
-  const onSubmit = (data: NewEvent) => {
-    console.log("submitted data", data);
-    createEventMutation.mutate(data);
-  };
+  // Seat 생성을 위한 mutation
+  const createSeatMutation = usePostMutation<
+    NewSeatResponse,
+    AxiosError<ApiErrorResponse>,
+    NewSeat
+  >(createNewSeat);
 
   const handleImageUpload = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -74,11 +79,104 @@ const EventRegisterForm = () => {
     const file = e.target.files?.[0];
     if (!file) return;
 
+    const objectUrl = URL.createObjectURL(file);
+    setImageUrl(objectUrl);
+
     const reader = new FileReader();
     reader.onload = (event) => {
       onChange(event.target?.result as string);
     };
     reader.readAsText(file);
+  };
+
+  // SVG 데이터 생성
+  const generateSVGData = () => {
+    const svgElement = document.querySelector("svg");
+    if (!svgElement) return null;
+
+    const clonedSvg = svgElement.cloneNode(true) as SVGElement;
+    const seatsGroup = clonedSvg.querySelector("g.seats");
+    if (seatsGroup) {
+      seatsGroup.remove();
+    }
+    console.log("Generated SVG:", clonedSvg.outerHTML); // 저장되는 내용 확인
+
+    return {
+      svgString: clonedSvg.outerHTML,
+    };
+  };
+
+  // 좌석 생성 핸들러
+  const handleSeatCreation = async (eventId: string) => {
+    try {
+      const seatContours = contours.filter((c) => c.type === "seat");
+
+      const results = await Promise.allSettled(
+        seatContours.map((contour) => {
+          const newSeat: NewSeat = {
+            event_id: eventId,
+            cx: contour.cx || 0,
+            cy: contour.cy || 0,
+            area: parseInt(contour.area?.toString() || "0"),
+            row: contour.row || 0,
+            number: contour.number || 0,
+          };
+          return createSeatMutation.mutateAsync(newSeat);
+        })
+      );
+
+      const hasError = results.some((result) => result.status === "rejected");
+
+      if (hasError) {
+        const firstError = results.find(
+          (result): result is PromiseRejectedResult =>
+            result.status === "rejected"
+        );
+
+        if (firstError) {
+          const error = firstError.reason as AxiosError<ApiErrorResponse>;
+          if (error.response) {
+            const code = error.response.data.code;
+            switch (code) {
+              case 8:
+                toast.error(postSeatErrorMessages.invalidToken);
+                break;
+              case 5:
+                toast.error(postSeatErrorMessages.validation);
+                break;
+              case 9:
+                toast.error(postSeatErrorMessages.inValidevent);
+                break;
+              case 10:
+                toast.error(postSeatErrorMessages.duplicatesSeat);
+                break;
+              default:
+                toast.error(postSeatErrorMessages.general);
+            }
+          }
+        }
+      } else {
+        toast.success("공연과 좌석이 성공적으로 등록되었습니다.");
+      }
+    } catch (error) {
+      console.error("Seat creation error:", error);
+      toast.error(postSeatErrorMessages.general);
+    }
+  };
+
+  const onSubmit = (data: NewEvent) => {
+    const svgData = generateSVGData();
+    if (!svgData) {
+      toast.error("SVG 데이터를 찾을 수 없습니다.");
+      return;
+    }
+
+    const eventData = {
+      ...data,
+      svg: JSON.stringify(svgData),
+    };
+
+    createEventMutation.mutate(eventData);
   };
 
   return (
@@ -252,7 +350,7 @@ const EventRegisterForm = () => {
               render={({ field }) => (
                 <input
                   type="file"
-                  accept="image/svg+xml,.svg"
+                  accept="image/jpeg,.jpg" // JPG 파일만 허용
                   className="w-full"
                   onChange={(e) => handleImageUpload(e, field.onChange)}
                 />

@@ -1,207 +1,143 @@
 import React from "react";
 import { useEventCreate } from "../../../store/EventCreateContext";
-import { Seat } from "../../../types/api/event";
-import { toast } from "react-toastify";
-import { createNewSeat } from "../../../api/events/eventsApi";
-import { usePostMutation } from "../../../hooks/usePostMutation";
-import { AxiosError } from "axios";
-import { ApiErrorResponse } from "../../../types/api/common";
-import { NewSeat, NewSeatResponse } from "../../../types/api/event";
-import { postSeatErrorMessages } from "../../../constants/errorMessages";
-import Button from "../../atoms/buttons/Button";
 
-interface SeatControlPanelProps {
-  seats: Seat[];
-  isEditMode: boolean;
-  setIsEditMode: (value: boolean) => void;
-  currentArea: number;
-  setCurrentArea: (value: number) => void;
-  currentRow: number;
-  setCurrentRow: (value: number) => void;
-  currentNumber: number;
-  setCurrentNumber: (value: number) => void;
-  currentPrice: string;
-  setCurrentPrice: (value: string) => void;
-  onComplete: (updatedSeats: Seat[]) => void;
-  snapToGrid: boolean;
-  setSnapToGrid: (value: boolean) => void;
-}
+const SeatControlPanel: React.FC = () => {
+  const { contours, selectedContour, updateContourType, updateContourLabel } =
+    useEventCreate();
 
-const SeatControlPanel: React.FC<SeatControlPanelProps> = ({
-  seats,
-  isEditMode,
-  setIsEditMode,
-  currentArea,
-  setCurrentArea,
-  currentRow,
-  setCurrentRow,
-  currentNumber,
-  setCurrentNumber,
-  currentPrice,
-  setCurrentPrice,
-  snapToGrid,
-  setSnapToGrid,
-}) => {
-  const { event } = useEventCreate();
+  const selectedContourData =
+    selectedContour !== null
+      ? contours.find((c) => c.id === selectedContour)
+      : null;
 
-  const createSeatMutation = usePostMutation<
-    NewSeatResponse,
-    AxiosError<ApiErrorResponse>,
-    NewSeat
-  >(createNewSeat);
+  // type에 따른 한글 표시 매핑
+  const typeToKorean = {
+    contour: "미지정",
+    seat: "좌석",
+    polygon: "부대시설",
+    area: "구역",
+  };
 
-  const handleComplete = async () => {
-    setIsEditMode(false);
+  if (!selectedContourData) {
+    return (
+      <div className="h-full p-6">
+        <p className="text-gray-500 text-center">선택된 요소가 없습니다.</p>
+      </div>
+    );
+  }
 
-    try {
-      if (!event?.id) return;
+  const handleRowChange = (value: string) => {
+    const newRow = parseInt(value) || 0;
+    updateContourLabel(
+      selectedContourData.id,
+      `${newRow}-${selectedContourData.number || 0}`
+    );
+  };
 
-      const results = await Promise.allSettled(
-        seats.map((seat) => {
-          const new_seat: NewSeat = {
-            event_id: event.id,
-            cx: seat.cx,
-            cy: seat.cy,
-            area: seat.area,
-            row: seat.row,
-            number: seat.number,
-          };
-          return createSeatMutation.mutateAsync(new_seat, {
-            onError: () => {},
-          });
-        })
-      );
-
-      const firstError = results.find(
-        (result): result is PromiseRejectedResult =>
-          result.status === "rejected"
-      );
-
-      if (firstError) {
-        const error = firstError.reason as AxiosError<ApiErrorResponse>;
-        if (error.response) {
-          const code = error.response.data.code;
-
-          switch (code) {
-            case 8:
-              toast.error(postSeatErrorMessages.invalidToken);
-              break;
-            case 5:
-              toast.error(postSeatErrorMessages.validation);
-              break;
-            case 9:
-              toast.error(postSeatErrorMessages.inValidevent);
-              break;
-            case 10:
-              toast.error(postSeatErrorMessages.duplicatesSeat);
-              break;
-            default:
-              toast.error(postSeatErrorMessages.general);
-          }
-        } else {
-          toast.error(postSeatErrorMessages.general);
-        }
-        return;
-      }
-
-      toast.success("모든 좌석이 성공적으로 생성되었습니다.");
-    } catch (error) {
-      console.log(error);
-      toast.error(postSeatErrorMessages.general);
-    }
+  const handleNumberChange = (value: string) => {
+    const newNumber = parseInt(value) || 0;
+    updateContourLabel(
+      selectedContourData.id,
+      `${selectedContourData.row || 0}-${newNumber}`
+    );
   };
 
   return (
-    <div className="h-full p-6">
-      <div className="space-y-1">
-        <Button
-          onClick={() => setIsEditMode(!isEditMode)}
-          className={`w-full px-4 py-2 rounded mb-3 ${
-            isEditMode
-              ? "bg-red-500 hover:bg-red-600 text-white"
-              : "bg-blue-500 hover:bg-blue-600 text-white"
-          }`}
-        >
-          {isEditMode ? "좌석 수정 마치기" : "좌석 생성하기"}
-        </Button>
-        {!isEditMode && (
-          <Button
-            variant="dark"
-            onClick={() => void handleComplete()}
-            className="w-full"
-          >
-            좌석 등록 완료
-          </Button>
-        )}
+    <div className="h-full p-6 space-y-6 overflow-auto bg-gray-50">
+      {/* 공통 헤더 */}
+      <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+        <h3 className="text-lg font-semibold text-gray-800 mb-2">
+          현재 타입: {typeToKorean[selectedContourData.type]}
+        </h3>
       </div>
 
-      {isEditMode && (
-        <>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              구역
-            </label>
-            <input
-              type="number"
-              value={currentArea}
-              onChange={(e) => setCurrentArea(Number(e.target.value))}
-              className="mt-1 w-full border rounded p-2"
-            />
+      {/* Contour type일 때의 타입 선택 패널 */}
+      {selectedContourData.type === "contour" && (
+        <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200 space-y-4">
+          <h4 className="text-md font-medium text-gray-700">타입 선택</h4>
+          <div className="space-y-3">
+            <button
+              onClick={() => updateContourType(selectedContourData.id, "seat")}
+              className="w-full py-2 px-4 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors"
+            >
+              좌석
+            </button>
+            <button
+              onClick={() =>
+                updateContourType(selectedContourData.id, "polygon")
+              }
+              className="w-full py-2 px-4 bg-green-500 text-white rounded-md hover:bg-green-600 transition-colors"
+            >
+              부대시설
+            </button>
           </div>
+        </div>
+      )}
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              열
-            </label>
-            <input
-              type="number"
-              value={currentRow}
-              onChange={(e) => setCurrentRow(Number(e.target.value))}
-              className="mt-1 w-full border rounded p-2"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              시작 번호
-            </label>
-            <input
-              type="number"
-              value={currentNumber}
-              onChange={(e) => setCurrentNumber(Number(e.target.value))}
-              className="mt-1 w-full border rounded p-2"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              가격
-            </label>
-            <input
-              type="number"
-              value={currentPrice}
-              onChange={(e) => setCurrentPrice(e.target.value)}
-              className="mt-1 w-full border rounded p-2"
-            />
-          </div>
-          <div className="mt-4 space-y-2">
-            <label className="block text-sm font-medium text-gray-700">
-              격자 설정
-            </label>
-            <div className="flex items-center space-x-2">
-              <input
-                type="checkbox"
-                checked={snapToGrid}
-                onChange={(e) => setSnapToGrid(e.target.checked)}
-                id="snapToGrid"
-                className="rounded border-gray-300"
-              />
-              <label htmlFor="snapToGrid" className="text-sm text-gray-600">
-                격자 스냅
+      {/* Seat type일 때의 정보 패널 */}
+      {selectedContourData.type === "seat" && (
+        <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200 space-y-4">
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                구역
               </label>
+              <input
+                type="text"
+                value={selectedContourData.area || ""}
+                onChange={(e) =>
+                  updateContourLabel(selectedContourData.id, e.target.value)
+                }
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                placeholder="구역 입력"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                열 번호
+              </label>
+              <input
+                type="number"
+                value={selectedContourData.row || ""}
+                onChange={(e) => handleRowChange(e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                placeholder="열 번호 입력"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                좌석 번호
+              </label>
+              <input
+                type="number"
+                value={selectedContourData.number || ""}
+                onChange={(e) => handleNumberChange(e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                placeholder="좌석 번호 입력"
+              />
             </div>
           </div>
-        </>
+        </div>
+      )}
+
+      {/* Polygon type일 때의 정보 패널 */}
+      {selectedContourData.type === "polygon" && (
+        <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200 space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              시설 이름
+            </label>
+            <input
+              type="text"
+              value={selectedContourData.label || ""}
+              onChange={(e) =>
+                updateContourLabel(selectedContourData.id, e.target.value)
+              }
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              placeholder="시설 이름 입력"
+            />
+          </div>
+        </div>
       )}
     </div>
   );

@@ -48,3 +48,36 @@ export interface TitleProps extends HTMLAttributes<HTMLHeadingElement> {
 export interface ImageProps extends ImgHTMLAttributes<HTMLImageElement> {
   variant?: "default" | "circle" | "rounded";
 }
+
+export interface Point {
+  x: number;
+  y: number;
+}
+
+export interface BoundingBox {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+}
+
+export interface Contour {
+  id: number;
+  type: "contour" | "seat" | "area" | "polygon";
+  label: string;
+  path: string;
+  center: { x: number; y: number };
+  boundingBox: { x: number; y: number; width: number; height: number };
+  points: Array<{ x: number; y: number }>;
+  cx?: number; // for seat type
+  cy?: number; // for seat type
+  r?: number; // for seat type
+  area?: number; // for seat type
+  row?: number; // for seat type
+  number?: number; // for seat type
+}
+
+export interface ImageSize {
+  width: number;
+  height: number;
+}

@@ -7,7 +7,7 @@ interface ReservationSeatContainerProps {
 const ReservationSeatContainer: React.FC<ReservationSeatContainerProps> = ({
   svg,
 }: ReservationSeatContainerProps) => {
-  return <SeatContainer svg={svg} viewBox="0 0 1024 768" />;
+  return <SeatContainer svg={svg} />;
 };
 
 export default ReservationSeatContainer;

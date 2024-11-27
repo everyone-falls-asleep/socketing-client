@@ -5,13 +5,9 @@ import SvgWrapper from "../../../utils/SvgWrapper";
 
 interface SeatContainerProps {
   svg: string;
-  viewBox?: string;
 }
 
-const SeatContainer: React.FC<SeatContainerProps> = ({
-  svg,
-  viewBox = "0 0 10240 7680",
-}) => {
+const SeatContainer: React.FC<SeatContainerProps> = ({ svg }) => {
   const { socket, isConnected, seatsMap } = useContext(ReservationContext);
   const containerRef = useRef<HTMLDivElement>(null);
   const [isDragging, setIsDragging] = useState(false);
@@ -128,12 +124,7 @@ const SeatContainer: React.FC<SeatContainerProps> = ({
           <SvgWrapper
             svgString={svg}
             seats={seatsData}
-            renderSeat={(seat) => (
-              <g key={seat.id} transform={`translate(${seat.cx},${seat.cy})`}>
-                <SeatObj seatData={seat} />
-              </g>
-            )}
-            viewBox={viewBox}
+            renderSeat={(seat) => <SeatObj seatData={seat} />}
           />
         </div>
       </div>
@@ -141,10 +132,7 @@ const SeatContainer: React.FC<SeatContainerProps> = ({
       {/* Zoom Controls */}
       <div className="hidden md:flex absolute bottom-11 left-1/2 transform -translate-x-1/2 bg-white rounded-lg shadow-lg p-2 gap-2">
         <button
-          onClick={() => {
-            const newScale = Math.min(scale + 0.2, 3);
-            setScale(newScale);
-          }}
+          onClick={() => setScale(Math.min(scale + 0.2, 3))}
           className="px-3 py-1 border rounded-lg hover:bg-gray-100"
         >
           +
@@ -159,10 +147,7 @@ const SeatContainer: React.FC<SeatContainerProps> = ({
           Reset
         </button>
         <button
-          onClick={() => {
-            const newScale = Math.max(scale - 0.2, 0.5);
-            setScale(newScale);
-          }}
+          onClick={() => setScale(Math.max(scale - 0.2, 0.5))}
           className="px-3 py-1 border rounded-lg hover:bg-gray-100"
         >
           -

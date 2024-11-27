@@ -3,49 +3,72 @@ import { Seat } from "../types/api/socket";
 
 interface SvgWrapperProps {
   svgString: string;
-  onClick?: (e: React.MouseEvent<SVGSVGElement>) => void;
   seats: Seat[];
   renderSeat: (seat: Seat) => React.ReactNode;
-  viewBox?: string;
 }
 
-function SvgWrapper({
-  svgString,
-  onClick,
-  seats,
-  renderSeat,
-  viewBox = "0 0 10240 7680", // 기존 viewBox로 수정
-}: SvgWrapperProps) {
-  const [svgContent, setSvgContent] = useState<string>("");
+// SVG 데이터의 타입 정의
+interface ParsedSvgData {
+  svgString: string;
+}
+
+function SvgWrapper({ svgString, seats, renderSeat }: SvgWrapperProps) {
+  const [svgContent, setSvgContent] = useState<{
+    viewBox: string;
+    content: string;
+  }>({
+    viewBox: "",
+    content: "",
+  });
 
   useEffect(() => {
     if (!svgString) return;
 
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(svgString, "image/svg+xml");
-    const svg = doc.documentElement;
+    try {
+      const parsedData = JSON.parse(svgString) as ParsedSvgData;
+      const tempDiv = document.createElement("div");
+      tempDiv.innerHTML = parsedData.svgString;
+      const svgElement = tempDiv.querySelector("svg");
 
-    const innerContent = Array.from(svg.children)
-      .map((child) => child.outerHTML)
-      .join("");
-
-    setSvgContent(innerContent);
+      if (svgElement) {
+        setSvgContent({
+          viewBox: svgElement.getAttribute("viewBox") || "",
+          content: Array.from(svgElement.children)
+            .filter((child) => {
+              return (
+                !(child instanceof Element) ||
+                !child.classList.contains("seats")
+              );
+            })
+            .map((child) => child.outerHTML)
+            .join(""),
+        });
+      }
+    } catch (error) {
+      console.error("Error parsing SVG string:", error);
+    }
   }, [svgString]);
+
+  if (!svgContent.viewBox) return null;
 
   return (
     <svg
       width="100%"
       height="100%"
-      viewBox={viewBox}
-      onClick={onClick}
-      style={{
-        maxWidth: "100%",
-        maxHeight: "100%",
-      }}
-      preserveAspectRatio="xMidYMid meet" // 추가: SVG가 컨테이너에 맞게 조정되도록
+      viewBox={svgContent.viewBox}
+      className="w-full h-full"
     >
-      <g dangerouslySetInnerHTML={{ __html: svgContent }} />
-      {seats?.map(renderSeat)}
+      {/* Background and other elements */}
+      <g dangerouslySetInnerHTML={{ __html: svgContent.content }} />
+
+      {/* Seats from socket */}
+      <g className="seats">
+        {seats?.map((seat) => (
+          <g key={seat.id} transform={`translate(${seat.cx},${seat.cy})`}>
+            {renderSeat(seat)}
+          </g>
+        ))}
+      </g>
     </svg>
   );
 }
