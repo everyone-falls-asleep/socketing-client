@@ -95,10 +95,10 @@ export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
   const selectSeat = (seatId: string) => {
     if (!socket || !eventId || !eventDateId) return;
     // Only emit the event, don't update state directly
-    // const seat = seatsMap.get(seatId);
-    // if (seat) {
-    //   setSelectedSeat(seat);
-    // }
+    const seat = seatsMap.get(seatId);
+    if (seat) {
+      setSelectedSeat(seat);
+    }
     socket.emit("selectSeat", { seatId, eventId, eventDateId });
   };
 
