@@ -140,6 +140,7 @@ export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
     });
 
     socket.on("adjacentSeatsSelected", (data: AdjacentSeatsResponse) => {
+      console.log(data);
       updateSeats(data.seats);
     });
 
