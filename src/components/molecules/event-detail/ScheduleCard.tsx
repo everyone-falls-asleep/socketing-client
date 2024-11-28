@@ -7,6 +7,8 @@ import {
 import { toast } from "react-toastify";
 import { useCurrentTime } from "../../../hooks/useCurrentTime";
 import { useMockEventFriendContext } from "../../../mocks/MockEventFriendContext";
+import { useContext } from "react";
+import { QueueContext } from "../../../store/QueueContext";
 
 interface ScheduleCardProps {
   eventId: string;
@@ -27,7 +29,8 @@ const ScheduleCard = ({
   const isTicketingStarted = ticketingStartTime && now >= ticketingStartTime;
   const isDisabled = !isTicketingStarted;
   const { eventFriends } = useMockEventFriendContext();
-
+  const { setShouldConnect, setEventId, setEventDateId } =
+    useContext(QueueContext);
   const checkLogin = () => {
     const userId = localStorage.getItem("userId");
     if (!userId) {
@@ -54,6 +57,12 @@ const ScheduleCard = ({
     navigate(`/reservation/${eventId}/${eventDateId}`, {
       state: { ticketsToReserve: eventFriends.length },
     });
+  };
+
+  const handleQueueEnterClick = () => {
+    setEventId(eventId);
+    setEventDateId(eventDateId);
+    setShouldConnect(true);
   };
 
   return (
@@ -85,6 +94,9 @@ const ScheduleCard = ({
             disabled={isDisabled}
           >
             {isDisabled ? "일반 준비 중" : "예매하기"}
+          </Button>
+          <Button variant="primary" onClick={handleQueueEnterClick}>
+            큐 서버에 입장하기
           </Button>
         </div>
       </div>

@@ -14,6 +14,7 @@ import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
 import { MockEventFriendProvider } from "../../mocks/MockEventFriendContext";
+import { QueueProvider } from "../../store/QueueContext";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -54,17 +55,19 @@ const EventDetailPage = () => {
   if (!data?.data) return <p>{fetchErrorMessages.noEventData}</p>;
 
   return (
-    <MainLayout>
-      <EventDetailTemplate
-        eventDetailHeader={<EventDetailHeader />}
-        eventDetailScheduleTab={
-          <MockEventFriendProvider>
-            <EventDetailScheduleTab />
-          </MockEventFriendProvider>
-        }
-        eventDetailAboutTab={<EventDetailAboutTab />}
-      />
-    </MainLayout>
+    <QueueProvider>
+      <MainLayout>
+        <EventDetailTemplate
+          eventDetailHeader={<EventDetailHeader />}
+          eventDetailScheduleTab={
+            <MockEventFriendProvider>
+              <EventDetailScheduleTab />
+            </MockEventFriendProvider>
+          }
+          eventDetailAboutTab={<EventDetailAboutTab />}
+        />
+      </MainLayout>
+    </QueueProvider>
   );
 };
 

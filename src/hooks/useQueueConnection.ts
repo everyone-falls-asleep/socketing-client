@@ -1,21 +1,22 @@
 import { useEffect, useRef, useState } from "react";
 import { io, Socket } from "socket.io-client";
-import { SOCKET_SERVER_URL } from "../constants/socket";
-import {
-  ServerToClientEvents,
-  ClientToServerEvents,
-} from "../types/api/socket";
+import { QUEUE_SERVER_URL } from "../constants/socket";
+import { ServerToClientEvents, ClientToServerEvents } from "../types/api/queue";
 
-export const useSocketConnection = () => {
+export const useQueueConnection = (shouldConnect: boolean) => {
   const [isConnected, setIsConnected] = useState(false);
+
   const socketRef = useRef<Socket<
     ServerToClientEvents,
     ClientToServerEvents
   > | null>(null);
 
   useEffect(() => {
-    const token = localStorage.getItem("entranceToken");
-    socketRef.current = io(SOCKET_SERVER_URL, {
+    if (!shouldConnect) {
+      return;
+    }
+    const token = localStorage.getItem("authToken");
+    socketRef.current = io(QUEUE_SERVER_URL, {
       transports: ["websocket"],
       auth: {
         token,
@@ -23,19 +24,19 @@ export const useSocketConnection = () => {
     });
 
     socketRef.current.on("connect", () => {
-      console.log("Socket connected!");
+      console.log("Queue Socket connected!");
       setIsConnected(true);
     });
 
     socketRef.current.on("disconnect", () => {
-      console.log("Socket disconnected!");
+      console.log("Queue Socket disconnected!");
       setIsConnected(false);
     });
 
     return () => {
       socketRef.current?.disconnect();
     };
-  }, []);
+  }, [shouldConnect]);
 
   return { socket: socketRef.current, isConnected };
 };
