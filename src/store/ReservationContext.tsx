@@ -19,6 +19,7 @@ interface Seat {
   area: number;
   row: number;
   number: number;
+  price: number;
   reservations: Reservation[];
   selectedBy?: string | null;
   updatedAt: string;

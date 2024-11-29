@@ -75,6 +75,7 @@ export interface Contour {
   area?: number; // for seat type
   row?: number; // for seat type
   number?: number; // for seat type
+  price?: number;
 }
 
 export interface ImageSize {

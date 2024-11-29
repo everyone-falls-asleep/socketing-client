@@ -64,6 +64,7 @@ const createNewSeat = async ({
   area,
   row,
   number,
+  price,
 }: NewSeat): Promise<NewSeatResponse> => {
   const response = await api.post<NewSeatResponse>(
     API_URL + event_id + "/seats",
@@ -73,6 +74,7 @@ const createNewSeat = async ({
       area,
       row,
       number,
+      price,
     }
   );
   return response.data;

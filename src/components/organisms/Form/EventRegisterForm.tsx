@@ -120,6 +120,7 @@ const EventRegisterForm = () => {
             area: parseInt(contour.area?.toString() || "0"),
             row: contour.row || 0,
             number: contour.number || 0,
+            price: contour.price || 0,
           };
           return createSeatMutation.mutateAsync(newSeat);
         })

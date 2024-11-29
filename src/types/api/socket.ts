@@ -8,6 +8,7 @@ export interface Seat {
   area: number;
   row: number;
   number: number;
+  price: number;
   reservations: Array<{
     id: string;
     eventDate: {

@@ -51,6 +51,7 @@ export interface Seat {
   area: number;
   row: number;
   number: number;
+  price: number;
 }
 
 export type SeatResponse = ApiResponse<Seat[]>;
@@ -62,6 +63,7 @@ export interface NewSeat {
   area: number;
   row: number;
   number: number;
+  price: number;
 }
 
 export type NewSeatResponse = ApiResponse<Seat>;
