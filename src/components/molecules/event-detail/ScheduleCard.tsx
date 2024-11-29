@@ -6,7 +6,7 @@ import {
 } from "../../../utils/dateUtils";
 import { toast } from "react-toastify";
 import { useCurrentTime } from "../../../hooks/useCurrentTime";
-import { useMockEventFriendContext } from "../../../mocks/MockEventFriendContext";
+import { useEventFriendContext } from "../../../store/EventFriendContext";
 import { useContext } from "react";
 import { QueueContext } from "../../../store/QueueContext";
 
@@ -28,7 +28,7 @@ const ScheduleCard = ({
 
   const isTicketingStarted = ticketingStartTime && now >= ticketingStartTime;
   const isDisabled = !isTicketingStarted;
-  const { eventFriends } = useMockEventFriendContext();
+  const { eventFriends } = useEventFriendContext();
   const { setShouldConnect, setEventId, setEventDateId } =
     useContext(QueueContext);
   const checkLogin = () => {
@@ -48,12 +48,12 @@ const ScheduleCard = ({
 
   const handleAdjacentReservationClick = () => {
     if (!checkLogin()) return;
+    if (!eventFriends) return;
 
     if (eventFriends.length < 1) {
       toast.error("연석 친구를 먼저 등록해 주세요.");
       return;
     }
-
     navigate(`/reservation/${eventId}/${eventDateId}`, {
       state: { numberOfTickets: eventFriends.length + 1 },
     });

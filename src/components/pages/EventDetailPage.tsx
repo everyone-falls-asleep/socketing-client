@@ -13,7 +13,7 @@ import EventDetailAboutTab from "../organisms/event-detail/EventDetailAboutTab";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
-import { MockEventFriendProvider } from "../../mocks/MockEventFriendContext";
+import { EventFriendProvider } from "../../store/EventFriendContext";
 import { QueueProvider } from "../../store/QueueContext";
 
 dayjs.extend(utc);
@@ -60,9 +60,9 @@ const EventDetailPage = () => {
         <EventDetailTemplate
           eventDetailHeader={<EventDetailHeader />}
           eventDetailScheduleTab={
-            <MockEventFriendProvider>
+            <EventFriendProvider>
               <EventDetailScheduleTab />
-            </MockEventFriendProvider>
+            </EventFriendProvider>
           }
           eventDetailAboutTab={<EventDetailAboutTab />}
         />

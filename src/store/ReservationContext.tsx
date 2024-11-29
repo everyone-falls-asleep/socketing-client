@@ -22,7 +22,7 @@ interface ReservationContextType {
   adjacentSeats: Seat[];
   setAdjacentSeats: (seats: Seat[]) => void;
   numberOfTickets: number;
-  setNumberofTickets: (count: number) => void;
+  setNumberOfTickets: (count: number) => void;
 }
 
 export const ReservationContext = createContext<ReservationContextType>(
@@ -49,7 +49,7 @@ export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
   const [selectedSeat, setSelectedSeat] = useState<Seat | null>(null);
   const [adjacentSeats, setAdjacentSeats] = useState<Seat[]>([]);
-  const [numberOfTickets, setNumberofTickets] = useState(1);
+  const [numberOfTickets, setNumberOfTickets] = useState(1);
 
   // const updateSeat = (seatId: string, updates: Partial<Seat>) => {
   //   setSeatsMap((prev) => {
@@ -70,9 +70,11 @@ export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
   const updateSeats = (seats: SeatSelectedResponse[]) => {
     setSeatsMap((prev) => {
       const newMap = new Map(prev);
+      setAdjacentSeats([]);
       seats.forEach((seat) => {
         const currentSeat = newMap.get(seat.seatId);
         if (currentSeat) {
+          setAdjacentSeats((prev) => [...prev, currentSeat]);
           newMap.set(seat.seatId, {
             ...currentSeat,
             ...seat,
@@ -136,7 +138,6 @@ export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
     });
 
     socket.on("adjacentSeatsSelected", (data: SeatSelectedResponse[]) => {
-      console.log(data);
       updateSeats(data);
     });
 
@@ -177,7 +178,7 @@ export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
     adjacentSeats,
     setAdjacentSeats,
     numberOfTickets,
-    setNumberofTickets,
+    setNumberOfTickets,
   };
 
   return (

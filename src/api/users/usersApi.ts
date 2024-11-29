@@ -9,4 +9,12 @@ const getUserInfo = async (user_id: string): Promise<UserResponse> => {
   return response.data;
 };
 
-export { getUserInfo };
+const getUserInfoByEmail = async (email: string): Promise<UserResponse> => {
+  const modifiedEmail = email + "@jungle.com";
+  const response = await axios.get<UserResponse>(
+    API_URL + "email/" + modifiedEmail
+  );
+  return response.data;
+};
+
+export { getUserInfo, getUserInfoByEmail };

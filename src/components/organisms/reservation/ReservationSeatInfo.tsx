@@ -65,12 +65,17 @@ const ReservationSeatInfo = () => {
       {selectedSeat ? (
         <div className="space-y-4 p-1">
           <h2 className="text-lg font-bold pl-1 text-gray-800">좌석 정보</h2>
-          <div className="border p-3 text-gray-800 rounded-lg space-y-2">
-            <p>구역: {selectedSeat.area}</p>
-            <p>열: {selectedSeat.row}</p>
-            <p>번호: {selectedSeat.number}</p>
-            <p>가격: 99,000원</p>
-          </div>
+
+          {/* 하나만 예매했을 경우 */}
+          {adjacentSeats.length === 0 && (
+            <div className="border p-3 text-gray-800 rounded-lg space-y-2">
+              <p>구역: {selectedSeat.area}</p>
+              <p>열: {selectedSeat.row}</p>
+              <p>번호: {selectedSeat.number}</p>
+              <p>가격: 99,000원</p>
+            </div>
+          )}
+
           {/* 인접 좌석이 있을 경우 인접 좌석 정보 표시 */}
           {adjacentSeats.length > 0 && (
             <>
