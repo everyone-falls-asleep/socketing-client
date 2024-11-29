@@ -2,6 +2,7 @@ import React, { createContext, useState, useEffect, useContext } from "react";
 import { Socket } from "socket.io-client";
 import { useSocketConnection } from "../hooks/useSocketConnection";
 import { Seat, SeatSelectedResponse } from "../types/api/socket";
+import { toast } from "react-toastify";
 
 interface ReservationContextType {
   socket: Socket | null;
@@ -143,6 +144,7 @@ export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
 
     socket.on("error", (data) => {
       console.error("Error received from server:", data.message);
+      toast.error("요청하신 티켓 수 만큼의 좌석이 없습니다.");
     });
 
     return () => {
