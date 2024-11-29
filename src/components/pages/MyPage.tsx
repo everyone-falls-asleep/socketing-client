@@ -164,7 +164,7 @@ const MyPage = () => {
                             다가오는 공연 예매 티켓이 없습니다
                           </p>
                           <Button
-                            onClick={() => navigate("/events")}
+                            onClick={() => navigate("/")}
                             className=""
                           >
                             이벤트 보러가기
