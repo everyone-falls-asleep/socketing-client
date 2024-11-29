@@ -111,7 +111,7 @@ const Header = () => {
 
   return (
     <>
-      <header className="flex items-center justify-between pl-6 pr-4 py-4 bg-black text-white">
+      <header className="flex h-[76px] items-center justify-between pl-6 pr-4 py-4 bg-black text-white">
         {/* 로고 */}
         <div className="flex items-center flex-shrink-0">
           <HeaderLogo />
