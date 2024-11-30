@@ -14,12 +14,12 @@ interface SeatProps {
 const SeatObj: React.FC<SeatProps> = ({ seatData }) => {
   const {
     eventDateId,
-    selectSeat,
+    selectSeats,
     socket,
     isConnected,
     currentUserId,
     numberOfTickets,
-    requestAdjacentSeats,
+    // requestAdjacentSeats,
   } = useContext(ReservationContext);
 
   const seatStatus = getSeatStatus(seatData, eventDateId, currentUserId);
@@ -31,16 +31,12 @@ const SeatObj: React.FC<SeatProps> = ({ seatData }) => {
     if (!isConnected || !socket) return;
     if (
       seatStatus === "reserved" ||
-      seatStatus === "temporary_hold" ||
-      seatStatus === "adjacent"
+      seatStatus === "temporary_hold"
+      // seatStatus === "adjacent"
     )
       return;
 
-    if (numberOfTickets === 1) {
-      selectSeat(seatData.id);
-    } else {
-      requestAdjacentSeats(seatData.id, numberOfTickets);
-    }
+    selectSeats(seatData.id, numberOfTickets);
   };
 
   return (

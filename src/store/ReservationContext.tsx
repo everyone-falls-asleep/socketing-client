@@ -1,7 +1,7 @@
 import React, { createContext, useState, useEffect, useContext } from "react";
 import { Socket } from "socket.io-client";
 import { useSocketConnection } from "../hooks/useSocketConnection";
-import { Seat, SeatSelectedResponse } from "../types/api/socket";
+import { Seat, SeatsSelectedResponse } from "../types/api/socket";
 import { toast } from "react-toastify";
 
 interface ReservationContextType {
@@ -14,8 +14,8 @@ interface ReservationContextType {
   seatsMap: Map<string, Seat>;
   // updateSeat: (seatId: string, updates: Partial<Seat>) => void;
   joinRoom: () => void;
-  selectSeat: (seatId: string) => void;
-  requestAdjacentSeats: (seatId: string, numberOfSeats: number) => void;
+  selectSeats: (seatId: string, numberOfSeats: number) => void;
+  // requestAdjacentSeats: (seatId: string, numberOfSeats: number) => void;
   currentUserId: string | null;
   selectedSeat: Seat | null;
   setSelectedSeat: (seat: Seat | null) => void;
@@ -68,7 +68,7 @@ export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
   //   });
   // };
 
-  const updateSeats = (seats: SeatSelectedResponse[]) => {
+  const updateSeats = (seats: SeatsSelectedResponse[]) => {
     setSeatsMap((prev) => {
       const newMap = new Map(prev);
       setAdjacentSeats([]);
@@ -91,29 +91,29 @@ export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
     socket?.emit("joinRoom", { eventId, eventDateId });
   };
 
-  const selectSeat = (seatId: string) => {
+  const selectSeats = (seatId: string, numberOfSeats: number) => {
     if (!socket || !eventId || !eventDateId) return;
     // Only emit the event, don't update state directly
     const seat = seatsMap.get(seatId);
     if (seat) {
       setSelectedSeat(seat);
     }
-    socket.emit("selectSeat", { seatId, eventId, eventDateId });
+    socket.emit("selectSeats", { seatId, eventId, eventDateId, numberOfSeats });
   };
 
-  const requestAdjacentSeats = (seatId: string, numberOfSeats: number) => {
-    if (!socket || !eventId || !eventDateId) return;
-    const seat = seatsMap.get(seatId);
-    if (seat) {
-      setSelectedSeat(seat);
-    }
-    socket.emit("requestAdjacentSeats", {
-      seatId,
-      eventId,
-      eventDateId,
-      numberOfSeats,
-    }); // 새로운 이벤트 이름을 쓰게 된다면
-  };
+  // const requestAdjacentSeats = (seatId: string, numberOfSeats: number) => {
+  //   if (!socket || !eventId || !eventDateId) return;
+  //   const seat = seatsMap.get(seatId);
+  //   if (seat) {
+  //     setSelectedSeat(seat);
+  //   }
+  //   socket.emit("requestAdjacentSeats", {
+  //     seatId,
+  //     eventId,
+  //     eventDateId,
+  //     numberOfSeats,
+  //   }); // 새로운 이벤트 이름을 쓰게 된다면
+  // };
 
   const reserveSeat = (seatId: string) => {
     if (!socket || !seatId || !eventId || !eventDateId) return;
@@ -134,13 +134,13 @@ export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
       setSeatsMap(newSeatsMap);
     });
 
-    socket.on("seatSelected", (data: SeatSelectedResponse) => {
-      updateSeats([data]);
-    });
-
-    socket.on("adjacentSeatsSelected", (data: SeatSelectedResponse[]) => {
+    socket.on("seatsSelected", (data: SeatsSelectedResponse[]) => {
       updateSeats(data);
     });
+
+    // socket.on("adjacentSeatsSelected", (data: SeatSelectedResponse[]) => {
+    //   updateSeats(data);
+    // });
 
     socket.on("error", (data) => {
       console.error("Error received from server:", data.message);
@@ -150,8 +150,8 @@ export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
     return () => {
       socket.off("connect");
       socket.off("roomJoined");
-      socket.off("seatSelected");
-      socket.off("adjacentSeatsSelected");
+      socket.off("seatsSelected");
+      // socket.off("adjacentSeatsSelected");
     };
   }, [socket]);
 
@@ -171,8 +171,8 @@ export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
     seatsMap,
     // updateSeat,
     joinRoom,
-    selectSeat,
-    requestAdjacentSeats,
+    selectSeats,
+    // requestAdjacentSeats,
     currentUserId,
     selectedSeat,
     setSelectedSeat,

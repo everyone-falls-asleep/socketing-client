@@ -16,8 +16,8 @@ const SeatContainer: React.FC<SeatContainerProps> = ({ svg }) => {
   const [scale, setScale] = useState(1);
   const [serverInfo, setServerInfo] = useState({
     time: "",
-    userCount: 0,
-    lastUpdate: "",
+    // userCount: 0,
+    // lastUpdate: "",
   });
   const [showLegend, setShowLegend] = useState(false); // 토글기능
 
@@ -33,24 +33,24 @@ const SeatContainer: React.FC<SeatContainerProps> = ({ svg }) => {
       }));
     });
 
-    socket.on("userList", (data: { count: number }) => {
-      setServerInfo((prev) => ({
-        ...prev,
-        userCount: data.count,
-      }));
-    });
+    // socket.on("userList", (data: { count: number }) => {
+    //   setServerInfo((prev) => ({
+    //     ...prev,
+    //     userCount: data.count,
+    //   }));
+    // });
 
-    socket.on("seatUpdate", () => {
-      setServerInfo((prev) => ({
-        ...prev,
-        lastUpdate: new Date().toLocaleString(),
-      }));
-    });
+    // socket.on("seatUpdate", () => {
+    //   setServerInfo((prev) => ({
+    //     ...prev,
+    //     lastUpdate: new Date().toLocaleString(),
+    //   }));
+    // });
 
     return () => {
       socket.off("serverTime");
-      socket.off("userList");
-      socket.off("seatUpdate");
+      // socket.off("userList");
+      // socket.off("seatUpdate");
     };
   }, [socket, isConnected]);
 
@@ -156,8 +156,8 @@ const SeatContainer: React.FC<SeatContainerProps> = ({ svg }) => {
       {/* Server Info */}
       <div className="absolute bottom-0 left-0 right-0 bg-white p-2 text-sm flex justify-between items-center h-10 border-t">
         <div>Server Time: {serverInfo.time}</div>
-        <div>Connected Users: {serverInfo.userCount}</div>
-        <div>Last Update: {serverInfo.lastUpdate}</div>
+        {/* <div>Connected Users: {serverInfo.userCount}</div>
+        <div>Last Update: {serverInfo.lastUpdate}</div> */}
       </div>
 
       {/* 좌석 상태 토글 버튼*/}
