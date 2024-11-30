@@ -17,4 +17,28 @@ const getUserInfoByEmail = async (email: string): Promise<UserResponse> => {
   return response.data;
 };
 
-export { getUserInfo, getUserInfoByEmail };
+const updateUserNickname = async (
+  user_id: string,
+  newNickname: string
+): Promise<UserResponse> => {
+  try {
+    const token = localStorage.getItem("authToken");
+    if (!token) {
+      throw new Error("인증 토큰이 없습니다. 로그인해주세요.");
+    }
+    const response = await axios.patch<UserResponse>(
+      API_URL + user_id + "/nickname",
+      { nickname: newNickname },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`, // 인증 헤더 추가!!
+        },
+      }
+    );
+    return response.data; // 업데이트 한 사용자 정보 반환
+  } catch (error) {
+    console.error("Failed to update nickname:", error);
+    throw error;
+  }
+};
+export { getUserInfo, updateUserNickname, getUserInfoByEmail };

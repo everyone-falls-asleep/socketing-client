@@ -21,10 +21,12 @@ const ReservationConfirmationTemplate = ({
   return (
     <MainLayout>
       <div className="max-w-3xl mx-auto p-6">
-        <SubTitle className="text-center mb-8">
+        <p className="text-center text-xl font-bold mb-8">
           {"예매가 완료되었습니다."}
-        </SubTitle>
-        <div className="flex flex-col items-center justify-center h-[100px] bg-gray-100 space-y-2">
+        </p>
+
+        {/* 유저테스트를 위한 */}
+        <div className="flex flex-col items-center justify-center rounded-md h-[100px] bg-gray-100 space-y-2">
           <label className="text-lg font-bold text-gray-700">
             ❗️❗️설문조사에 참여해주세요 ❗️❗️🙏
           </label>
@@ -37,15 +39,16 @@ const ReservationConfirmationTemplate = ({
             설문조사 링크 열기
           </a>
         </div>
-        <div className="bg-white rounded-lg shadow-lg overflow-hidden">
+
+        <div className="bg-white rounded-md shadow-lg overflow-hidden">
           {/* Header Section with Event Image */}
-          <div className="relative h-48 bg-gradient-to-r from-purple-600 to-blue-600">
+          <div className="relative h-48 ">
             <img
               src={reservationData.thumbnail}
               alt={reservationData.title}
               className="w-full h-full object-cover opacity-50"
             />
-            <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/60">
+            <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/20">
               <SubTitle className="!text-white font-bold mb-2">
                 {reservationData.title}
               </SubTitle>
@@ -59,8 +62,8 @@ const ReservationConfirmationTemplate = ({
           <div className="p-6 space-y-6">
             {/* User Info */}
             <div className="flex items-center space-x-4 p-4 bg-gray-50 rounded-lg">
-              <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center">
-                <span className="text-purple-600 font-bold">
+              <div className="w-12 h-12 bg-rose-100 rounded-full flex items-center justify-center">
+                <span className="font-bold">
                   {reservation.user.email.slice(0, 1)}
                 </span>
               </div>
