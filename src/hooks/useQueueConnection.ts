@@ -3,18 +3,15 @@ import { io, Socket } from "socket.io-client";
 import { QUEUE_SERVER_URL } from "../constants/socket";
 import { ServerToClientEvents, ClientToServerEvents } from "../types/api/queue";
 
-export const useQueueConnection = (shouldConnect: boolean) => {
+export const useQueueConnection = () => {
   const [isConnected, setIsConnected] = useState(false);
-
+  const [isTurn, setIsTurn] = useState(false);
   const socketRef = useRef<Socket<
     ServerToClientEvents,
     ClientToServerEvents
   > | null>(null);
 
   useEffect(() => {
-    if (!shouldConnect) {
-      return;
-    }
     const token = localStorage.getItem("authToken");
     socketRef.current = io(QUEUE_SERVER_URL, {
       transports: ["websocket"],
@@ -31,12 +28,13 @@ export const useQueueConnection = (shouldConnect: boolean) => {
     socketRef.current.on("disconnect", () => {
       console.log("Queue Socket disconnected!");
       setIsConnected(false);
+      setIsTurn(true);
     });
 
     return () => {
       socketRef.current?.disconnect();
     };
-  }, [shouldConnect]);
+  }, []);
 
-  return { socket: socketRef.current, isConnected };
+  return { socket: socketRef.current, isConnected, isTurn };
 };

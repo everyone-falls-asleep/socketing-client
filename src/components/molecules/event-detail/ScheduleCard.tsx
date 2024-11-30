@@ -7,8 +7,6 @@ import {
 import { toast } from "react-toastify";
 import { useCurrentTime } from "../../../hooks/useCurrentTime";
 import { useEventFriendContext } from "../../../store/EventFriendContext";
-import { useContext } from "react";
-import { QueueContext } from "../../../store/QueueContext";
 
 interface ScheduleCardProps {
   eventId: string;
@@ -29,8 +27,7 @@ const ScheduleCard = ({
   const isTicketingStarted = ticketingStartTime && now >= ticketingStartTime;
   const isDisabled = !isTicketingStarted;
   const { eventFriends } = useEventFriendContext();
-  const { setShouldConnect, setEventId, setEventDateId } =
-    useContext(QueueContext);
+
   const checkLogin = () => {
     const userId = localStorage.getItem("userId");
     if (!userId) {
@@ -42,8 +39,7 @@ const ScheduleCard = ({
 
   const handleDefaultReservationClick = () => {
     if (!checkLogin()) return;
-
-    navigate(`/reservation/${eventId}/${eventDateId}`);
+    navigate(`/waiting/${eventId}/${eventDateId}`);
   };
 
   const handleAdjacentReservationClick = () => {
@@ -54,15 +50,9 @@ const ScheduleCard = ({
       toast.error("연석 친구를 먼저 등록해 주세요.");
       return;
     }
-    navigate(`/reservation/${eventId}/${eventDateId}`, {
+    navigate(`/waiting/${eventId}/${eventDateId}`, {
       state: { numberOfTickets: eventFriends.length + 1 },
     });
-  };
-
-  const handleQueueEnterClick = () => {
-    setEventId(eventId);
-    setEventDateId(eventDateId);
-    setShouldConnect(true);
   };
 
   return (
@@ -94,9 +84,6 @@ const ScheduleCard = ({
             disabled={isDisabled}
           >
             {isDisabled ? "일반 준비 중" : "예매하기"}
-          </Button>
-          <Button variant="primary" onClick={handleQueueEnterClick}>
-            큐 서버에 입장하기
           </Button>
         </div>
       </div>

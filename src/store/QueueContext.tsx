@@ -6,12 +6,13 @@ import { TokenResponse, UpdatedQueueResponse } from "../types/api/queue";
 interface QueueContextType {
   socket: Socket | null;
   isConnected: boolean;
-  shouldConnect: boolean;
-  setShouldConnect: (connect: boolean) => void;
+  isTurn: boolean;
   eventId: string | null;
   setEventId: (id: string) => void;
   eventDateId: string | null;
   setEventDateId: (id: string) => void;
+  myPosition: number | null;
+  totalWaiting: number | null;
 }
 
 export const QueueContext = createContext<QueueContextType>(
@@ -29,10 +30,11 @@ export const useQueueContext = () => {
 export const QueueProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [shouldConnect, setShouldConnect] = useState(false);
-  const { socket, isConnected } = useQueueConnection(shouldConnect);
+  const { socket, isConnected, isTurn } = useQueueConnection();
   const [eventId, setEventId] = useState<string | null>(null);
   const [eventDateId, setEventDateId] = useState<string | null>(null);
+  const [myPosition, setMyPosition] = useState<number | null>(null);
+  const [totalWaiting, setTotalWaiting] = useState<number | null>(null);
 
   useEffect(() => {
     if (!socket || !eventId || !eventDateId) return;
@@ -44,7 +46,8 @@ export const QueueProvider: React.FC<{ children: React.ReactNode }> = ({
     });
 
     socket.on("updateQueue", (data: UpdatedQueueResponse) => {
-      console.log(data);
+      setMyPosition(data.yourPosition);
+      setTotalWaiting(data.totalWaiting);
     });
 
     return () => {
@@ -57,12 +60,13 @@ export const QueueProvider: React.FC<{ children: React.ReactNode }> = ({
   const value = {
     socket,
     isConnected,
-    shouldConnect,
-    setShouldConnect,
+    isTurn,
     eventId,
     setEventId,
     eventDateId,
     setEventDateId,
+    myPosition,
+    totalWaiting,
   };
 
   return (
