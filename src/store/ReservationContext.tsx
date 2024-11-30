@@ -12,16 +12,10 @@ interface ReservationContextType {
   eventDateId: string | null;
   setEventDateId: (id: string) => void;
   seatsMap: Map<string, Seat>;
-  // updateSeat: (seatId: string, updates: Partial<Seat>) => void;
-  joinRoom: () => void;
   selectSeats: (seatId: string, numberOfSeats: number) => void;
-  // requestAdjacentSeats: (seatId: string, numberOfSeats: number) => void;
   currentUserId: string | null;
-  selectedSeat: Seat | null;
-  setSelectedSeat: (seat: Seat | null) => void;
+  selectedSeats: Seat[];
   reserveSeat: (seatId: string, eventId: string, eventDateId: string) => void;
-  adjacentSeats: Seat[];
-  setAdjacentSeats: (seats: Seat[]) => void;
   numberOfTickets: number;
   setNumberOfTickets: (count: number) => void;
 }
@@ -48,34 +42,17 @@ export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
   const [eventDateId, setEventDateId] = useState<string | null>(null);
   const [seatsMap, setSeatsMap] = useState<Map<string, Seat>>(new Map());
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
-  const [selectedSeat, setSelectedSeat] = useState<Seat | null>(null);
-  const [adjacentSeats, setAdjacentSeats] = useState<Seat[]>([]);
+  const [selectedSeats, setSelectedSeats] = useState<Seat[]>([]);
   const [numberOfTickets, setNumberOfTickets] = useState(1);
-
-  // const updateSeat = (seatId: string, updates: Partial<Seat>) => {
-  //   setSeatsMap((prev) => {
-  //     const newMap = new Map(prev);
-  //     const currentSeat = newMap.get(seatId);
-  //     if (currentSeat) {
-  //       newMap.set(seatId, {
-  //         ...currentSeat,
-  //         ...updates,
-  //         selectedBy: updates.selectedBy,
-  //         reservedBy: updates.reservedBy,
-  //       });
-  //     }
-  //     return newMap;
-  //   });
-  // };
 
   const updateSeats = (seats: SeatsSelectedResponse[]) => {
     setSeatsMap((prev) => {
       const newMap = new Map(prev);
-      setAdjacentSeats([]);
+      setSelectedSeats([]);
       seats.forEach((seat) => {
         const currentSeat = newMap.get(seat.seatId);
         if (currentSeat) {
-          setAdjacentSeats((prev) => [...prev, currentSeat]);
+          setSelectedSeats((prev) => [...prev, currentSeat]);
           newMap.set(seat.seatId, {
             ...currentSeat,
             ...seat,
@@ -93,27 +70,9 @@ export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const selectSeats = (seatId: string, numberOfSeats: number) => {
     if (!socket || !eventId || !eventDateId) return;
-    // Only emit the event, don't update state directly
-    const seat = seatsMap.get(seatId);
-    if (seat) {
-      setSelectedSeat(seat);
-    }
+
     socket.emit("selectSeats", { seatId, eventId, eventDateId, numberOfSeats });
   };
-
-  // const requestAdjacentSeats = (seatId: string, numberOfSeats: number) => {
-  //   if (!socket || !eventId || !eventDateId) return;
-  //   const seat = seatsMap.get(seatId);
-  //   if (seat) {
-  //     setSelectedSeat(seat);
-  //   }
-  //   socket.emit("requestAdjacentSeats", {
-  //     seatId,
-  //     eventId,
-  //     eventDateId,
-  //     numberOfSeats,
-  //   }); // 새로운 이벤트 이름을 쓰게 된다면
-  // };
 
   const reserveSeat = (seatId: string) => {
     if (!socket || !seatId || !eventId || !eventDateId) return;
@@ -123,7 +82,6 @@ export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
   useEffect(() => {
     if (!socket) return;
 
-    // Get current user ID when socket connects
     socket.on("connect", () => {
       if (socket.id) setCurrentUserId(socket.id);
     });
@@ -138,10 +96,6 @@ export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
       updateSeats(data);
     });
 
-    // socket.on("adjacentSeatsSelected", (data: SeatSelectedResponse[]) => {
-    //   updateSeats(data);
-    // });
-
     socket.on("error", (data) => {
       console.error("Error received from server:", data.message);
       toast.error("요청하신 티켓 수 만큼의 좌석이 없습니다.");
@@ -151,7 +105,6 @@ export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
       socket.off("connect");
       socket.off("roomJoined");
       socket.off("seatsSelected");
-      // socket.off("adjacentSeatsSelected");
     };
   }, [socket]);
 
@@ -169,16 +122,10 @@ export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
     eventDateId,
     setEventDateId,
     seatsMap,
-    // updateSeat,
-    joinRoom,
     selectSeats,
-    // requestAdjacentSeats,
     currentUserId,
-    selectedSeat,
-    setSelectedSeat,
+    selectedSeats,
     reserveSeat,
-    adjacentSeats,
-    setAdjacentSeats,
     numberOfTickets,
     setNumberOfTickets,
   };
