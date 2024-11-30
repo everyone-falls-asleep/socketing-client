@@ -14,7 +14,6 @@ import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
 import { EventFriendProvider } from "../../store/EventFriendContext";
-import { QueueProvider } from "../../store/QueueContext";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -55,19 +54,17 @@ const EventDetailPage = () => {
   if (!data?.data) return <p>{fetchErrorMessages.noEventData}</p>;
 
   return (
-    <QueueProvider>
-      <MainLayout>
-        <EventDetailTemplate
-          eventDetailHeader={<EventDetailHeader />}
-          eventDetailScheduleTab={
-            <EventFriendProvider>
-              <EventDetailScheduleTab />
-            </EventFriendProvider>
-          }
-          eventDetailAboutTab={<EventDetailAboutTab />}
-        />
-      </MainLayout>
-    </QueueProvider>
+    <MainLayout>
+      <EventDetailTemplate
+        eventDetailHeader={<EventDetailHeader />}
+        eventDetailScheduleTab={
+          <EventFriendProvider>
+            <EventDetailScheduleTab />
+          </EventFriendProvider>
+        }
+        eventDetailAboutTab={<EventDetailAboutTab />}
+      />
+    </MainLayout>
   );
 };
 

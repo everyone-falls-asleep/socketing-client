@@ -6,7 +6,7 @@ import JoinPage from "../components/pages/JoinPage";
 import Mypage from "../components/pages/MyPage";
 import ReservationConfirmationPage from "../components/pages/ReservationConfirmationPage";
 import { WrappedEventDetailPage } from "../components/wrappers/WrappedEventDatailPage";
-import WaitingRoomPage from "../components/pages/WatingRoomPage";
+import { WrappedWaitingRoomPage } from "../components/wrappers/WrappedWaitingRoomPage";
 import SearchResultsPage from "../components/pages/SearchResultsPage";
 import RegisterEventPage from "../components/pages/RegisterEventPage";
 import { WrappedReservationPage } from "../components/wrappers/WrappedReservationPage";
@@ -33,7 +33,10 @@ const Router = () => {
           element={<SearchResultsPage />}
         />{" "}
         {/* 검색 결과 페이지 */}
-        <Route path="waiting" element={<WaitingRoomPage />} />
+        <Route
+          path="waiting/:eventId/:eventDateId"
+          element={<WrappedWaitingRoomPage />}
+        />
         <Route
           path="reservation-confirmation/:reservationId"
           element={<ReservationConfirmationPage />}
