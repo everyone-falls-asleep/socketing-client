@@ -52,7 +52,7 @@ export const calculateFontSize = (boundingBox: {
 }): number => {
   const minDimension = Math.min(boundingBox.width, boundingBox.height);
   const baseSize = minDimension * 0.5;
-  return Math.min(Math.max(baseSize, 14), 24);
+  return Math.min(Math.max(baseSize, 18), 42);
 };
 
 export const pointsToSVGPath = (points: Point[]): string => {
@@ -69,17 +69,18 @@ export const pointsToSVGPath = (points: Point[]): string => {
 export const createOutlinePath = (
   contours: Contour[],
   padding: number = 20,
-  threshold: number = 30 // 무시할 거리 임계값
+  threshold: number = 10 // 점 간 최소 변화량 threshold
 ): string => {
   const allPoints = contours.flatMap((contour) => contour.points);
   if (allPoints.length === 0) return "";
 
+  // 중심점 계산
   const center = {
     x: allPoints.reduce((sum, p) => sum + p.x, 0) / allPoints.length,
     y: allPoints.reduce((sum, p) => sum + p.y, 0) / allPoints.length,
   };
 
-  // 패딩 적용
+  // padding 적용
   const paddedPoints = allPoints.map((point) => {
     const dx = point.x - center.x;
     const dy = point.y - center.y;
@@ -92,14 +93,13 @@ export const createOutlinePath = (
     };
   });
 
-  const hull = getConvexHull(paddedPoints);
+  // Convex Hull 계산
+  const outlinePoints = getConvexHull(paddedPoints);
 
-  // 근접 점들을 병합하는 과정 추가
-  const mergedPoints = mergeClosePoints(hull, threshold);
+  // 중요한 점들만 선택
+  const significantPoints = simplifyPath(outlinePoints, threshold);
 
-  // 각도가 심하게 변하는 점들만 선택
-  const significantPoints = filterSignificantAngles(mergedPoints, 20); // 20도 이상 차이나는 점들만 선택
-
+  // SVG path string 생성
   return significantPoints.length > 0
     ? `M ${significantPoints[0].x} ${significantPoints[0].y} ` +
         significantPoints
@@ -110,93 +110,48 @@ export const createOutlinePath = (
     : "";
 };
 
-// 가까운 점들을 하나로 병합
-const mergeClosePoints = (points: Point[], threshold: number): Point[] => {
-  const result: Point[] = [];
-  let currentGroup: Point[] = [points[0]];
-
-  for (let i = 1; i < points.length; i++) {
-    const lastPoint = currentGroup[currentGroup.length - 1];
-    const currentPoint = points[i];
-    const distance = getDistance(lastPoint, currentPoint);
-
-    if (distance < threshold) {
-      currentGroup.push(currentPoint);
-    } else {
-      // 현재 그룹의 평균점을 결과에 추가
-      if (currentGroup.length > 0) {
-        result.push(getAveragePoint(currentGroup));
-        currentGroup = [currentPoint];
-      }
-    }
-  }
-
-  // 마지막 그룹 처리
-  if (currentGroup.length > 0) {
-    result.push(getAveragePoint(currentGroup));
-  }
-
-  return result;
-};
-
-// 유의미한 각도 변화가 있는 점들만 필터링
-const filterSignificantAngles = (
-  points: Point[],
-  angleThreshold: number
-): Point[] => {
-  if (points.length <= 3) return points;
+// 경로 단순화 함수
+const simplifyPath = (points: Point[], threshold: number): Point[] => {
+  if (points.length <= 2) return points;
 
   const result: Point[] = [points[0]];
+  let lastPoint = points[0];
 
-  for (let i = 1; i < points.length - 1; i++) {
-    const prev = points[i - 1];
-    const current = points[i];
-    const next = points[i + 1];
+  for (let i = 1; i < points.length; i++) {
+    const currentPoint = points[i];
+    const dx = Math.abs(currentPoint.x - lastPoint.x);
+    const dy = Math.abs(currentPoint.y - lastPoint.y);
 
-    const angle = getAngleChange(prev, current, next);
+    const isSignificantChange = dx > threshold || dy > threshold;
+    const isLastPoint = i === points.length - 1;
+    const isDirectionChange =
+      i < points.length - 1 &&
+      isSignificantDirectionChange(lastPoint, currentPoint, points[i + 1], 45);
 
-    if (Math.abs(angle) > angleThreshold) {
-      result.push(current);
+    if (isSignificantChange || isLastPoint || isDirectionChange) {
+      result.push(currentPoint);
+      lastPoint = currentPoint;
     }
   }
-
-  // 마지막 점은 항상 포함
-  result.push(points[points.length - 1]);
 
   return result;
 };
 
-// 두 점 사이의 거리 계산
-const getDistance = (p1: Point, p2: Point): number => {
-  return Math.sqrt(Math.pow(p2.x - p1.x, 2) + Math.pow(p2.y - p1.y, 2));
-};
-
-// 점들의 평균 위치 계산
-const getAveragePoint = (points: Point[]): Point => {
-  const sum = points.reduce((acc, p) => ({ x: acc.x + p.x, y: acc.y + p.y }), {
-    x: 0,
-    y: 0,
-  });
-  return {
-    x: sum.x / points.length,
-    y: sum.y / points.length,
-  };
-};
-
-// 세 점 사이의 각도 변화 계산 (도단위)
-const getAngleChange = (p1: Point, p2: Point, p3: Point): number => {
+// 방향 변화 감지 함수
+const isSignificantDirectionChange = (
+  p1: Point,
+  p2: Point,
+  p3: Point,
+  angleThreshold: number
+): boolean => {
   const angle1 = Math.atan2(p2.y - p1.y, p2.x - p1.x);
   const angle2 = Math.atan2(p3.y - p2.y, p3.x - p2.x);
 
-  let angleDiff = (angle2 - angle1) * (180 / Math.PI);
+  let angleDiff = Math.abs((angle2 - angle1) * (180 / Math.PI));
+  if (angleDiff > 180) angleDiff = 360 - angleDiff;
 
-  // 각도를 -180 ~ 180 범위로 정규화
-  while (angleDiff > 180) angleDiff -= 360;
-  while (angleDiff < -180) angleDiff += 360;
-
-  return angleDiff;
+  return angleDiff > angleThreshold;
 };
-// Ramer-Douglas-Peucker 알고리즘을 사용한 경로 단순화
 
 const getConvexHull = (points: Point[]): Point[] => {
   if (points.length < 3) return points;

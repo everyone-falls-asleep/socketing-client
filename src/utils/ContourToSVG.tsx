@@ -100,7 +100,6 @@ const ContourToSVG: React.FC<ContourToSVGProps> = ({
     }
   };
 
-  // Automatic retry logic
   useEffect(() => {
     if (error && retryCount < maxRetries) {
       const retryTimeout = setTimeout(() => {
@@ -108,7 +107,7 @@ const ContourToSVG: React.FC<ContourToSVGProps> = ({
           `Automatically retrying... Attempt ${retryCount + 1}/${maxRetries}`
         );
         void processImage(true);
-      }, 2000); // Retry after 2 seconds
+      }, 2000);
 
       return () => clearTimeout(retryTimeout);
     }
@@ -217,8 +216,9 @@ const ContourToSVG: React.FC<ContourToSVGProps> = ({
         {showAreas && (
           <path
             d={contour.path}
-            fill="rgba(47, 67, 222, 0.768)"
-            stroke="none"
+            fill="rgba(105, 114, 201, 0.983)"
+            stroke="#f1e5e5"
+            strokeWidth={"5"}
             opacity="1"
             cursor="pointer"
             onClick={(e) => handleContourClick(e, contour.id)}
@@ -227,9 +227,10 @@ const ContourToSVG: React.FC<ContourToSVGProps> = ({
         <path
           d={contour.path}
           fill="none"
-          stroke={isSelected ? "red" : "#000000"}
+          stroke={isSelected ? "red" : "#f1e5e5"}
           strokeWidth={"3"}
-          strokeDasharray={showAreas ? "none" : "5,5"}
+          strokeLinecap="round"
+          strokeLinejoin="round"
           opacity="1"
           cursor="pointer"
           onClick={(e) => handleContourClick(e, contour.id)}
@@ -240,7 +241,7 @@ const ContourToSVG: React.FC<ContourToSVGProps> = ({
             y={contour.center.y}
             textAnchor="middle"
             dominantBaseline="middle"
-            fill="black"
+            fill="white"
             fontSize={calculateFontSize(contour.boundingBox)}
             fontWeight="bold"
             pointerEvents="none"
@@ -332,7 +333,7 @@ const ContourToSVG: React.FC<ContourToSVGProps> = ({
                           ? "rgba(255, 0, 0, 0.2)"
                           : "rgba(0, 255, 26, 0.833)"
                       }
-                      stroke={isSelected ? "red" : "blue"}
+                      stroke={isSelected ? "red" : "gray"}
                       strokeWidth={isSelected ? "3" : "2"}
                       opacity="0.8"
                       cursor="pointer"

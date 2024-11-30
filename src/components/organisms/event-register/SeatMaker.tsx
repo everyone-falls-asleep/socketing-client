@@ -24,24 +24,17 @@ const SeatMaker: React.FC<SeatMakerProps> = ({ isDateSidebarOpen = false }) => {
 
   const ZOOM_THRESHOLD = 1.1;
 
-  // 화면 좌표를 실제 이미지 좌표로 변환하는 함수
   const screenToSVGCoords = (clientX: number, clientY: number): Point => {
     const rect = containerRef.current?.getBoundingClientRect();
+
     if (!rect) return { x: 0, y: 0 };
-
-    // SVG 요소 가져오기
     const svg = containerRef.current?.querySelector("svg");
+
     if (!svg) return { x: 0, y: 0 };
-
-    // SVG의 현재 ViewBox 가져오기
-    // const viewBox = svg.viewBox.baseVal;
-
-    // 화면 좌표를 SVG 좌표로 변환
     const point = svg.createSVGPoint();
     point.x = clientX;
     point.y = clientY;
 
-    // 화면 좌표계에서 SVG 좌표계로 변환
     const svgPoint = point.matrixTransform(svg.getScreenCTM()?.inverse());
 
     return {
@@ -54,7 +47,6 @@ const SeatMaker: React.FC<SeatMakerProps> = ({ isDateSidebarOpen = false }) => {
     contour: Contour,
     box: { start: Point; end: Point }
   ): boolean => {
-    // SVG 좌표계에서의 선택 영역 계산
     const rect = {
       left: Math.min(box.start.x, box.end.x),
       right: Math.max(box.start.x, box.end.x),
@@ -62,7 +54,6 @@ const SeatMaker: React.FC<SeatMakerProps> = ({ isDateSidebarOpen = false }) => {
       bottom: Math.max(box.start.y, box.end.y),
     };
 
-    // contour의 중심점이 선택 영역 내에 있는지 확인
     return (
       contour.center.x >= rect.left &&
       contour.center.x <= rect.right &&
@@ -147,7 +138,6 @@ const SeatMaker: React.FC<SeatMakerProps> = ({ isDateSidebarOpen = false }) => {
     }
   };
 
-  // 선택 영역 렌더링 함수
   const renderSelectionBox = () => {
     if (!selectionBox) return null;
 
@@ -175,7 +165,7 @@ const SeatMaker: React.FC<SeatMakerProps> = ({ isDateSidebarOpen = false }) => {
   return (
     <div
       ref={containerRef}
-      className={`relative w-full h-full overflow-hidden bg-[#fcf8f8] transition-all duration-300 
+      className={`relative w-full h-full overflow-hidden bg-[#f9efef] transition-all duration-300 
                 ${isDateSidebarOpen ? "ml-1/5" : ""}`}
       onMouseDown={handleMouseDown}
       style={{ touchAction: "none" }}

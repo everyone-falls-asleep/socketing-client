@@ -15,7 +15,13 @@ import {
 } from "../../../constants/errorMessages";
 
 const EventRegisterForm = () => {
-  const { setEvent, setImageUrl, contours } = useEventCreate();
+  const {
+    setEvent,
+    setImageUrl,
+    contours,
+    setSelectedContour,
+    setSelectedContours,
+  } = useEventCreate();
 
   const {
     register,
@@ -165,6 +171,8 @@ const EventRegisterForm = () => {
   };
 
   const onSubmit = (data: NewEvent) => {
+    setSelectedContour(null);
+    setSelectedContours([]);
     const svgData = generateSVGData();
     if (!svgData) {
       toast.error("SVG 데이터를 찾을 수 없습니다.");

@@ -24,6 +24,8 @@ const OverallControlPanel: React.FC = () => {
     );
 
     if (selectedSeats.length === 0) return;
+    const firstSeatRadius = selectedSeats[0].r;
+
     const updatedSeats: Contour[] = [];
     const sortedByY = [...selectedSeats].sort(
       (a, b) => (a.cy || 0) - (b.cy || 0)
@@ -48,6 +50,7 @@ const OverallControlPanel: React.FC = () => {
     if (currentRow.length > 0) {
       rows.push(currentRow);
     }
+
     rows.forEach((rowSeats, rowIndex) => {
       const sortedSeats = [...rowSeats].sort(
         (a, b) => (a.cx || 0) - (b.cx || 0)
@@ -67,6 +70,7 @@ const OverallControlPanel: React.FC = () => {
 
         updatedSeats.push({
           ...seat,
+          r: firstSeatRadius,
           area: areaNumber,
           row: rowIndex + 1,
           number: currentNumber,
@@ -79,7 +83,7 @@ const OverallControlPanel: React.FC = () => {
       id: Math.max(...contours.map((c) => c.id)) + 1,
       type: "area",
       points: selectedSeats.flatMap((seat) => seat.points),
-      path: createOutlinePath(selectedSeats, 20, 21),
+      path: createOutlinePath(selectedSeats, 20),
       center: {
         x:
           selectedSeats.reduce((sum, seat) => sum + (seat.cx || 0), 0) /
@@ -94,7 +98,6 @@ const OverallControlPanel: React.FC = () => {
       label: areaNumber.toString(),
     };
 
-    // contours 업데이트
     setContours((prevContours: Contour[]): Contour[] => {
       const otherContours = prevContours.filter(
         (contour) => !selectedContours.includes(contour.id)
@@ -102,7 +105,6 @@ const OverallControlPanel: React.FC = () => {
       return [...otherContours, ...updatedSeats, newArea];
     });
 
-    // 선택 초기화
     setAreaNumber(0);
   };
 
