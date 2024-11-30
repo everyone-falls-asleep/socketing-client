@@ -51,7 +51,7 @@ const WaitingRoomPage = () => {
 
   const enterReservationPage = () => {
     navigate(`/reservation/${urlEventId}/${urlEventDateId}`, {
-      state: numberOfTickets,
+      state: { numberOfTickets },
     });
   };
 
@@ -64,7 +64,7 @@ const WaitingRoomPage = () => {
 
   useEffect(() => {
     if (myPosition && totalWaiting) {
-      setProgress((myPosition / totalWaiting) * 100);
+      setProgress(((totalWaiting - myPosition) / totalWaiting) * 100);
     }
     console.log(progress);
   }, [myPosition, totalWaiting]);
