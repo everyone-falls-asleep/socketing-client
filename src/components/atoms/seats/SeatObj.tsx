@@ -39,7 +39,7 @@ const SeatObj: React.FC<SeatProps> = ({ seatData }) => {
         <circle
           r="18"
           fill="none"
-          stroke="#60A5FA"
+          stroke="#F66687"
           strokeWidth="2"
           className="animate-pulse"
         />

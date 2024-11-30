@@ -2,7 +2,7 @@ import MainLayout from "../layout/MainLayout";
 import { useState, useEffect, useContext } from "react";
 import { UserContext } from "../../store/UserContext";
 import UserMainPage from "./UserMainPage";
-import AdminPage from "./ManagerMainPage";
+import MyPageManager from "./MyPageManager";
 
 function MainPage() {
   const [isManager, setIsManager] = useState(false);
@@ -19,7 +19,9 @@ function MainPage() {
 
   return (
     <>
-      <MainLayout>{isManager ? <AdminPage /> : <UserMainPage />}</MainLayout>
+      <MainLayout>
+        {isManager ? <MyPageManager /> : <UserMainPage />}
+      </MainLayout>
     </>
   );
 }

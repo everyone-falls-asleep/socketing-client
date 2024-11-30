@@ -192,33 +192,34 @@ const Header = () => {
                 로그아웃
               </Button>
 
-              {isManager && (
+              {isManager ? (
                 <Button
-                  variant="dark"
+                  variant="secondary"
                   onClick={handleRegister}
                   className="hidden md:inline-block"
                 >
                   공연 등록하기
                 </Button>
+              ) : (
+                <>
+                  <Button
+                    onClick={openMyPage}
+                    variant="secondary"
+                    className="hidden md:inline-block"
+                  >
+                    마이 페이지
+                  </Button>
+                  {/* 모바일 */}
+                  <Button
+                    onClick={openMyPage}
+                    variant="secondary"
+                    size="sm"
+                    className="md:hidden text-[15px]"
+                  >
+                    마이 페이지
+                  </Button>
+                </>
               )}
-
-              <Button
-                onClick={openMyPage}
-                variant="secondary"
-                className="hidden md:inline-block"
-              >
-                마이 페이지
-              </Button>
-
-              {/* 모바일 */}
-              <Button
-                onClick={openMyPage}
-                variant="secondary"
-                size="sm"
-                className="md:hidden text-[15px]"
-              >
-                마이 페이지
-              </Button>
             </>
           )}
         </div>

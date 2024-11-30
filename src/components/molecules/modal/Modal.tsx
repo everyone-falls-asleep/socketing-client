@@ -21,7 +21,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
             onClick={onClose}
             className="p-1 hover:bg-gray-100 rounded-full"
           >
-            X
+            ✖
           </button>
         </div>
         {children}

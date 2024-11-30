@@ -3,16 +3,16 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import BaseMainPage from "../components/pages/MainPage";
 import LoginPage from "../components/pages/LoginPage";
 import JoinPage from "../components/pages/JoinPage";
-import Mypage from "../components/pages/MyPage";
+import MyPageUser from "../components/pages/MyPageUser";
 import ReservationConfirmationPage from "../components/pages/ReservationConfirmationPage";
 import { WrappedEventDetailPage } from "../components/wrappers/WrappedEventDatailPage";
 import { WrappedWaitingRoomPage } from "../components/wrappers/WrappedWaitingRoomPage";
 import SearchResultsPage from "../components/pages/SearchResultsPage";
 import RegisterEventPage from "../components/pages/RegisterEventPage";
 import { WrappedReservationPage } from "../components/wrappers/WrappedReservationPage";
-import AdminPage from "../components/pages/ManagerMainPage";
 import AdminDetailPage from "../components/pages/AdminDetailPage";
 import MyDetailPage from "../components/pages/MyDetailPage";
+import MyPageManager from "../components/pages/MyPageManager";
 
 const Router = () => {
   return (
@@ -21,7 +21,7 @@ const Router = () => {
         <Route path="/" element={<BaseMainPage />} />
         <Route path="login" element={<LoginPage />} />
         <Route path="join" element={<JoinPage />} />
-        <Route path="mypage" element={<Mypage />} />
+        <Route path="mypage" element={<MyPageUser />} />
         <Route path="event/:id" element={<WrappedEventDetailPage />} />
         <Route path="register" element={<RegisterEventPage />} />
         <Route
@@ -45,7 +45,7 @@ const Router = () => {
           path="reservation-info"
           element={<ReservationConfirmationPage />}
         />
-        <Route path="admin" element={<AdminPage />} />
+        <Route path="admin" element={<MyPageManager />} />
         <Route path="admin/:id" element={<AdminDetailPage />} />
         <Route path="mypage/detail" element={<MyDetailPage />} />
       </Routes>

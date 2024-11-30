@@ -7,7 +7,7 @@ export const getStatusColor = (status: SeatStatus) => {
     case "reserved":
       return "#9CA3AF";
     case "selected":
-      return "#60A5FA";
+      return "#F66687";
     // case "adjacent":
     //   return "#0a74f5";
     case "temporary_hold":

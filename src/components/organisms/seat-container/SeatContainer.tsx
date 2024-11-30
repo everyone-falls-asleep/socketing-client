@@ -162,7 +162,7 @@ const SeatContainer: React.FC<SeatContainerProps> = ({ svg }) => {
             <span className="text-gray-600 font-bold">예매 완료</span>
           </div>
           <div className="flex items-center space-x-3">
-            <div className="w-5 h-5 rounded-full border border-gray-400 bg-[#60A5FA]"></div>
+            <div className="w-5 h-5 rounded-full border border-gray-400 bg-[#F66687]"></div>
             <span className="text-gray-600 font-bold">내가 선택</span>
           </div>
           <div className="flex items-center space-x-3">
