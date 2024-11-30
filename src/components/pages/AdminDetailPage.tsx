@@ -1,4 +1,3 @@
-import FourSectionLayout from "../layout/FourSectionLayout";
 import AdminReservationSeatContainer from "../organisms/admin/AdminReservationSeatContainer";
 import ReservationUpperEvent from "../organisms/reservation/ReservationUpperEvent";
 import { fetchReservationsByEvent } from "../../api/reservations/reservationsApi";
@@ -8,13 +7,14 @@ import { fetchErrorMessages } from "../../constants/errorMessages";
 import { fetchAllSeats, fetchOneEvent } from "../../api/events/eventsApi";
 import { SeatResponse, SingleEventResponse } from "../../types/api/event";
 import { useParams } from "react-router-dom";
-import { useState } from "react";
 import ReservationCalendarSideBar from "../organisms/reservation/ReservationCalendarSideBar";
 import { UserSeat, Seat } from "../../types/api/event";
+import ReservationLayout from "../layout/ReservationLayout";
+import ReservationSeatInfo from "../organisms/reservation/ReservationSeatInfo";
+import MainLayout from "../layout/MainLayout";
 
 const AdminDetailPage = () => {
   const { id } = useParams();
-  const [isLeftSidebarOpen, setIsLeftSidebarOpen] = useState<boolean>(true);
 
   const useReservations = createResourceQuery<ReservationsResponse>(
     "all-reservations-by-event",
@@ -96,23 +96,23 @@ const AdminDetailPage = () => {
   console.log("user_seats: ", userSeats);
 
   return (
-    <FourSectionLayout
-      topContent={<ReservationUpperEvent {...eventData?.data} />}
-      leftSidebarContent={
-        <ReservationCalendarSideBar dateData={eventData.data.eventDates} />
-      }
-      centerContent={
-        <AdminReservationSeatContainer
-          seatsData={seatsData.data}
-          selectedSeatsData={userSeats} // 일단 첫번째 eventDate의 좌석으로만 처리
-          svg={eventData.data.svg ?? ""}
-        />
-      }
-      rightTopContent={<></>}
-      rightBottomContent={<></>}
-      isLeftSidebarOpen={isLeftSidebarOpen}
-      toggleSidebar={() => setIsLeftSidebarOpen(!isLeftSidebarOpen)}
-    />
+    <MainLayout>
+      <ReservationLayout
+        topContent={<ReservationUpperEvent {...eventData?.data} />}
+        centerContent={
+          <AdminReservationSeatContainer
+            seatsData={seatsData.data}
+            selectedSeatsData={userSeats} // 일단 첫번째 eventDate의 좌석으로만 처리
+            svg={eventData.data.svg ?? ""}
+          />
+        }
+        rightTopContent={
+          <ReservationCalendarSideBar dateData={eventData.data.eventDates} />
+        }
+        rightBottomContent={<ReservationSeatInfo />}
+        // 좌석 선택하면 해당 좌석 회원 정보나오게 하면 좋을듯
+      />
+    </MainLayout>
   );
 };
 

@@ -63,16 +63,28 @@ const ReservationSeatInfo = () => {
   return (
     <div>
       {selectedSeat ? (
-        <div className="space-y-4 p-1">
-          <h2 className="text-lg font-bold pl-1 text-gray-800">좌석 정보</h2>
-
+        <div className="space-y-3">
+          <Button
+            onClick={() => void handleReservationSubmit()}
+            className="p-4 w-full transition-colors "
+            variant="primary"
+          >
+            선택 좌석 예매하기
+          </Button>
           {/* 하나만 예매했을 경우 */}
           {adjacentSeats.length === 0 && (
-            <div className="border p-3 text-gray-800 rounded-lg space-y-2">
-              <p>구역: {selectedSeat.area}</p>
-              <p>열: {selectedSeat.row}</p>
-              <p>번호: {selectedSeat.number}</p>
-              <p>가격: 99,000원</p>
+            <div className="border p-3 text-gray-800 bg-white rounded-lg space-y-2">
+              {/* 이 버튼 소켓이랑 연결해주세요^0^ */}
+              <button className="absolute right-16 md:right-10">✖</button>
+
+              <p className="font-bold text-gray-700">
+                <span className="text-black">{selectedSeat.area}</span>구역{" "}
+                <span className="text-black">{selectedSeat.row}</span>열{" "}
+                <span className="text-black">{selectedSeat.number}</span>번{" "}
+              </p>
+              <p>
+                <span className="font-bold">가격:</span> 99,000원
+              </p>
             </div>
           )}
 
@@ -82,24 +94,24 @@ const ReservationSeatInfo = () => {
               {adjacentSeats.map((seat) => (
                 <div
                   key={seat.id}
-                  className="border p-3 text-gray-800 rounded-lg space-y-2"
+                  className="border p-3 text-gray-800 bg-white rounded-lg space-y-2"
                 >
-                  <p>구역: {seat.area}</p>
-                  <p>열: {seat.row}</p>
-                  <p>번호: {seat.number}</p>
-                  <p>가격: 99,000원</p>
+                  {/* 이 버튼 소켓이랑 연결해주세요^0^ */}
+                  <button className="absolute right-16 md:right-10">✖</button>
+
+                  <p className="font-bold text-gray-700">
+                    <span className="text-black">{seat.area}</span>구역{" "}
+                    <span className="text-black">{seat.row}</span>열{" "}
+                    <span className="text-black">{seat.number}</span>번{" "}
+                  </p>
+
+                  <p>
+                    <span className="font-bold">가격:</span> 99,000원
+                  </p>
                 </div>
               ))}
             </>
           )}
-          <div className="text-center">
-            <Button
-              onClick={() => void handleReservationSubmit()}
-              className="p-4 w-full transition-colors"
-            >
-              예매하기
-            </Button>
-          </div>
         </div>
       ) : (
         <div className="h-full flex items-center justify-center text-gray-500">
