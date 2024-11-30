@@ -15,7 +15,7 @@ import Button from "../../atoms/buttons/Button";
 
 const ReservationSeatInfo = () => {
   const navigate = useNavigate();
-  const { eventId, eventDateId, selectedSeat, reserveSeat, adjacentSeats } =
+  const { eventId, eventDateId, selectedSeats, reserveSeat } =
     useContext(ReservationContext);
   const createReservationMutation = usePostMutation<
     NewReservationResponse,
@@ -23,8 +23,8 @@ const ReservationSeatInfo = () => {
     NewReservation
   >(createNewReservation, {
     onSuccess: (response: NewReservationResponse) => {
-      if (response.data?.id && selectedSeat?.id && eventId && eventDateId) {
-        reserveSeat(selectedSeat?.id, eventId, eventDateId);
+      if (response.data?.id && selectedSeats[0].id && eventId && eventDateId) {
+        reserveSeat(selectedSeats[0].id, eventId, eventDateId);
         navigate(`/reservation-confirmation/${response.data.id}`);
       }
     },
@@ -48,11 +48,11 @@ const ReservationSeatInfo = () => {
   });
   const handleReservationSubmit = async () => {
     try {
-      if (eventId && eventDateId && selectedSeat) {
+      if (eventId && eventDateId && selectedSeats[0]) {
         const reservation: NewReservation = {
           eventId,
           eventDateId,
-          seatId: selectedSeat.id,
+          seatId: selectedSeats[0].id,
         };
         await createReservationMutation.mutateAsync(reservation);
       }
@@ -62,24 +62,12 @@ const ReservationSeatInfo = () => {
   };
   return (
     <div>
-      {selectedSeat ? (
+      {selectedSeats ? (
         <div className="space-y-4 p-1">
           <h2 className="text-lg font-bold pl-1 text-gray-800">좌석 정보</h2>
-
-          {/* 하나만 예매했을 경우 */}
-          {adjacentSeats.length === 0 && (
-            <div className="border p-3 text-gray-800 rounded-lg space-y-2">
-              <p>구역: {selectedSeat.area}</p>
-              <p>열: {selectedSeat.row}</p>
-              <p>번호: {selectedSeat.number}</p>
-              <p>가격: 99,000원</p>
-            </div>
-          )}
-
-          {/* 인접 좌석이 있을 경우 인접 좌석 정보 표시 */}
-          {adjacentSeats.length > 0 && (
+          {selectedSeats.length > 0 && (
             <>
-              {adjacentSeats.map((seat) => (
+              {selectedSeats.map((seat) => (
                 <div
                   key={seat.id}
                   className="border p-3 text-gray-800 rounded-lg space-y-2"
