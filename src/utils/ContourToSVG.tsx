@@ -88,7 +88,7 @@ const ContourToSVG: React.FC<ContourToSVGProps> = ({
         }
       );
       setContours(newContours);
-      setRetryCount(0); // Reset retry count on success
+      setRetryCount(0);
     } catch (err) {
       console.error("Error in processImage:", err);
       if (isRetry && retryCount < maxRetries) {

@@ -14,6 +14,7 @@ const OverallControlPanel: React.FC = () => {
     setSelectedContours,
   } = useEventCreate();
   const [areaLabel, setAreaLabel] = useState<string>("");
+  const [areaPrice, setAreaPrice] = useState<number>(50000);
 
   const createAreaFromSelectedSeats = () => {
     if (!areaLabel || selectedContours.length === 0) return;
@@ -43,6 +44,7 @@ const OverallControlPanel: React.FC = () => {
         selectedSeats.flatMap((seat) => seat.points)
       ),
       label: areaLabel,
+      price: 3000,
     };
 
     const updatedSeats: Contour[] = [];
@@ -104,8 +106,6 @@ const OverallControlPanel: React.FC = () => {
       );
       return [...otherContours, ...updatedSeats, newArea];
     });
-
-    setAreaLabel("");
   };
 
   const convertAllToSeats = () => {
@@ -168,9 +168,21 @@ const OverallControlPanel: React.FC = () => {
               className="w-full px-3 py-2 border rounded-md"
               placeholder="구역 이름을 입력하세요"
             />
+            <label className="block text-sm font-medium">구역 좌석 가격</label>
+            <input
+              type="number"
+              value={areaPrice}
+              onChange={(e) => setAreaPrice(Number(e.target.value))}
+              className="w-full px-3 py-2 border rounded-md"
+              placeholder="구역 가격을 입력하세요"
+            />
             <button
-              onClick={createAreaFromSelectedSeats}
-              disabled={!areaLabel}
+              onClick={() => {
+                createAreaFromSelectedSeats();
+                setAreaLabel("");
+                setAreaPrice(50000);
+              }}
+              disabled={!areaLabel || !areaPrice}
               className="w-full px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:bg-gray-300"
             >
               구역 생성

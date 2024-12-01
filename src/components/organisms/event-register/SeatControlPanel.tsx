@@ -44,37 +44,42 @@ const SeatControlPanel: React.FC = () => {
 
   return (
     <div className="h-full p-6 space-y-6 overflow-auto bg-gray-50">
-      {/* 공통 헤더 */}
       <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
-        <h3 className="text-lg font-semibold text-gray-800 mb-2">
+        <h3 className="text-md font-semibold text-gray-800 mb-2">
           현재 타입: {typeToKorean[selectedContourData.type]}
         </h3>
       </div>
 
-      {/* Contour type일 때의 타입 선택 패널 */}
       {selectedContourData.type === "contour" && (
         <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200 space-y-4">
-          <h4 className="text-md font-medium text-gray-700">타입 선택</h4>
           <div className="space-y-3">
-            <button
-              onClick={() => updateContourType(selectedContourData.id, "seat")}
-              className="w-full py-2 px-4 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors"
-            >
-              좌석
-            </button>
             <button
               onClick={() =>
                 updateContourType(selectedContourData.id, "polygon")
               }
               className="w-full py-2 px-4 bg-green-500 text-white rounded-md hover:bg-green-600 transition-colors"
             >
-              부대시설
+              부대시설로 지정
             </button>
           </div>
         </div>
       )}
 
-      {/* Seat type일 때의 정보 패널 */}
+      {selectedContourData.type === "area" && (
+        <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200 space-y-4">
+          <div className="space-y-3">
+            <button
+              onClick={() =>
+                updateContourType(selectedContourData.id, "polygon")
+              }
+              className="w-full py-2 px-4 bg-green-500 text-white rounded-md hover:bg-green-600 transition-colors"
+            >
+              부대시설로 지정
+            </button>
+          </div>
+        </div>
+      )}
+
       {selectedContourData.type === "seat" && (
         <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200 space-y-4">
           <div className="space-y-4">
@@ -120,7 +125,6 @@ const SeatControlPanel: React.FC = () => {
         </div>
       )}
 
-      {/* Polygon type일 때의 정보 패널 */}
       {selectedContourData.type === "polygon" && (
         <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200 space-y-4">
           <div>
