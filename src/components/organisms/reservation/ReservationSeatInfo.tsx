@@ -1,13 +1,15 @@
 import { useContext } from "react";
 import { ReservationContext } from "../../../store/ReservationContext";
 import { usePostMutation } from "../../../hooks/usePostMutation";
-import {
-  NewReservation,
-  NewReservationResponse,
-} from "../../../types/api/reservation";
+// import {
+//   NewReservation,
+//   NewReservationResponse,
+// } from "../../../types/api/reservation";
+import { NewOrder, NewOrderResponse } from "../../../types/api/order";
+import { createNewOrder } from "../../../api/orders/ordersApi";
 import { AxiosError } from "axios";
 import { ApiErrorResponse } from "../../../types/api/common";
-import { createNewReservation } from "../../../api/reservations/reservationsApi";
+// import { createNewReservation } from "../../../api/reservations/reservationsApi";
 import { postReservationErrorMessages } from "../../../constants/errorMessages";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
@@ -18,13 +20,13 @@ const ReservationSeatInfo = () => {
   const { eventId, eventDateId, selectedSeats, reserveSeat } =
     useContext(ReservationContext);
   const createReservationMutation = usePostMutation<
-    NewReservationResponse,
+    NewOrderResponse,
     AxiosError<ApiErrorResponse>,
-    NewReservation
-  >(createNewReservation, {
-    onSuccess: (response: NewReservationResponse) => {
+    NewOrder
+  >(createNewOrder, {
+    onSuccess: (response: NewOrderResponse) => {
       if (response.data?.id && selectedSeats[0].id && eventId && eventDateId) {
-        reserveSeat(selectedSeats[0].id, eventId, eventDateId);
+        reserveSeat(selectedSeats[0].id, eventId, eventDateId); // 소켓 서버 수정 필요
         navigate(`/reservation-confirmation/${response.data.id}`);
       }
     },
@@ -49,12 +51,16 @@ const ReservationSeatInfo = () => {
   const handleReservationSubmit = async () => {
     try {
       if (eventId && eventDateId && selectedSeats[0]) {
-        const reservation: NewReservation = {
-          eventId,
-          eventDateId,
-          seatId: selectedSeats[0].id,
+        const order: NewOrder = {
+          eventId: "729a0250-5478-40e5-9611-e4738817e261",
+          eventDateId: "",
+          seatIds: [
+            "b93349ab-7ae6-4347-acf2-d3db446b9c9e",
+            "7987fac6-e475-4ef7-8938-7e0b5620e1d7",
+            "4301741c-2345-47f6-86e6-935fdfdaca08",
+          ], //selectedSeats.map(seat => seat.id)
         };
-        await createReservationMutation.mutateAsync(reservation);
+        await createReservationMutation.mutateAsync(order);
       }
     } catch (error) {
       console.log(error);

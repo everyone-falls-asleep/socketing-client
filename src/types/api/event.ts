@@ -8,7 +8,7 @@ export interface Event {
   place: string;
   cast: string;
   ageLimit: number;
-  svg: string;
+  svg?: string;
   createdAt?: string;
   updatedAt?: string;
   ticketingStartTime: string;
@@ -44,11 +44,19 @@ export type EventDeleteResponse = ApiResponse<null>;
 export interface CustomEventsProps extends Omit<Event, "ticketingStartTime"> {
   ticketingStartTime: number;
 }
+
+export interface Area {
+  id: string;
+  label: string;
+  price: number;
+  no: number;
+}
+
 export interface Seat {
   id: string;
   cx: number;
   cy: number;
-  area: number;
+  area: Area; //number;
   row: number;
   number: number;
 }
