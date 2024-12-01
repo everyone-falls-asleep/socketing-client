@@ -150,7 +150,6 @@ const EventRegisterForm = () => {
         }));
 
       return {
-        event_id: eventId,
         price: contour.price,
         label: contour.label,
         svg: document.querySelector(`g[id="${contour.id}"]`)?.outerHTML,
