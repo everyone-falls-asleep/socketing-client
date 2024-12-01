@@ -3,7 +3,7 @@ import { ApiResponse } from "./common";
 export interface Event {
   id: string;
   title: string;
-  eventDates: EventDate[];
+  eventDates?: EventDate[];
   thumbnail: string;
   place: string;
   cast: string;
@@ -49,7 +49,6 @@ export interface Area {
   id: string;
   label: string;
   price: number;
-  no: number;
 }
 
 export interface Seat {
