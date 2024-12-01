@@ -3,12 +3,12 @@ import { ApiResponse } from "./common";
 export interface Event {
   id: string;
   title: string;
-  eventDates: EventDate[];
+  eventDates?: EventDate[];
   thumbnail: string;
   place: string;
   cast: string;
   ageLimit: number;
-  svg: string;
+  svg?: string;
   createdAt?: string;
   updatedAt?: string;
   ticketingStartTime: string;
@@ -44,6 +44,7 @@ export type EventDeleteResponse = ApiResponse<null>;
 export interface CustomEventsProps extends Omit<Event, "ticketingStartTime"> {
   ticketingStartTime: number;
 }
+
 export interface Seat {
   id: string;
   cx: number;

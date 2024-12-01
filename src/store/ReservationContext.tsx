@@ -98,7 +98,7 @@ export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
 
     socket.on("error", (data) => {
       console.error("Error received from server:", data.message);
-      toast.error("요청하신 티켓 수 만큼의 좌석이 없습니다.");
+      toast.error(data.message); //("요청하신 티켓 수 만큼의 좌석이 없습니다.");
     });
 
     return () => {
