@@ -64,7 +64,7 @@ export interface BoundingBox {
 export interface Contour {
   id: number;
   type: "contour" | "seat" | "area" | "polygon";
-  label: string;
+  label?: string;
   path: string;
   center: { x: number; y: number };
   boundingBox: { x: number; y: number; width: number; height: number };
@@ -72,9 +72,10 @@ export interface Contour {
   cx?: number; // for seat type
   cy?: number; // for seat type
   r?: number; // for seat type
-  area?: number; // for seat type
+  area_id?: number; // for seat type
   row?: number; // for seat type
   number?: number; // for seat type
+  price?: number;
 }
 
 export interface ImageSize {

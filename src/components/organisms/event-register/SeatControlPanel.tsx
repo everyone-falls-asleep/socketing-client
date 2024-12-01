@@ -84,7 +84,7 @@ const SeatControlPanel: React.FC = () => {
               </label>
               <input
                 type="text"
-                value={selectedContourData.area || ""}
+                value={selectedContourData.label || ""}
                 onChange={(e) =>
                   updateContourLabel(selectedContourData.id, e.target.value)
                 }

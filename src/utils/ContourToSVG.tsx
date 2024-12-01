@@ -212,7 +212,7 @@ const ContourToSVG: React.FC<ContourToSVGProps> = ({
       selectedContours.includes(contour.id) || selectedContour === contour.id;
 
     return (
-      <g key={contour.id}>
+      <g key={contour.id} id={contour.id.toString()}>
         {showAreas && (
           <path
             d={contour.path}

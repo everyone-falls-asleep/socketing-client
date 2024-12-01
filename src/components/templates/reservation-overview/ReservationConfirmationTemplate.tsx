@@ -79,8 +79,7 @@ const ReservationConfirmationTemplate = ({
                 <div>
                   <Font className="font-bold text-gray-700">좌석</Font>
                   <Font className="text-gray-600">
-                    {reservation.seat.area}구역 {reservation.seat.row}열{" "}
-                    {reservation.seat.number}번
+                    {reservation.seat.row}열 {reservation.seat.number}번
                   </Font>
                 </div>
               </div>

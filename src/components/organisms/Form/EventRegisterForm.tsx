@@ -1,10 +1,10 @@
 import { useForm, Controller } from "react-hook-form";
-import { NewEvent, NewSeat } from "../../../types/api/event";
+import { NewArea, NewEvent } from "../../../types/api/event";
 import Input from "../../atoms/inputs/Input";
 import Button from "../../atoms/buttons/Button";
-import { createNewEvent, createNewSeat } from "../../../api/events/eventsApi";
+import { createNewArea, createNewEvent } from "../../../api/events/eventsApi";
 import { usePostMutation } from "../../../hooks/usePostMutation";
-import { NewEventResponse, NewSeatResponse } from "../../../types/api/event";
+import { NewEventResponse } from "../../../types/api/event";
 import { AxiosError } from "axios";
 import { ApiErrorResponse } from "../../../types/api/common";
 import { toast } from "react-toastify";
@@ -13,6 +13,7 @@ import {
   postEventErrorMessages,
   postSeatErrorMessages,
 } from "../../../constants/errorMessages";
+import { NewAreasResponse } from "../../../types/api/event";
 
 const EventRegisterForm = () => {
   const {
@@ -47,7 +48,6 @@ const EventRegisterForm = () => {
     },
   });
 
-  // Event 생성을 위한 mutation
   const createEventMutation = usePostMutation<
     NewEventResponse,
     AxiosError<ApiErrorResponse>,
@@ -56,8 +56,7 @@ const EventRegisterForm = () => {
     onSuccess: async (response: NewEventResponse) => {
       if (response.data) {
         setEvent(response.data);
-        // Event 생성 성공 후 좌석 생성 시작
-        await handleSeatCreation(response.data.id);
+        await handleAreaCreation(response.data.id);
       }
     },
     onError: (error: AxiosError<ApiErrorResponse>) => {
@@ -71,12 +70,11 @@ const EventRegisterForm = () => {
     },
   });
 
-  // Seat 생성을 위한 mutation
-  const createSeatMutation = usePostMutation<
-    NewSeatResponse,
+  const createAreaMutation = usePostMutation<
+    NewAreasResponse,
     AxiosError<ApiErrorResponse>,
-    NewSeat
-  >(createNewSeat);
+    NewArea
+  >(createNewArea);
 
   const handleImageUpload = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -95,39 +93,43 @@ const EventRegisterForm = () => {
     reader.readAsText(file);
   };
 
-  // SVG 데이터 생성
   const generateSVGData = () => {
     const svgElement = document.querySelector("svg");
     if (!svgElement) return null;
 
     const clonedSvg = svgElement.cloneNode(true) as SVGElement;
-    const seatsGroup = clonedSvg.querySelector("g.seats");
-    if (seatsGroup) {
-      seatsGroup.remove();
-    }
-    console.log("Generated SVG:", clonedSvg.outerHTML); // 저장되는 내용 확인
+
+    const removableGroups = clonedSvg.querySelectorAll("g.seats, g.area");
+    removableGroups.forEach((group) => group.remove());
+
+    console.log("Generated SVG:", clonedSvg.outerHTML);
 
     return {
       svgString: clonedSvg.outerHTML,
     };
   };
-
-  // 좌석 생성 핸들러
-  const handleSeatCreation = async (eventId: string) => {
+  const handleAreaCreation = async (eventId: string) => {
     try {
-      const seatContours = contours.filter((c) => c.type === "seat");
+      const areaContours = contours.filter((c) => c.type === "area");
 
       const results = await Promise.allSettled(
-        seatContours.map((contour) => {
-          const newSeat: NewSeat = {
+        areaContours.map((contour) => {
+          const seats = contours
+            .filter((c) => c.type === "seat" && c.area_id === contour.id)
+            .map((seat) => ({
+              cx: seat.cx!,
+              cy: seat.cy!,
+              row: seat.row!,
+              number: seat.number!,
+            }));
+          const newArea: NewArea = {
             event_id: eventId,
-            cx: contour.cx || 0,
-            cy: contour.cy || 0,
-            area: parseInt(contour.area?.toString() || "0"),
-            row: contour.row || 0,
-            number: contour.number || 0,
+            price: contour.price,
+            label: contour.label,
+            svg: document.querySelector(`g#${contour.id}`)?.outerHTML,
+            seats: seats,
           };
-          return createSeatMutation.mutateAsync(newSeat);
+          return createAreaMutation.mutateAsync(newArea);
         })
       );
 
@@ -275,12 +277,10 @@ const EventRegisterForm = () => {
                     className="w-[235px] h-6"
                     type="datetime-local"
                     onChange={(e) => {
-                      // UTC 시간으로 변환
                       const localDate = new Date(e.target.value);
                       const utcDate = localDate.toISOString();
                       field.onChange(utcDate);
                     }}
-                    // 화면에 보여줄 때는 다시 로컬 시간으로 변환
                     value={
                       field.value
                         ? new Date(field.value)
@@ -318,12 +318,10 @@ const EventRegisterForm = () => {
                     className="w-[235px] h-6"
                     type="datetime-local"
                     onChange={(e) => {
-                      // UTC 시간으로 변환
                       const localDate = new Date(e.target.value);
                       const utcDate = localDate.toISOString();
                       field.onChange(utcDate);
                     }}
-                    // 화면에 보여줄 때는 다시 로컬 시간으로 변환
                     value={
                       field.value
                         ? new Date(field.value)
