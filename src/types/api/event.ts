@@ -86,3 +86,8 @@ export interface NewArea {
   svg?: string;
   seats: NewSeat[];
 }
+
+export interface CreateAreaRequest {
+  event_id: string;
+  areas: Omit<NewArea, "event_id">[];
+}

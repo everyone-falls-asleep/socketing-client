@@ -7,8 +7,8 @@ import {
   NewEventResponse,
   SeatResponse,
   EventDeleteResponse,
-  NewArea,
   NewAreasResponse,
+  CreateAreaRequest,
 } from "../../types/api/event";
 
 const API_URL = baseURL + "events/";
@@ -59,18 +59,12 @@ const deleteEvent = async (event_id: string): Promise<EventDeleteResponse> => {
 
 const createNewArea = async ({
   event_id,
-  price,
-  label,
-  svg,
-  seats,
-}: NewArea): Promise<NewAreasResponse> => {
+  areas,
+}: CreateAreaRequest): Promise<NewAreasResponse> => {
   const response = await api.post<NewAreasResponse>(
     API_URL + event_id + "/seats" + "/batch",
     {
-      price,
-      label,
-      svg,
-      seats,
+      areas,
     }
   );
   return response.data;

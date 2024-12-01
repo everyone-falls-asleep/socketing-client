@@ -1,5 +1,5 @@
 import { useForm, Controller } from "react-hook-form";
-import { NewArea, NewEvent } from "../../../types/api/event";
+import { CreateAreaRequest, NewEvent } from "../../../types/api/event";
 import Input from "../../atoms/inputs/Input";
 import Button from "../../atoms/buttons/Button";
 import { createNewArea, createNewEvent } from "../../../api/events/eventsApi";
@@ -53,10 +53,10 @@ const EventRegisterForm = () => {
     AxiosError<ApiErrorResponse>,
     NewEvent
   >(createNewEvent, {
-    onSuccess: async (response: NewEventResponse) => {
+    onSuccess: (response: NewEventResponse) => {
       if (response.data) {
         setEvent(response.data);
-        await handleAreaCreation(response.data.id);
+        handleAreaCreation(response.data.id);
       }
     },
     onError: (error: AxiosError<ApiErrorResponse>) => {
@@ -73,8 +73,35 @@ const EventRegisterForm = () => {
   const createAreaMutation = usePostMutation<
     NewAreasResponse,
     AxiosError<ApiErrorResponse>,
-    NewArea
-  >(createNewArea);
+    CreateAreaRequest
+  >(createNewArea, {
+    onSuccess: () => {
+      toast.success("공연과 좌석이 성공적으로 등록되었습니다.");
+    },
+    onError: (error: AxiosError<ApiErrorResponse>) => {
+      if (error.response?.data) {
+        const code = error.response.data.code;
+        switch (code) {
+          case 8:
+            toast.error(postSeatErrorMessages.invalidToken);
+            break;
+          case 5:
+            toast.error(postSeatErrorMessages.validation);
+            break;
+          case 9:
+            toast.error(postSeatErrorMessages.inValidevent);
+            break;
+          case 10:
+            toast.error(postSeatErrorMessages.duplicatesSeat);
+            break;
+          default:
+            toast.error(postSeatErrorMessages.general);
+        }
+      } else {
+        toast.error(postSeatErrorMessages.general);
+      }
+    },
+  });
 
   const handleImageUpload = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -108,68 +135,33 @@ const EventRegisterForm = () => {
       svgString: clonedSvg.outerHTML,
     };
   };
-  const handleAreaCreation = async (eventId: string) => {
-    try {
-      const areaContours = contours.filter((c) => c.type === "area");
 
-      const results = await Promise.allSettled(
-        areaContours.map((contour) => {
-          const seats = contours
-            .filter((c) => c.type === "seat" && c.area_id === contour.id)
-            .map((seat) => ({
-              cx: seat.cx!,
-              cy: seat.cy!,
-              row: seat.row!,
-              number: seat.number!,
-            }));
-          const newArea: NewArea = {
-            event_id: eventId,
-            price: contour.price,
-            label: contour.label,
-            svg: document.querySelector(`g[id="${contour.id}"]`)?.outerHTML,
-            seats: seats,
-          };
-          return createAreaMutation.mutateAsync(newArea);
-        })
-      );
+  const handleAreaCreation = (eventId: string) => {
+    const areaContours = contours.filter((c) => c.type === "area");
 
-      const hasError = results.some((result) => result.status === "rejected");
+    const newAreas = areaContours.map((contour) => {
+      const seats = contours
+        .filter((c) => c.type === "seat" && c.area_id === contour.id)
+        .map((seat) => ({
+          cx: seat.cx!,
+          cy: seat.cy!,
+          row: seat.row!,
+          number: seat.number!,
+        }));
 
-      if (hasError) {
-        const firstError = results.find(
-          (result): result is PromiseRejectedResult =>
-            result.status === "rejected"
-        );
+      return {
+        event_id: eventId,
+        price: contour.price,
+        label: contour.label,
+        svg: document.querySelector(`g[id="${contour.id}"]`)?.outerHTML,
+        seats: seats,
+      };
+    });
 
-        if (firstError) {
-          const error = firstError.reason as AxiosError<ApiErrorResponse>;
-          if (error.response) {
-            const code = error.response.data.code;
-            switch (code) {
-              case 8:
-                toast.error(postSeatErrorMessages.invalidToken);
-                break;
-              case 5:
-                toast.error(postSeatErrorMessages.validation);
-                break;
-              case 9:
-                toast.error(postSeatErrorMessages.inValidevent);
-                break;
-              case 10:
-                toast.error(postSeatErrorMessages.duplicatesSeat);
-                break;
-              default:
-                toast.error(postSeatErrorMessages.general);
-            }
-          }
-        }
-      } else {
-        toast.success("공연과 좌석이 성공적으로 등록되었습니다.");
-      }
-    } catch (error) {
-      console.error("Seat creation error:", error);
-      toast.error(postSeatErrorMessages.general);
-    }
+    createAreaMutation.mutate({
+      event_id: eventId,
+      areas: newAreas,
+    });
   };
 
   const onSubmit = (data: NewEvent) => {
