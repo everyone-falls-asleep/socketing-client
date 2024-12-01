@@ -126,7 +126,7 @@ const EventRegisterForm = () => {
             event_id: eventId,
             price: contour.price,
             label: contour.label,
-            svg: document.querySelector(`g#${contour.id}`)?.outerHTML,
+            svg: document.querySelector(`g[id="${contour.id}"]`)?.outerHTML,
             seats: seats,
           };
           return createAreaMutation.mutateAsync(newArea);
