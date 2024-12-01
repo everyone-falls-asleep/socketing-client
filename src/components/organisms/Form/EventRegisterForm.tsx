@@ -164,6 +164,20 @@ const EventRegisterForm = () => {
   };
 
   const onSubmit = (data: NewEvent) => {
+    const hasUnassignedContours = contours.some((c) => c.type === "contour");
+    if (hasUnassignedContours) {
+      toast.error("아직 미지정 좌석이 있습니다");
+      return;
+    }
+
+    const hasUnassignedSeats = contours.some(
+      (c) => c.type === "seat" && !c.area_id
+    );
+    if (hasUnassignedSeats) {
+      toast.error("구역 설정이 안된 좌석이 있습니다");
+      return;
+    }
+
     setSelectedContour(null);
     setSelectedContours([]);
     const svgData = generateSVGData();

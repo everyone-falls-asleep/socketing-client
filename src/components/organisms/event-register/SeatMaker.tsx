@@ -14,8 +14,14 @@ const SeatMaker: React.FC<SeatMakerProps> = ({ isDateSidebarOpen = false }) => {
   const [startPoint, setStartPoint] = useState<Point>({ x: 0, y: 0 });
   const [translate, setTranslate] = useState<Point>({ x: 0, y: 0 });
   const [scale, setScale] = useState<number>(1);
-  const { editMode, setSelectedContours, contours, imageUrl } =
-    useEventCreate();
+  const {
+    editMode,
+    setEditMode,
+    setSelectedContours,
+    contours,
+    imageUrl,
+    setSelectedContour,
+  } = useEventCreate();
   const [selectionBox, setSelectionBox] = useState<{
     start: Point;
     end: Point;
@@ -23,6 +29,28 @@ const SeatMaker: React.FC<SeatMakerProps> = ({ isDateSidebarOpen = false }) => {
   const [showAreas, setShowAreas] = useState<boolean>(true);
 
   const ZOOM_THRESHOLD = 1.1;
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Shift") {
+        setEditMode(true);
+      }
+    };
+
+    const handleKeyUp = (e: KeyboardEvent) => {
+      if (e.key === "Shift") {
+        setEditMode(false);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    window.addEventListener("keyup", handleKeyUp);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("keyup", handleKeyUp);
+    };
+  }, [setEditMode]);
 
   const screenToSVGCoords = (clientX: number, clientY: number): Point => {
     const rect = containerRef.current?.getBoundingClientRect();
@@ -121,6 +149,14 @@ const SeatMaker: React.FC<SeatMakerProps> = ({ isDateSidebarOpen = false }) => {
   const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>): void => {
     if (e.button === 0) {
       e.preventDefault();
+
+      const target = e.target as Element;
+      const isBackgroundClick = target.closest(".background-image") !== null;
+
+      if (isBackgroundClick) {
+        setSelectedContour(null);
+        setSelectedContours([]);
+      }
 
       if (editMode) {
         const startSVGCoords = screenToSVGCoords(e.clientX, e.clientY);
