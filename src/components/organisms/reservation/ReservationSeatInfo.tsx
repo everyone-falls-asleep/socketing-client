@@ -25,7 +25,7 @@ const ReservationSeatInfo = () => {
     onSuccess: (response: NewReservationResponse) => {
       if (response.data?.id && selectedSeats[0].id && eventId && eventDateId) {
         reserveSeat(selectedSeats[0].id, eventId, eventDateId);
-        navigate(`/reservation-confirmation/${response.data.id}`);
+        navigate(`/order`);
       }
     },
     onError: (error: AxiosError<ApiErrorResponse>) => {

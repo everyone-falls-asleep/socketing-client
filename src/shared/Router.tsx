@@ -13,6 +13,8 @@ import { WrappedReservationPage } from "../components/wrappers/WrappedReservatio
 import AdminDetailPage from "../components/pages/AdminDetailPage";
 import MyDetailPage from "../components/pages/MyDetailPage";
 import MyPageManager from "../components/pages/MyPageManager";
+import PaymentPage from "../components/pages/PaymentPage";
+import OrderPage from "../components/pages/OrderPage";
 
 const Router = () => {
   return (
@@ -28,11 +30,12 @@ const Router = () => {
           path="reservation/:eventId/:eventDateId"
           element={<WrappedReservationPage />}
         />
+        <Route path="order" element={<OrderPage />} />
+        <Route path="payment" element={<PaymentPage />} />
         <Route
-          path="/search-results/:searchTerm"
+          path="search-results/:searchTerm"
           element={<SearchResultsPage />}
-        />{" "}
-        {/* 검색 결과 페이지 */}
+        />
         <Route
           path="waiting/:eventId/:eventDateId"
           element={<WrappedWaitingRoomPage />}
