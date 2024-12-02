@@ -17,7 +17,7 @@ import Button from "../../atoms/buttons/Button";
 
 const ReservationSeatInfo = () => {
   const navigate = useNavigate();
-  const { eventId, eventDateId, selectedSeats, reserveSeat } =
+  const { eventId, eventDateId, selectedSeats, reserveSeat, areasMap } =
     useContext(ReservationContext);
   const createReservationMutation = usePostMutation<
     NewOrderResponse,
@@ -86,8 +86,10 @@ const ReservationSeatInfo = () => {
                   <button className="absolute right-16 md:right-10">✖</button>
 
                   <p className="font-bold text-gray-700">
-                    <span className="text-black">{seat.area}</span>구역{" "}
-                    <span className="text-black">{seat.row}</span>열{" "}
+                    <span className="text-black">
+                      {areasMap?.get(seat.areaId)?.label ?? ""}
+                    </span>
+                    구역 <span className="text-black">{seat.row}</span>열{" "}
                     <span className="text-black">{seat.number}</span>번{" "}
                   </p>
 

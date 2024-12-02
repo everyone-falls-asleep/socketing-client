@@ -178,8 +178,6 @@ const EventRegisterForm = () => {
       return;
     }
 
-    setSelectedContour(null);
-    setSelectedContours([]);
     const svgData = generateSVGData();
     if (!svgData) {
       toast.error("SVG 데이터를 찾을 수 없습니다.");
@@ -372,7 +370,15 @@ const EventRegisterForm = () => {
             )}
           </div>
 
-          <Button variant="primary" type="submit" className="mt-6">
+          <Button
+            variant="primary"
+            type="submit"
+            className="mt-6"
+            onClick={() => {
+              setSelectedContour(null);
+              setSelectedContours([]);
+            }}
+          >
             공연 등록
           </Button>
         </div>

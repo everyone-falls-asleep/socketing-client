@@ -30,7 +30,7 @@ const SeatObj: React.FC<SeatProps> = ({ seatData }) => {
     if (!isConnected || !socket) return;
     if (seatStatus === "reserved" || seatStatus === "temporary_hold") return;
 
-    selectSeats(seatData.id, numberOfTickets);
+    selectSeats(seatData.id, seatData.areaId, numberOfTickets);
   };
 
   return (

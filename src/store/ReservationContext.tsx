@@ -1,7 +1,7 @@
 import React, { createContext, useState, useEffect, useContext } from "react";
 import { Socket } from "socket.io-client";
 import { useSocketConnection } from "../hooks/useSocketConnection";
-import { Seat, SeatsSelectedResponse } from "../types/api/socket";
+import { AreaSocket, Seat, SeatsSelectedResponse } from "../types/api/socket";
 import { toast } from "react-toastify";
 
 interface ReservationContextType {
@@ -12,12 +12,15 @@ interface ReservationContextType {
   eventDateId: string | null;
   setEventDateId: (id: string) => void;
   seatsMap: Map<string, Seat>;
-  selectSeats: (seatId: string, numberOfSeats: number) => void;
+  selectSeats: (seatId: string, areaId: string, numberOfSeats: number) => void;
   currentUserId: string | null;
   selectedSeats: Seat[];
   reserveSeat: (seatId: string, eventId: string, eventDateId: string) => void;
   numberOfTickets: number;
   setNumberOfTickets: (count: number) => void;
+  areasMap: Map<string, AreaSocket>;
+  joinArea: (areaId: string) => void;
+  setSeatsMap: (seatsMap: Map<string, Seat>) => void;
 }
 
 export const ReservationContext = createContext<ReservationContextType>(
@@ -41,6 +44,7 @@ export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
   const [eventId, setEventId] = useState<string | null>(null);
   const [eventDateId, setEventDateId] = useState<string | null>(null);
   const [seatsMap, setSeatsMap] = useState<Map<string, Seat>>(new Map());
+  const [areasMap, setAreasMap] = useState<Map<string, AreaSocket>>(new Map());
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
   const [selectedSeats, setSelectedSeats] = useState<Seat[]>([]);
   const [numberOfTickets, setNumberOfTickets] = useState(1);
@@ -65,13 +69,27 @@ export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const joinRoom = () => {
     if (!socket || !eventId || !eventDateId) return;
-    socket?.emit("joinRoom", { eventId, eventDateId });
+    socket.emit("joinRoom", { eventId, eventDateId });
   };
 
-  const selectSeats = (seatId: string, numberOfSeats: number) => {
+  const joinArea = (areaId: string) => {
     if (!socket || !eventId || !eventDateId) return;
+    socket.emit("joinArea", { eventId, eventDateId, areaId });
+  };
 
-    socket.emit("selectSeats", { seatId, eventId, eventDateId, numberOfSeats });
+  const selectSeats = (
+    seatId: string,
+    areaId: string,
+    numberOfSeats: number
+  ) => {
+    if (!socket || !eventId || !eventDateId) return;
+    socket.emit("selectSeats", {
+      seatId,
+      eventId,
+      eventDateId,
+      areaId,
+      numberOfSeats,
+    });
   };
 
   const reserveSeat = (seatId: string) => {
@@ -86,7 +104,13 @@ export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
       if (socket.id) setCurrentUserId(socket.id);
     });
 
-    socket.on("roomJoined", (data: { seats: Seat[] }) => {
+    socket.on("roomJoined", (data: { areas: AreaSocket[] }) => {
+      const newAreasMap = new Map();
+      data.areas.forEach((area) => newAreasMap.set(area.id, area));
+      setAreasMap(newAreasMap);
+    });
+
+    socket.on("areaJoined", (data: { seats: Seat[] }) => {
       const newSeatsMap = new Map();
       data.seats.forEach((seat) => newSeatsMap.set(seat.id, seat));
       setSeatsMap(newSeatsMap);
@@ -128,6 +152,9 @@ export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
     reserveSeat,
     numberOfTickets,
     setNumberOfTickets,
+    areasMap,
+    joinArea,
+    setSeatsMap,
   };
 
   return (

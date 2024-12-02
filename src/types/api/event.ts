@@ -3,7 +3,7 @@ import { ApiResponse } from "./common";
 export interface Event {
   id: string;
   title: string;
-  eventDates?: EventDate[];
+  eventDates: EventDate[];
   thumbnail: string;
   place: string;
   cast: string;
