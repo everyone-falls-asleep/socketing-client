@@ -3,6 +3,7 @@ import { Socket } from "socket.io-client";
 import { useSocketConnection } from "../hooks/useSocketConnection";
 import { AreaSocket, Seat, SeatsSelectedResponse } from "../types/api/socket";
 import { toast } from "react-toastify";
+import { UserContext } from "./UserContext";
 
 interface ReservationContextType {
   socket: Socket | null;
@@ -23,6 +24,7 @@ interface ReservationContextType {
   setSeatsMap: (seatsMap: Map<string, Seat>) => void;
   currentAreaId: string | null;
   setCurrentAreaId: (currentAreaId: string) => void;
+  exitArea: (areaId: string) => void;
 }
 
 export const ReservationContext = createContext<ReservationContextType>(
@@ -42,6 +44,7 @@ export const useReservationContext = () => {
 export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
+  const { userId } = useContext(UserContext);
   const { socket, isConnected } = useSocketConnection();
   const [eventId, setEventId] = useState<string | null>(null);
   const [eventDateId, setEventDateId] = useState<string | null>(null);
@@ -78,6 +81,11 @@ export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
   const joinArea = (areaId: string) => {
     if (!socket || !eventId || !eventDateId) return;
     socket.emit("joinArea", { eventId, eventDateId, areaId });
+  };
+
+  const exitArea = (areaId: string) => {
+    if (!socket || !eventId || !eventDateId || !userId) return;
+    socket.emit("exitArea", { eventId, eventDateId, areaId, userId });
   };
 
   const selectSeats = (
@@ -117,6 +125,10 @@ export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
       const newSeatsMap = new Map();
       data.seats.forEach((seat) => newSeatsMap.set(seat.id, seat));
       setSeatsMap(newSeatsMap);
+    });
+
+    socket.on("areaExited", (message) => {
+      console.log(message);
     });
 
     socket.on("seatsSelected", (data: SeatsSelectedResponse[]) => {
@@ -160,6 +172,7 @@ export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
     setSeatsMap,
     currentAreaId,
     setCurrentAreaId,
+    exitArea,
   };
 
   return (

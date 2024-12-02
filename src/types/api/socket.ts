@@ -56,6 +56,7 @@ export interface ServerToClientEvents {
   seatsSelected: (response: SeatsSelectedResponse[]) => void;
   serverTime: (time: string) => void;
   error: (response: ErrorResponse) => void;
+  areaExited: (message: string) => void;
 }
 
 export interface ClientToServerEvents {
@@ -76,6 +77,12 @@ export interface ClientToServerEvents {
     seatId: string;
     eventId: string;
     eventDateId: string;
+  }) => void;
+  exitArea: (params: {
+    eventId: string;
+    eventDateId: string;
+    areaId: string;
+    userId: string;
   }) => void;
 }
 

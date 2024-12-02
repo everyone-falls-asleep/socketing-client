@@ -15,7 +15,7 @@ interface ParsedSvgData {
 }
 
 function SvgWrapper({ svgString, seats, areas, renderSeat }: SvgWrapperProps) {
-  const { joinArea, setSeatsMap, setCurrentAreaId } =
+  const { joinArea, setSeatsMap, currentAreaId, setCurrentAreaId, exitArea } =
     useContext(ReservationContext);
   const [svgContent, setSvgContent] = useState<{
     viewBox: string;
@@ -72,6 +72,9 @@ function SvgWrapper({ svgString, seats, areas, renderSeat }: SvgWrapperProps) {
             dangerouslySetInnerHTML={{ __html: area.svg }}
             onClick={() => {
               setSeatsMap(new Map());
+              if (currentAreaId !== null) {
+                exitArea(currentAreaId);
+              }
               joinArea(area.id);
               setCurrentAreaId(area.id);
             }}
