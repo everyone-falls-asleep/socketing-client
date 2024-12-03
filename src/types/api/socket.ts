@@ -5,7 +5,6 @@ export interface Seat {
   id: string;
   cx: number;
   cy: number;
-  area: number;
   row: number;
   number: number;
   reservations: Array<{
@@ -19,9 +18,22 @@ export interface Seat {
   updatedAt: string;
   expirationTime: string;
   reservedBy?: string;
+  areaId: string;
+}
+
+export interface AreaSocket {
+  id: string;
+  label: string;
+  price: number;
+  svg: string;
 }
 
 export interface RoomJoinedResponse {
+  message: string;
+  areas: AreaSocket[];
+}
+
+export interface AreaJoinedResponse {
   message: string;
   seats: Seat[];
 }
@@ -40,36 +52,37 @@ export interface ErrorResponse {
 
 export interface ServerToClientEvents {
   roomJoined: (response: RoomJoinedResponse) => void;
-
+  areaJoined: (response: AreaJoinedResponse) => void;
   seatsSelected: (response: SeatsSelectedResponse[]) => void;
-
-  // "seat:update": (seat: Seat) => void;
-  // "seats:bulk_update": (seats: Seat[]) => void;
-  // "seat:error": (error: { message: string; seatId: string }) => void;
-
   serverTime: (time: string) => void;
-
   error: (response: ErrorResponse) => void;
+  areaExited: (message: string) => void;
 }
 
 export interface ClientToServerEvents {
   joinRoom: (params: { eventId: string; eventDateId: string }) => void;
-
-  // "seat:watch": (seatId: string) => void;
-  // "seat:unwatch": (seatId: string) => void;
-  // "seat:temporary_hold": (seatId: string) => void;
-
+  joinArea: (params: {
+    eventId: string;
+    eventDateId: string;
+    areaId: string;
+  }) => void;
   selectSeats: (params: {
     seatId: string;
     eventId: string;
     eventDateId: string;
+    areaId: string;
     numberOfSeats: number;
   }) => void;
-
   reserveSeat: (params: {
     seatId: string;
     eventId: string;
     eventDateId: string;
+  }) => void;
+  exitArea: (params: {
+    eventId: string;
+    eventDateId: string;
+    areaId: string;
+    userId: string;
   }) => void;
 }
 

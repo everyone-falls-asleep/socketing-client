@@ -19,6 +19,7 @@ const SeatObj: React.FC<SeatProps> = ({ seatData }) => {
     isConnected,
     currentUserId,
     numberOfTickets,
+    currentAreaId,
   } = useContext(ReservationContext);
 
   const seatStatus = getSeatStatus(seatData, eventDateId, currentUserId);
@@ -27,10 +28,10 @@ const SeatObj: React.FC<SeatProps> = ({ seatData }) => {
 
   const handleClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (!isConnected || !socket) return;
+    if (!isConnected || !socket || !currentAreaId) return;
     if (seatStatus === "reserved" || seatStatus === "temporary_hold") return;
 
-    selectSeats(seatData.id, numberOfTickets);
+    selectSeats(seatData.id, currentAreaId, numberOfTickets);
   };
 
   return (

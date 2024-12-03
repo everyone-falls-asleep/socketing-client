@@ -37,7 +37,6 @@ const ContourToSVG: React.FC<ContourToSVGProps> = ({
     setSelectedContour,
     selectedContours,
     editMode,
-    setSelectedContours,
     isImageVisible,
   } = useEventCreate();
 
@@ -88,7 +87,7 @@ const ContourToSVG: React.FC<ContourToSVGProps> = ({
         }
       );
       setContours(newContours);
-      setRetryCount(0); // Reset retry count on success
+      setRetryCount(0);
     } catch (err) {
       console.error("Error in processImage:", err);
       if (isRetry && retryCount < maxRetries) {
@@ -124,40 +123,6 @@ const ContourToSVG: React.FC<ContourToSVGProps> = ({
     setRetryCount(0);
     void processImage(true);
   };
-
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (!editMode) return;
-
-      if (e.key === "Backspace" || e.key === "Delete") {
-        e.preventDefault();
-
-        if (selectedContours.length > 0) {
-          setContours((prevContours: Contour[]) =>
-            prevContours.filter(
-              (contour) => !selectedContours.includes(contour.id)
-            )
-          );
-          setSelectedContours([]);
-        } else if (selectedContour !== null) {
-          setContours((prevContours: Contour[]) =>
-            prevContours.filter((contour) => contour.id !== selectedContour)
-          );
-          setSelectedContour(null);
-        }
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [
-    editMode,
-    selectedContour,
-    selectedContours,
-    setContours,
-    setSelectedContour,
-    setSelectedContours,
-  ]);
 
   const handleContourClick = (e: React.MouseEvent, id: number) => {
     if (!editMode) {
@@ -212,7 +177,7 @@ const ContourToSVG: React.FC<ContourToSVGProps> = ({
       selectedContours.includes(contour.id) || selectedContour === contour.id;
 
     return (
-      <g key={contour.id}>
+      <g key={contour.id} id={contour.id.toString()}>
         {showAreas && (
           <path
             d={contour.path}

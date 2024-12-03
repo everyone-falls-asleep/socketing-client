@@ -13,10 +13,11 @@ const OverallControlPanel: React.FC = () => {
     contours,
     setSelectedContours,
   } = useEventCreate();
-  const [areaNumber, setAreaNumber] = useState<number>(0);
+  const [areaLabel, setAreaLabel] = useState<string>("");
+  const [areaPrice, setAreaPrice] = useState<number>(50000);
 
   const createAreaFromSelectedSeats = () => {
-    if (!areaNumber || selectedContours.length === 0) return;
+    if (!areaLabel || selectedContours.length === 0) return;
 
     const selectedSeats = contours.filter(
       (contour) =>
@@ -25,6 +26,26 @@ const OverallControlPanel: React.FC = () => {
 
     if (selectedSeats.length === 0) return;
     const firstSeatRadius = selectedSeats[0].r;
+
+    const newArea: Contour = {
+      id: Math.max(...contours.map((c) => c.id)) + 1,
+      type: "area",
+      points: selectedSeats.flatMap((seat) => seat.points),
+      path: createOutlinePath(selectedSeats, 20),
+      center: {
+        x:
+          selectedSeats.reduce((sum, seat) => sum + (seat.cx || 0), 0) /
+          selectedSeats.length,
+        y:
+          selectedSeats.reduce((sum, seat) => sum + (seat.cy || 0), 0) /
+          selectedSeats.length,
+      },
+      boundingBox: calculateBoundingBox(
+        selectedSeats.flatMap((seat) => seat.points)
+      ),
+      label: areaLabel,
+      price: 50000,
+    };
 
     const updatedSeats: Contour[] = [];
     const sortedByY = [...selectedSeats].sort(
@@ -71,7 +92,7 @@ const OverallControlPanel: React.FC = () => {
         updatedSeats.push({
           ...seat,
           r: firstSeatRadius,
-          area: areaNumber,
+          area_id: newArea.id,
           row: rowIndex + 1,
           number: currentNumber,
           label: `${rowIndex + 1}-${currentNumber}`,
@@ -79,33 +100,12 @@ const OverallControlPanel: React.FC = () => {
       });
     });
 
-    const newArea: Contour = {
-      id: Math.max(...contours.map((c) => c.id)) + 1,
-      type: "area",
-      points: selectedSeats.flatMap((seat) => seat.points),
-      path: createOutlinePath(selectedSeats, 20),
-      center: {
-        x:
-          selectedSeats.reduce((sum, seat) => sum + (seat.cx || 0), 0) /
-          selectedSeats.length,
-        y:
-          selectedSeats.reduce((sum, seat) => sum + (seat.cy || 0), 0) /
-          selectedSeats.length,
-      },
-      boundingBox: calculateBoundingBox(
-        selectedSeats.flatMap((seat) => seat.points)
-      ),
-      label: areaNumber.toString(),
-    };
-
     setContours((prevContours: Contour[]): Contour[] => {
       const otherContours = prevContours.filter(
         (contour) => !selectedContours.includes(contour.id)
       );
       return [...otherContours, ...updatedSeats, newArea];
     });
-
-    setAreaNumber(0);
   };
 
   const convertAllToSeats = () => {
@@ -162,15 +162,27 @@ const OverallControlPanel: React.FC = () => {
           <div className="space-y-2">
             <label className="block text-sm font-medium">구역 이름</label>
             <input
-              type="number"
-              value={areaNumber}
-              onChange={(e) => setAreaNumber(Number(e.target.value))}
+              type="text"
+              value={areaLabel}
+              onChange={(e) => setAreaLabel(e.target.value)}
               className="w-full px-3 py-2 border rounded-md"
               placeholder="구역 이름을 입력하세요"
             />
+            <label className="block text-sm font-medium">구역 좌석 가격</label>
+            <input
+              type="number"
+              value={areaPrice}
+              onChange={(e) => setAreaPrice(Number(e.target.value))}
+              className="w-full px-3 py-2 border rounded-md"
+              placeholder="구역 가격을 입력하세요"
+            />
             <button
-              onClick={createAreaFromSelectedSeats}
-              disabled={!areaNumber}
+              onClick={() => {
+                createAreaFromSelectedSeats();
+                setAreaLabel("");
+                setAreaPrice(50000);
+              }}
+              disabled={!areaLabel || !areaPrice}
               className="w-full px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:bg-gray-300"
             >
               구역 생성

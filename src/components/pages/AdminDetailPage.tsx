@@ -8,10 +8,11 @@ import { fetchAllSeats, fetchOneEvent } from "../../api/events/eventsApi";
 import { SeatResponse, SingleEventResponse } from "../../types/api/event";
 import { useParams } from "react-router-dom";
 import ReservationCalendarSideBar from "../organisms/reservation/ReservationCalendarSideBar";
-import { UserSeat, Seat } from "../../types/api/event";
+import { UserSeat } from "../../types/api/event";
 import ReservationLayout from "../layout/ReservationLayout";
 import ReservationSeatInfo from "../organisms/reservation/ReservationSeatInfo";
 import MainLayout from "../layout/MainLayout";
+import { Seat } from "../../types/api/reservation";
 
 const AdminDetailPage = () => {
   const { id } = useParams();
@@ -76,7 +77,7 @@ const AdminDetailPage = () => {
 
   const userSeats: UserSeat[] = reservationData.data.reduce((acc, entry) => {
     const userId = entry.user.id;
-    const seat = entry.seat;
+    // const seat = entry.seat;
 
     // Find existing UserSeat entry for the user
     let userEntry = acc.find((item) => item.user_id === userId);
@@ -88,7 +89,7 @@ const AdminDetailPage = () => {
     }
 
     // Add the seat to the user's seats
-    userEntry.seats.push(seat);
+    // userEntry.seats.push(seat);
 
     return acc;
   }, [] as UserSeat[]);

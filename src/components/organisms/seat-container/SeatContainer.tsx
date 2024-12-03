@@ -8,7 +8,8 @@ interface SeatContainerProps {
 }
 
 const SeatContainer: React.FC<SeatContainerProps> = ({ svg }) => {
-  const { socket, isConnected, seatsMap } = useContext(ReservationContext);
+  const { socket, isConnected, seatsMap, areasMap } =
+    useContext(ReservationContext);
   const containerRef = useRef<HTMLDivElement>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [startPoint, setStartPoint] = useState({ x: 0, y: 0 });
@@ -20,6 +21,7 @@ const SeatContainer: React.FC<SeatContainerProps> = ({ svg }) => {
   const [showLegend, setShowLegend] = useState(false); // 토글기능
 
   const seatsData = Array.from(seatsMap.values());
+  const areasData = Array.from(areasMap.values());
 
   useEffect(() => {
     if (!socket || !isConnected) return;
@@ -33,8 +35,6 @@ const SeatContainer: React.FC<SeatContainerProps> = ({ svg }) => {
 
     return () => {
       socket.off("serverTime");
-      // socket.off("userList");
-      // socket.off("seatUpdate");
     };
   }, [socket, isConnected]);
 
@@ -108,6 +108,7 @@ const SeatContainer: React.FC<SeatContainerProps> = ({ svg }) => {
           <SvgWrapper
             svgString={svg}
             seats={seatsData}
+            areas={areasData}
             renderSeat={(seat) => <SeatObj seatData={seat} />}
           />
         </div>

@@ -14,6 +14,7 @@ export interface User {
   createdAt?: string;
   updatedAt?: string;
   role?: string;
+  point?: number;
 }
 
 export type RegisterResponse = ApiResponse<User>;

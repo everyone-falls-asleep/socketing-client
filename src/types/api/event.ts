@@ -8,7 +8,7 @@ export interface Event {
   place: string;
   cast: string;
   ageLimit: number;
-  svg: string;
+  svg?: string;
   createdAt?: string;
   updatedAt?: string;
   ticketingStartTime: string;
@@ -44,11 +44,12 @@ export type EventDeleteResponse = ApiResponse<null>;
 export interface CustomEventsProps extends Omit<Event, "ticketingStartTime"> {
   ticketingStartTime: number;
 }
+
 export interface Seat {
   id: string;
   cx: number;
   cy: number;
-  area: number;
+  area_id: number;
   row: number;
   number: number;
 }
@@ -56,10 +57,8 @@ export interface Seat {
 export type SeatResponse = ApiResponse<Seat[]>;
 
 export interface NewSeat {
-  event_id: string;
   cx: number;
   cy: number;
-  area: number;
   row: number;
   number: number;
 }
@@ -69,4 +68,27 @@ export type NewSeatResponse = ApiResponse<Seat>;
 export interface UserSeat {
   user_id: string;
   seats: Seat[];
+}
+
+export interface Area {
+  id: string;
+  price: number;
+  label: string;
+  seats: Seat[];
+  svg: string;
+}
+
+export type NewAreasResponse = ApiResponse<Area[]>;
+
+export interface NewArea {
+  event_id: string;
+  price?: number;
+  label?: string;
+  svg?: string;
+  seats: NewSeat[];
+}
+
+export interface CreateAreaRequest {
+  event_id: string;
+  areas: Omit<NewArea, "event_id">[];
 }

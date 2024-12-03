@@ -1,10 +1,10 @@
 import { useForm, Controller } from "react-hook-form";
-import { NewEvent, NewSeat } from "../../../types/api/event";
+import { CreateAreaRequest, NewEvent } from "../../../types/api/event";
 import Input from "../../atoms/inputs/Input";
 import Button from "../../atoms/buttons/Button";
-import { createNewEvent, createNewSeat } from "../../../api/events/eventsApi";
+import { createNewArea, createNewEvent } from "../../../api/events/eventsApi";
 import { usePostMutation } from "../../../hooks/usePostMutation";
-import { NewEventResponse, NewSeatResponse } from "../../../types/api/event";
+import { NewEventResponse } from "../../../types/api/event";
 import { AxiosError } from "axios";
 import { ApiErrorResponse } from "../../../types/api/common";
 import { toast } from "react-toastify";
@@ -13,6 +13,7 @@ import {
   postEventErrorMessages,
   postSeatErrorMessages,
 } from "../../../constants/errorMessages";
+import { NewAreasResponse } from "../../../types/api/event";
 
 const EventRegisterForm = () => {
   const {
@@ -47,17 +48,15 @@ const EventRegisterForm = () => {
     },
   });
 
-  // Event 생성을 위한 mutation
   const createEventMutation = usePostMutation<
     NewEventResponse,
     AxiosError<ApiErrorResponse>,
     NewEvent
   >(createNewEvent, {
-    onSuccess: async (response: NewEventResponse) => {
+    onSuccess: (response: NewEventResponse) => {
       if (response.data) {
         setEvent(response.data);
-        // Event 생성 성공 후 좌석 생성 시작
-        await handleSeatCreation(response.data.id);
+        handleAreaCreation(response.data.id);
       }
     },
     onError: (error: AxiosError<ApiErrorResponse>) => {
@@ -71,12 +70,38 @@ const EventRegisterForm = () => {
     },
   });
 
-  // Seat 생성을 위한 mutation
-  const createSeatMutation = usePostMutation<
-    NewSeatResponse,
+  const createAreaMutation = usePostMutation<
+    NewAreasResponse,
     AxiosError<ApiErrorResponse>,
-    NewSeat
-  >(createNewSeat);
+    CreateAreaRequest
+  >(createNewArea, {
+    onSuccess: () => {
+      toast.success("공연과 좌석이 성공적으로 등록되었습니다.");
+    },
+    onError: (error: AxiosError<ApiErrorResponse>) => {
+      if (error.response?.data) {
+        const code = error.response.data.code;
+        switch (code) {
+          case 8:
+            toast.error(postSeatErrorMessages.invalidToken);
+            break;
+          case 5:
+            toast.error(postSeatErrorMessages.validation);
+            break;
+          case 9:
+            toast.error(postSeatErrorMessages.inValidevent);
+            break;
+          case 10:
+            toast.error(postSeatErrorMessages.duplicatesSeat);
+            break;
+          default:
+            toast.error(postSeatErrorMessages.general);
+        }
+      } else {
+        toast.error(postSeatErrorMessages.general);
+      }
+    },
+  });
 
   const handleImageUpload = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -95,84 +120,64 @@ const EventRegisterForm = () => {
     reader.readAsText(file);
   };
 
-  // SVG 데이터 생성
   const generateSVGData = () => {
     const svgElement = document.querySelector("svg");
     if (!svgElement) return null;
 
     const clonedSvg = svgElement.cloneNode(true) as SVGElement;
-    const seatsGroup = clonedSvg.querySelector("g.seats");
-    if (seatsGroup) {
-      seatsGroup.remove();
-    }
-    console.log("Generated SVG:", clonedSvg.outerHTML); // 저장되는 내용 확인
+
+    const removableGroups = clonedSvg.querySelectorAll("g.seats, g.area");
+    removableGroups.forEach((group) => group.remove());
+
+    console.log("Generated SVG:", clonedSvg.outerHTML);
 
     return {
       svgString: clonedSvg.outerHTML,
     };
   };
 
-  // 좌석 생성 핸들러
-  const handleSeatCreation = async (eventId: string) => {
-    try {
-      const seatContours = contours.filter((c) => c.type === "seat");
+  const handleAreaCreation = (eventId: string) => {
+    const areaContours = contours.filter((c) => c.type === "area");
 
-      const results = await Promise.allSettled(
-        seatContours.map((contour) => {
-          const newSeat: NewSeat = {
-            event_id: eventId,
-            cx: contour.cx || 0,
-            cy: contour.cy || 0,
-            area: parseInt(contour.area?.toString() || "0"),
-            row: contour.row || 0,
-            number: contour.number || 0,
-          };
-          return createSeatMutation.mutateAsync(newSeat);
-        })
-      );
+    const newAreas = areaContours.map((contour) => {
+      const seats = contours
+        .filter((c) => c.type === "seat" && c.area_id === contour.id)
+        .map((seat) => ({
+          cx: seat.cx!,
+          cy: seat.cy!,
+          row: seat.row!,
+          number: seat.number!,
+        }));
 
-      const hasError = results.some((result) => result.status === "rejected");
+      return {
+        price: contour.price,
+        label: contour.label,
+        svg: document.querySelector(`g[id="${contour.id}"]`)?.outerHTML,
+        seats: seats,
+      };
+    });
 
-      if (hasError) {
-        const firstError = results.find(
-          (result): result is PromiseRejectedResult =>
-            result.status === "rejected"
-        );
-
-        if (firstError) {
-          const error = firstError.reason as AxiosError<ApiErrorResponse>;
-          if (error.response) {
-            const code = error.response.data.code;
-            switch (code) {
-              case 8:
-                toast.error(postSeatErrorMessages.invalidToken);
-                break;
-              case 5:
-                toast.error(postSeatErrorMessages.validation);
-                break;
-              case 9:
-                toast.error(postSeatErrorMessages.inValidevent);
-                break;
-              case 10:
-                toast.error(postSeatErrorMessages.duplicatesSeat);
-                break;
-              default:
-                toast.error(postSeatErrorMessages.general);
-            }
-          }
-        }
-      } else {
-        toast.success("공연과 좌석이 성공적으로 등록되었습니다.");
-      }
-    } catch (error) {
-      console.error("Seat creation error:", error);
-      toast.error(postSeatErrorMessages.general);
-    }
+    createAreaMutation.mutate({
+      event_id: eventId,
+      areas: newAreas,
+    });
   };
 
   const onSubmit = (data: NewEvent) => {
-    setSelectedContour(null);
-    setSelectedContours([]);
+    const hasUnassignedContours = contours.some((c) => c.type === "contour");
+    if (hasUnassignedContours) {
+      toast.error("아직 미지정 좌석이 있습니다");
+      return;
+    }
+
+    const hasUnassignedSeats = contours.some(
+      (c) => c.type === "seat" && !c.area_id
+    );
+    if (hasUnassignedSeats) {
+      toast.error("구역 설정이 안된 좌석이 있습니다");
+      return;
+    }
+
     const svgData = generateSVGData();
     if (!svgData) {
       toast.error("SVG 데이터를 찾을 수 없습니다.");
@@ -275,12 +280,10 @@ const EventRegisterForm = () => {
                     className="w-[235px] h-6"
                     type="datetime-local"
                     onChange={(e) => {
-                      // UTC 시간으로 변환
                       const localDate = new Date(e.target.value);
                       const utcDate = localDate.toISOString();
                       field.onChange(utcDate);
                     }}
-                    // 화면에 보여줄 때는 다시 로컬 시간으로 변환
                     value={
                       field.value
                         ? new Date(field.value)
@@ -318,12 +321,10 @@ const EventRegisterForm = () => {
                     className="w-[235px] h-6"
                     type="datetime-local"
                     onChange={(e) => {
-                      // UTC 시간으로 변환
                       const localDate = new Date(e.target.value);
                       const utcDate = localDate.toISOString();
                       field.onChange(utcDate);
                     }}
-                    // 화면에 보여줄 때는 다시 로컬 시간으로 변환
                     value={
                       field.value
                         ? new Date(field.value)
@@ -369,7 +370,15 @@ const EventRegisterForm = () => {
             )}
           </div>
 
-          <Button variant="primary" type="submit" className="mt-6">
+          <Button
+            variant="primary"
+            type="submit"
+            className="mt-6"
+            onClick={() => {
+              setSelectedContour(null);
+              setSelectedContours([]);
+            }}
+          >
             공연 등록
           </Button>
         </div>
