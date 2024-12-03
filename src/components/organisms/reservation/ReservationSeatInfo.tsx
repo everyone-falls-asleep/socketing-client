@@ -17,7 +17,7 @@ const ReservationSeatInfo = () => {
     try {
       socket.on("reservedSeats", (response: OrderResponse) => {
         console.log(response.data);
-        navigate("/reservation-confirmation", {
+        navigate("/order", {
           state: { orderData: response.data },
         });
       });
