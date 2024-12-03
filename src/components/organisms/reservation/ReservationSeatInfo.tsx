@@ -32,7 +32,7 @@ const ReservationSeatInfo = () => {
           {selectedSeats.length > 0 && (
             <>
               <Button
-                onClick={() => void handleReservationSubmit()}
+                onClick={() => void handleReservationSocketSubmit()}
                 className="p-4 w-full transition-colors "
                 variant="primary"
               >
