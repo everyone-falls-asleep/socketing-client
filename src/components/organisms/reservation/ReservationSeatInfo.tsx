@@ -64,16 +64,15 @@ const ReservationSeatInfo = () => {
     <div>
       {selectedSeats ? (
         <div className="space-y-3">
-          <Button
-            onClick={() => void handleReservationSubmit()}
-            className="p-4 w-full transition-colors "
-            variant="primary"
-          >
-            선택 좌석 예매하기
-          </Button>
-
           {selectedSeats.length > 0 && (
             <>
+              <Button
+                onClick={() => void handleReservationSubmit()}
+                className="p-4 w-full transition-colors "
+                variant="primary"
+              >
+                선택 좌석 예매하기
+              </Button>
               {selectedSeats.map((seat) => (
                 <div
                   key={seat.id}

@@ -10,7 +10,7 @@ import { useParams } from "react-router-dom";
 import ReservationCalendarSideBar from "../organisms/reservation/ReservationCalendarSideBar";
 import { UserSeat, Seat } from "../../types/api/event";
 import ReservationLayout from "../layout/ReservationLayout";
-import ReservationSeatInfo from "../organisms/reservation/ReservationSeatInfo";
+import ReservationAllInfo from "../organisms/reservation/ReservationAllInfo";
 import MainLayout from "../layout/MainLayout";
 
 const AdminDetailPage = () => {
@@ -106,11 +106,10 @@ const AdminDetailPage = () => {
             svg={eventData.data.svg ?? ""}
           />
         }
-        rightTopContent={
+        rightTopContent={<ReservationAllInfo />}
+        rightBottomContent={
           <ReservationCalendarSideBar dateData={eventData.data.eventDates} />
         }
-        rightBottomContent={<ReservationSeatInfo />}
-        // 좌석 선택하면 해당 좌석 회원 정보나오게 하면 좋을듯
       />
     </MainLayout>
   );

@@ -68,6 +68,24 @@ const AdminSeatContainer: React.FC<SeatContainerProps> = ({
           viewBox={viewBox}
         />
       </div>
+      <div className="absolute right-0 opacity-80 border p-3  text-gray-950 bg-white rounded-lg space-y-2">
+        <p className="text-center font-bold text-lg">좌석 예매 정보</p>
+        <p className="font-bold text-gray-700">
+          <span className="text-black">1</span>구역{" "}
+          <span className="text-black">2</span>열{" "}
+          <span className="text-black">3</span>번{" "}
+        </p>
+
+        <p>
+          <span className="font-bold ">ID:</span> 김혜다
+        </p>
+        <p className="flex flex-col">
+          <span className="font-bold">예매 시간:</span>
+          <div className="pl-6">
+            <span> 2024.12.15 11:30</span>
+          </div>
+        </p>
+      </div>
     </div>
   );
 };
