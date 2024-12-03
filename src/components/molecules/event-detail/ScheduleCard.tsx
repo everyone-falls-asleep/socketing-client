@@ -58,15 +58,15 @@ const ScheduleCard = ({
   return (
     <>
       {/* lg */}
-      <div className="hidden lg:flex event-card h-20 items-center justify-between lg:px-8 py-4 mx-2 mb-2 rounded-lg border shadow-lg hover:bg-gray-100 transition">
-        <div className="schedule-info flex lg:gap-4">
+      <div className="hidden lg:flex event-card h-20 items-center justify-between p-4 mx-2 mb-2 rounded-lg border shadow-lg hover:bg-gray-100 transition">
+        <div className="schedule-info flex gap-2 items-center">
           <div
             id="schedule-date"
-            className="text-lg font-semibold text-gray-800 flex items-end"
+            className=" font-semibold text-gray-800 flex items-end"
           >
             <p>{formatDateToKoreanDate(date)}</p>
           </div>
-          <div className="schedule-time text-base text-gray-600 flex items-end">
+          <div className="schedule-time text-gray-600 flex items-end">
             <p>{formatDateToKoreanTime(date)}</p>
           </div>
         </div>
@@ -75,6 +75,7 @@ const ScheduleCard = ({
             variant="dark"
             onClick={handleAdjacentReservationClick}
             disabled={isDisabled}
+            className="text-sm"
           >
             {isDisabled ? "연석 준비 중" : "연석 예매하기"}
           </Button>
@@ -82,6 +83,7 @@ const ScheduleCard = ({
             variant="primary"
             onClick={handleDefaultReservationClick}
             disabled={isDisabled}
+            className="text-sm"
           >
             {isDisabled ? "일반 준비 중" : "예매하기"}
           </Button>
