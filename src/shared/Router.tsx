@@ -38,7 +38,7 @@ const Router = () => {
           element={<WrappedWaitingRoomPage />}
         />
         <Route
-          path="reservation-confirmation/:reservationId"
+          path="reservation-confirmation"
           element={<ReservationConfirmationPage />}
         />
         <Route

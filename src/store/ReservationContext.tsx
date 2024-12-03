@@ -16,7 +16,7 @@ interface ReservationContextType {
   selectSeats: (seatId: string, areaId: string, numberOfSeats: number) => void;
   currentUserId: string | null;
   selectedSeats: Seat[];
-  reserveSeat: (seatId: string, eventId: string, eventDateId: string) => void;
+  reserveSeat: (seatIds: string[]) => void;
   numberOfTickets: number;
   setNumberOfTickets: (count: number) => void;
   areasMap: Map<string, AreaSocket>;
@@ -84,8 +84,8 @@ export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   const exitArea = (areaId: string) => {
-    if (!socket || !eventId || !eventDateId || !userId) return;
-    socket.emit("exitArea", { eventId, eventDateId, areaId, userId });
+    if (!socket || !eventId || !eventDateId) return;
+    socket.emit("exitArea", { eventId, eventDateId, areaId });
   };
 
   const selectSeats = (
@@ -103,9 +103,16 @@ export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
     });
   };
 
-  const reserveSeat = (seatId: string) => {
-    if (!socket || !seatId || !eventId || !eventDateId) return;
-    socket.emit("reserveSeat", { seatId, eventId, eventDateId });
+  const reserveSeat = (seatIds: string[]) => {
+    if (!socket || !eventId || !eventDateId || !currentAreaId || !userId)
+      return;
+    socket.emit("reserveSeats", {
+      seatIds,
+      eventId,
+      eventDateId,
+      areaId: currentAreaId,
+      userId,
+    });
   };
 
   useEffect(() => {
