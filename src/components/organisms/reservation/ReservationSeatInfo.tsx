@@ -1,63 +1,28 @@
 import { useContext } from "react";
 import { ReservationContext } from "../../../store/ReservationContext";
-import { usePostMutation } from "../../../hooks/usePostMutation";
-import {
-  NewReservation,
-  NewReservationResponse,
-} from "../../../types/api/reservation";
-import { AxiosError } from "axios";
-import { ApiErrorResponse } from "../../../types/api/common";
-import { createNewReservation } from "../../../api/reservations/reservationsApi";
-import { postReservationErrorMessages } from "../../../constants/errorMessages";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import Button from "../../atoms/buttons/Button";
+import { OrderResponse } from "../../../types/api/socket";
 
 const ReservationSeatInfo = () => {
   const navigate = useNavigate();
-  const { eventId, eventDateId, selectedSeats, reserveSeat } =
+  const { selectedSeats, reserveSeat, areasMap, socket } =
     useContext(ReservationContext);
-  const createReservationMutation = usePostMutation<
-    NewReservationResponse,
-    AxiosError<ApiErrorResponse>,
-    NewReservation
-  >(createNewReservation, {
-    onSuccess: (response: NewReservationResponse) => {
-      if (response.data?.id && selectedSeats[0].id && eventId && eventDateId) {
-        reserveSeat(selectedSeats[0].id, eventId, eventDateId);
-        navigate(`/order`);
-      }
-    },
-    onError: (error: AxiosError<ApiErrorResponse>) => {
-      if (error.response) {
-        const code = error.response.data.code;
-        switch (code) {
-          case 8:
-            toast.error(postReservationErrorMessages.invalidToken);
-            break;
-          case 13:
-            toast.error(postReservationErrorMessages.reserved);
-            break;
-          default:
-            toast.error(postReservationErrorMessages.general);
-        }
-      } else {
-        toast.error(postReservationErrorMessages.general);
-      }
-    },
-  });
-  const handleReservationSubmit = async () => {
+
+  const handleReservationSocketSubmit = () => {
+    const seatIds: string[] = selectedSeats.map((seat) => seat.id);
+    if (!socket) return;
+    reserveSeat(seatIds); // 소켓 서버 수정 필요
     try {
-      if (eventId && eventDateId && selectedSeats[0]) {
-        const reservation: NewReservation = {
-          eventId,
-          eventDateId,
-          seatId: selectedSeats[0].id,
-        };
-        await createReservationMutation.mutateAsync(reservation);
-      }
-    } catch (error) {
-      console.log(error);
+      socket.on("reservedSeats", (response: OrderResponse) => {
+        console.log(response.data);
+        navigate("/order", {
+          state: { orderData: response.data },
+        });
+      });
+    } catch {
+      toast.error("예매에 실패하셨습니다. 다시 시도해주세요.");
     }
   };
   return (
@@ -82,8 +47,10 @@ const ReservationSeatInfo = () => {
                   <button className="absolute right-16 md:right-10">✖</button>
 
                   <p className="font-bold text-gray-700">
-                    <span className="text-black">{seat.area}</span>구역{" "}
-                    <span className="text-black">{seat.row}</span>열{" "}
+                    <span className="text-black">
+                      {areasMap?.get(seat.areaId)?.label ?? ""}
+                    </span>
+                    구역 <span className="text-black">{seat.row}</span>열{" "}
                     <span className="text-black">{seat.number}</span>번{" "}
                   </p>
 

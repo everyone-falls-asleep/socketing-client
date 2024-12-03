@@ -1,8 +1,9 @@
 import React, { createContext, useState, useEffect, useContext } from "react";
 import { Socket } from "socket.io-client";
 import { useSocketConnection } from "../hooks/useSocketConnection";
-import { Seat, SeatsSelectedResponse } from "../types/api/socket";
+import { AreaSocket, Seat, SeatsSelectedResponse } from "../types/api/socket";
 import { toast } from "react-toastify";
+import { UserContext } from "./UserContext";
 
 interface ReservationContextType {
   socket: Socket | null;
@@ -12,12 +13,18 @@ interface ReservationContextType {
   eventDateId: string | null;
   setEventDateId: (id: string) => void;
   seatsMap: Map<string, Seat>;
-  selectSeats: (seatId: string, numberOfSeats: number) => void;
+  selectSeats: (seatId: string, areaId: string, numberOfSeats: number) => void;
   currentUserId: string | null;
   selectedSeats: Seat[];
-  reserveSeat: (seatId: string, eventId: string, eventDateId: string) => void;
+  reserveSeat: (seatIds: string[]) => void;
   numberOfTickets: number;
   setNumberOfTickets: (count: number) => void;
+  areasMap: Map<string, AreaSocket>;
+  joinArea: (areaId: string) => void;
+  setSeatsMap: (seatsMap: Map<string, Seat>) => void;
+  currentAreaId: string | null;
+  setCurrentAreaId: (currentAreaId: string) => void;
+  exitArea: (areaId: string) => void;
 }
 
 export const ReservationContext = createContext<ReservationContextType>(
@@ -37,12 +44,15 @@ export const useReservationContext = () => {
 export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
+  const { userId } = useContext(UserContext);
   const { socket, isConnected } = useSocketConnection();
   const [eventId, setEventId] = useState<string | null>(null);
   const [eventDateId, setEventDateId] = useState<string | null>(null);
   const [seatsMap, setSeatsMap] = useState<Map<string, Seat>>(new Map());
+  const [areasMap, setAreasMap] = useState<Map<string, AreaSocket>>(new Map());
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
   const [selectedSeats, setSelectedSeats] = useState<Seat[]>([]);
+  const [currentAreaId, setCurrentAreaId] = useState<string | null>(null);
   const [numberOfTickets, setNumberOfTickets] = useState(1);
 
   const updateSeats = (seats: SeatsSelectedResponse[]) => {
@@ -65,18 +75,44 @@ export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const joinRoom = () => {
     if (!socket || !eventId || !eventDateId) return;
-    socket?.emit("joinRoom", { eventId, eventDateId });
+    socket.emit("joinRoom", { eventId, eventDateId });
   };
 
-  const selectSeats = (seatId: string, numberOfSeats: number) => {
+  const joinArea = (areaId: string) => {
     if (!socket || !eventId || !eventDateId) return;
-
-    socket.emit("selectSeats", { seatId, eventId, eventDateId, numberOfSeats });
+    socket.emit("joinArea", { eventId, eventDateId, areaId });
   };
 
-  const reserveSeat = (seatId: string) => {
-    if (!socket || !seatId || !eventId || !eventDateId) return;
-    socket.emit("reserveSeat", { seatId, eventId, eventDateId });
+  const exitArea = (areaId: string) => {
+    if (!socket || !eventId || !eventDateId) return;
+    socket.emit("exitArea", { eventId, eventDateId, areaId });
+  };
+
+  const selectSeats = (
+    seatId: string,
+    areaId: string,
+    numberOfSeats: number
+  ) => {
+    if (!socket || !eventId || !eventDateId) return;
+    socket.emit("selectSeats", {
+      seatId,
+      eventId,
+      eventDateId,
+      areaId,
+      numberOfSeats,
+    });
+  };
+
+  const reserveSeat = (seatIds: string[]) => {
+    if (!socket || !eventId || !eventDateId || !currentAreaId || !userId)
+      return;
+    socket.emit("reserveSeats", {
+      seatIds,
+      eventId,
+      eventDateId,
+      areaId: currentAreaId,
+      userId,
+    });
   };
 
   useEffect(() => {
@@ -86,10 +122,20 @@ export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
       if (socket.id) setCurrentUserId(socket.id);
     });
 
-    socket.on("roomJoined", (data: { seats: Seat[] }) => {
+    socket.on("roomJoined", (data: { areas: AreaSocket[] }) => {
+      const newAreasMap = new Map();
+      data.areas.forEach((area) => newAreasMap.set(area.id, area));
+      setAreasMap(newAreasMap);
+    });
+
+    socket.on("areaJoined", (data: { seats: Seat[] }) => {
       const newSeatsMap = new Map();
       data.seats.forEach((seat) => newSeatsMap.set(seat.id, seat));
       setSeatsMap(newSeatsMap);
+    });
+
+    socket.on("areaExited", (message) => {
+      console.log(message);
     });
 
     socket.on("seatsSelected", (data: SeatsSelectedResponse[]) => {
@@ -98,7 +144,7 @@ export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
 
     socket.on("error", (data) => {
       console.error("Error received from server:", data.message);
-      toast.error("요청하신 티켓 수 만큼의 좌석이 없습니다.");
+      toast.error(data.message); //("요청하신 티켓 수 만큼의 좌석이 없습니다.");
     });
 
     return () => {
@@ -128,6 +174,12 @@ export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
     reserveSeat,
     numberOfTickets,
     setNumberOfTickets,
+    areasMap,
+    joinArea,
+    setSeatsMap,
+    currentAreaId,
+    setCurrentAreaId,
+    exitArea,
   };
 
   return (

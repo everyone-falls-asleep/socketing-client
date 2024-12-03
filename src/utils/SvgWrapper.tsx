@@ -1,9 +1,11 @@
-import { useState, useEffect } from "react";
-import { Seat } from "../types/api/socket";
+import { useState, useEffect, useContext } from "react";
+import { AreaSocket, Seat } from "../types/api/socket";
+import { ReservationContext } from "../store/ReservationContext";
 
 interface SvgWrapperProps {
   svgString: string;
   seats: Seat[];
+  areas: AreaSocket[];
   renderSeat: (seat: Seat) => React.ReactNode;
 }
 
@@ -12,7 +14,9 @@ interface ParsedSvgData {
   svgString: string;
 }
 
-function SvgWrapper({ svgString, seats, renderSeat }: SvgWrapperProps) {
+function SvgWrapper({ svgString, seats, areas, renderSeat }: SvgWrapperProps) {
+  const { joinArea, setSeatsMap, currentAreaId, setCurrentAreaId, exitArea } =
+    useContext(ReservationContext);
   const [svgContent, setSvgContent] = useState<{
     viewBox: string;
     content: string;
@@ -61,7 +65,23 @@ function SvgWrapper({ svgString, seats, renderSeat }: SvgWrapperProps) {
       {/* Background and other elements */}
       <g dangerouslySetInnerHTML={{ __html: svgContent.content }} />
 
-      {/* Seats from socket */}
+      <g className="areas">
+        {areas?.map((area) => (
+          <g
+            key={area.id}
+            dangerouslySetInnerHTML={{ __html: area.svg }}
+            onClick={() => {
+              setSeatsMap(new Map());
+              if (currentAreaId !== null) {
+                exitArea(currentAreaId);
+              }
+              joinArea(area.id);
+              setCurrentAreaId(area.id);
+            }}
+          />
+        ))}
+      </g>
+
       <g className="seats">
         {seats?.map((seat) => (
           <g key={seat.id} transform={`translate(${seat.cx},${seat.cy})`}>

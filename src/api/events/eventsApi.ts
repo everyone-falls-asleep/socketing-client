@@ -5,10 +5,10 @@ import {
   SingleEventResponse,
   NewEvent,
   NewEventResponse,
-  NewSeat,
-  NewSeatResponse,
   SeatResponse,
   EventDeleteResponse,
+  NewAreasResponse,
+  CreateAreaRequest,
 } from "../../types/api/event";
 
 const API_URL = baseURL + "events/";
@@ -57,22 +57,14 @@ const deleteEvent = async (event_id: string): Promise<EventDeleteResponse> => {
   return response.data;
 };
 
-const createNewSeat = async ({
+const createNewArea = async ({
   event_id,
-  cx,
-  cy,
-  area,
-  row,
-  number,
-}: NewSeat): Promise<NewSeatResponse> => {
-  const response = await api.post<NewSeatResponse>(
-    API_URL + event_id + "/seats",
+  areas,
+}: CreateAreaRequest): Promise<NewAreasResponse> => {
+  const response = await api.post<NewAreasResponse>(
+    API_URL + event_id + "/seats" + "/batch",
     {
-      cx,
-      cy,
-      area,
-      row,
-      number,
+      areas,
     }
   );
   return response.data;
@@ -103,7 +95,7 @@ export {
   fetchAllEvents,
   fetchOneEvent,
   createNewEvent,
-  createNewSeat,
+  createNewArea,
   fetchAllSeats,
   deleteEvent,
 };

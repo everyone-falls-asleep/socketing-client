@@ -217,6 +217,7 @@ export const processImageWithOpenCV = async (
         center,
         boundingBox,
         points,
+        price: 3000,
       });
 
       approxCurve.delete();

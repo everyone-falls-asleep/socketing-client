@@ -80,6 +80,17 @@ export const EventCreateProvider: React.FC<{ children: React.ReactNode }> = ({
     );
   };
 
+  const handleSetSelectedContour = (id: number | null) => {
+    setSelectedContour(id);
+    setSelectedContours([]); // selectedContours 초기화
+  };
+
+  // setSelectedContours 수정
+  const handleSetSelectedContours = (ids: number[]) => {
+    setSelectedContours(ids);
+    setSelectedContour(null); // selectedContour 초기화
+  };
+
   return (
     <EventCreateContext.Provider
       value={{
@@ -88,13 +99,13 @@ export const EventCreateProvider: React.FC<{ children: React.ReactNode }> = ({
         contours,
         selectedContour,
         setContours,
-        setSelectedContour,
+        setSelectedContour: handleSetSelectedContour,
         updateContourType,
         updateContourLabel,
         editMode,
         setEditMode,
         selectedContours,
-        setSelectedContours,
+        setSelectedContours: handleSetSelectedContours,
         updateMultipleContours,
         isImageVisible,
         setIsImageVisible,

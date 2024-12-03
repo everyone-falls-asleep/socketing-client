@@ -5,7 +5,6 @@ export interface Seat {
   id: string;
   cx: number;
   cy: number;
-  area: number;
   row: number;
   number: number;
   reservations: Array<{
@@ -19,9 +18,71 @@ export interface Seat {
   updatedAt: string;
   expirationTime: string;
   reservedBy?: string;
+  areaId: string;
+}
+
+interface OrderEvent {
+  title: string;
+  thumbnail: string;
+  place: string;
+  cast: string;
+  ageLimit: number;
+  ticketingStartTime: string;
+}
+
+interface OrderUser {
+  email: string;
+  nickname: string;
+  profileImage?: string;
+  role: string;
+}
+
+interface OrderReservation {
+  id: string;
+  seat: OrderSeat;
+}
+
+interface OrderSeat {
+  row: number;
+  number: number;
+  area: OrderArea;
+}
+
+interface OrderArea {
+  label: string;
+  price: number;
+}
+
+export interface Order {
+  id: string;
+  updatedAt: string;
+  createdAt: string;
+  user: OrderUser;
+}
+
+export interface OrderResponseData {
+  event: OrderEvent;
+  order: Order;
+  reservations: OrderReservation[];
+}
+
+export interface OrderResponse {
+  data: OrderResponseData;
+}
+
+export interface AreaSocket {
+  id: string;
+  label: string;
+  price: number;
+  svg: string;
 }
 
 export interface RoomJoinedResponse {
+  message: string;
+  areas: AreaSocket[];
+}
+
+export interface AreaJoinedResponse {
   message: string;
   seats: Seat[];
 }
@@ -40,36 +101,39 @@ export interface ErrorResponse {
 
 export interface ServerToClientEvents {
   roomJoined: (response: RoomJoinedResponse) => void;
-
-  seatsSelected: (response: SeatsSelectedResponse[]) => void;
-
-  // "seat:update": (seat: Seat) => void;
-  // "seats:bulk_update": (seats: Seat[]) => void;
-  // "seat:error": (error: { message: string; seatId: string }) => void;
-
+  areaJoined: (response: AreaJoinedResponse) => void;
+  seatsSelected: (response: SeatsSelectedResponse[]) => void; // 예매된 상태 다른 사용자들에게 전달하는 용으로도 쓰임
   serverTime: (time: string) => void;
-
   error: (response: ErrorResponse) => void;
+  areaExited: (message: string) => void;
+  seatsReserved: (response: OrderResponse) => void; // 예매된 사용자에게만. 이거 받으면 결제창으로 응답 데이터 전달하며 화면 전환
 }
 
 export interface ClientToServerEvents {
   joinRoom: (params: { eventId: string; eventDateId: string }) => void;
-
-  // "seat:watch": (seatId: string) => void;
-  // "seat:unwatch": (seatId: string) => void;
-  // "seat:temporary_hold": (seatId: string) => void;
-
+  joinArea: (params: {
+    eventId: string;
+    eventDateId: string;
+    areaId: string;
+  }) => void;
   selectSeats: (params: {
     seatId: string;
     eventId: string;
     eventDateId: string;
+    areaId: string;
     numberOfSeats: number;
   }) => void;
-
-  reserveSeat: (params: {
-    seatId: string;
+  reserveSeats: (params: {
+    seatIds: string[];
     eventId: string;
     eventDateId: string;
+    areaId: string;
+    userId: string;
+  }) => void;
+  exitArea: (params: {
+    eventId: string;
+    eventDateId: string;
+    areaId: string;
   }) => void;
 }
 

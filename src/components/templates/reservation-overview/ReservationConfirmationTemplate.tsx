@@ -1,21 +1,19 @@
 import SubTitle from "../../atoms/titles/subtitle/SubTitle";
 import Font from "../../atoms/fonts/Font";
-import { Reservation } from "../../../types/api/reservation";
+import { OrderResponseData } from "../../../types/api/socket";
 import { fetchErrorMessages } from "../../../constants/errorMessages";
-import { formatToKoreanDateAndTime } from "../../../utils/dateUtils";
+// import { formatToKoreanDateAndTime } from "../../../utils/dateUtils";
 
 interface ReservationConfirmProps {
-  reservation: Reservation;
-  //content : 다중 예매 시 업데이트 필요
+  data: OrderResponseData;
 }
 
-const ReservationConfirmationTemplate = ({
-  reservation,
-}: ReservationConfirmProps) => {
-  if (!reservation.eventDate.event) {
+const ReservationConfirmationTemplate = ({ data }: ReservationConfirmProps) => {
+  if (!data.event) {
     return <div>{fetchErrorMessages.noReservationData}</div>;
   }
-  const reservationData = reservation.eventDate.event;
+  const eventData = data.event;
+  const orderData = data.order;
 
   return (
     <>
@@ -24,17 +22,15 @@ const ReservationConfirmationTemplate = ({
           {/* Header Section with Event Image */}
           <div className="relative h-48 ">
             <img
-              src={reservationData.thumbnail}
-              alt={reservationData.title}
+              src={eventData.thumbnail}
+              alt={eventData.title}
               className="w-full h-full object-cover opacity-50"
             />
             <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/20">
               <SubTitle className="!text-white font-bold mb-2">
-                {reservationData.title}
+                {eventData.title}
               </SubTitle>
-              <Font className="text-white/90">
-                출연진: {reservationData.cast}
-              </Font>
+              <Font className="text-white/90">출연진: {eventData.cast}</Font>
             </div>
           </div>
 
@@ -44,12 +40,12 @@ const ReservationConfirmationTemplate = ({
             <div className="flex items-center space-x-4 p-4 bg-gray-50 rounded-lg">
               <div className="w-12 h-12 bg-rose-100 rounded-full flex items-center justify-center">
                 <span className="font-bold">
-                  {reservation.user.email.slice(0, 1)}
+                  {orderData.user.email.slice(0, 1)}
                 </span>
               </div>
               <div>
                 <Font className="font-bold text-gray-800">
-                  {reservation.user.email.slice(0, 3)}
+                  {orderData.user.email.slice(0, 3)}
                 </Font>
               </div>
             </div>
@@ -61,7 +57,8 @@ const ReservationConfirmationTemplate = ({
                 <div>
                   <Font className="font-bold text-gray-700">일시</Font>
                   <Font className="text-gray-600">
-                    {formatToKoreanDateAndTime(reservation.eventDate.date)}
+                    {/* {formatToKoreanDateAndTime(reservation.eventDate.date)} */}
+                    2024.12.19 수요일 7PM
                   </Font>
                 </div>
               </div>
@@ -70,7 +67,7 @@ const ReservationConfirmationTemplate = ({
                 <div className="w-6 text-gray-400">📍</div>
                 <div>
                   <Font className="font-bold text-gray-700">장소</Font>
-                  <Font className="text-gray-600">{reservationData.place}</Font>
+                  <Font className="text-gray-600">{eventData.place}</Font>
                 </div>
               </div>
 
@@ -79,8 +76,9 @@ const ReservationConfirmationTemplate = ({
                 <div>
                   <Font className="font-bold text-gray-700">좌석</Font>
                   <Font className="text-gray-600">
-                    {reservation.seat.area}구역 {reservation.seat.row}열{" "}
-                    {reservation.seat.number}번
+                    {data.reservations[0].seat.area.label}구역{" "}
+                    {data.reservations[0].seat.row}열{" "}
+                    {data.reservations[0].seat.number}번
                   </Font>
                 </div>
               </div>

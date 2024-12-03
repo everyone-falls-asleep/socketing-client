@@ -1,5 +1,5 @@
 import { User } from "./user";
-import { EventDate, Seat } from "./event";
+import { EventDate } from "./event";
 import { ApiResponse } from "./common";
 
 export interface NewReservation {
@@ -7,6 +7,21 @@ export interface NewReservation {
   eventDateId: string;
   seatId: string;
 }
+export interface Area {
+  id: string;
+  label: string;
+  price: number;
+}
+
+export interface Seat {
+  id: string;
+  cx: number;
+  cy: number;
+  area: Area;
+  row: number;
+  number: number;
+}
+
 export interface Reservation {
   id: string;
   user: User;
