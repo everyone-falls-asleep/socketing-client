@@ -7,7 +7,7 @@ import { OrderResponse } from "../../../types/api/socket";
 
 const ReservationSeatInfo = () => {
   const navigate = useNavigate();
-  const { selectedSeats, reserveSeat, areasMap, socket } =
+  const { selectedSeats, reserveSeat, areasMap, socket, currentAreaId } =
     useContext(ReservationContext);
 
   const handleReservationSocketSubmit = () => {
@@ -43,19 +43,18 @@ const ReservationSeatInfo = () => {
                   key={seat.id}
                   className="border p-3 text-gray-800 bg-white rounded-lg space-y-2"
                 >
-                  {/* 이 버튼 소켓이랑 연결해주세요^0^ */}
-                  <button className="absolute right-16 md:right-10">✖</button>
-
                   <p className="font-bold text-gray-700">
                     <span className="text-black">
-                      {areasMap?.get(seat.areaId)?.label ?? ""}
+                      {areasMap?.get(currentAreaId!)?.label ?? ""}
                     </span>
                     구역 <span className="text-black">{seat.row}</span>열{" "}
                     <span className="text-black">{seat.number}</span>번{" "}
                   </p>
 
                   <p>
-                    <span className="font-bold">가격:</span> 99,000원
+                    <span className="font-bold">
+                      가격: {areasMap?.get(currentAreaId!)?.price ?? ""}
+                    </span>
                   </p>
                 </div>
               ))}

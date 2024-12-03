@@ -44,7 +44,7 @@ const OverallControlPanel: React.FC = () => {
         selectedSeats.flatMap((seat) => seat.points)
       ),
       label: areaLabel,
-      price: 50000,
+      price: areaPrice,
     };
 
     const updatedSeats: Contour[] = [];

@@ -71,6 +71,9 @@ function SvgWrapper({ svgString, seats, areas, renderSeat }: SvgWrapperProps) {
             key={area.id}
             dangerouslySetInnerHTML={{ __html: area.svg }}
             onClick={() => {
+              if (currentAreaId === area.id) {
+                return;
+              }
               setSeatsMap(new Map());
               if (currentAreaId !== null) {
                 exitArea(currentAreaId);

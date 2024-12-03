@@ -62,10 +62,14 @@ export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
       seats.forEach((seat) => {
         const currentSeat = newMap.get(seat.seatId);
         if (currentSeat) {
-          setSelectedSeats((prev) => [...prev, currentSeat]);
+          if (seat.selectedBy === socket?.id) {
+            setSelectedSeats((prev) => [...prev, currentSeat]);
+          }
+
           newMap.set(seat.seatId, {
             ...currentSeat,
             ...seat,
+            areaId: currentSeat.areaId,
           });
         }
       });
