@@ -53,7 +53,7 @@ const ReservationSeatInfo = () => {
 
                   <p>
                     <span className="font-bold">
-                      가격: {areasMap?.get(currentAreaId!)?.price ?? ""}
+                      가격: {areasMap?.get(currentAreaId!)?.price ?? ""}원
                     </span>
                   </p>
                 </div>

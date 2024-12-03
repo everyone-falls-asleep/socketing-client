@@ -1,7 +1,12 @@
 import React, { createContext, useState, useEffect, useContext } from "react";
 import { Socket } from "socket.io-client";
 import { useSocketConnection } from "../hooks/useSocketConnection";
-import { AreaSocket, Seat, SeatsSelectedResponse } from "../types/api/socket";
+import {
+  AreaSocket,
+  ReservedSeatsStatisticResponse,
+  Seat,
+  SeatsSelectedResponse,
+} from "../types/api/socket";
 import { toast } from "react-toastify";
 import { UserContext } from "./UserContext";
 
@@ -25,6 +30,7 @@ interface ReservationContextType {
   currentAreaId: string | null;
   setCurrentAreaId: (currentAreaId: string) => void;
   exitArea: (areaId: string) => void;
+  areaStats: ReservedSeatsStatisticResponse;
 }
 
 export const ReservationContext = createContext<ReservationContextType>(
@@ -54,16 +60,33 @@ export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
   const [selectedSeats, setSelectedSeats] = useState<Seat[]>([]);
   const [currentAreaId, setCurrentAreaId] = useState<string | null>(null);
   const [numberOfTickets, setNumberOfTickets] = useState(1);
+  const [areaStats, setAreaStats] = useState<ReservedSeatsStatisticResponse>({
+    areaId: "",
+    totalSeatsNum: 0,
+    reservedSeatsNum: 0,
+  });
 
   const updateSeats = (seats: SeatsSelectedResponse[]) => {
     setSeatsMap((prev) => {
       const newMap = new Map(prev);
-      setSelectedSeats([]);
+
       seats.forEach((seat) => {
         const currentSeat = newMap.get(seat.seatId);
         if (currentSeat) {
           if (seat.selectedBy === socket?.id) {
-            setSelectedSeats((prev) => [...prev, currentSeat]);
+            setSelectedSeats((prev) => {
+              if (!prev.some((s) => s.id === seat.seatId)) {
+                return [...prev, currentSeat];
+              }
+              return prev;
+            });
+          } else if (
+            currentSeat.selectedBy === socket?.id &&
+            seat.selectedBy === null
+          ) {
+            setSelectedSeats((prev) =>
+              prev.filter((s) => s.id !== seat.seatId)
+            );
           }
 
           newMap.set(seat.seatId, {
@@ -138,13 +161,16 @@ export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
       setSeatsMap(newSeatsMap);
     });
 
-    socket.on("areaExited", (message) => {
-      console.log(message);
-    });
-
     socket.on("seatsSelected", (data: SeatsSelectedResponse[]) => {
       updateSeats(data);
     });
+
+    socket.on(
+      "reservedSeatsStatistic",
+      (data: ReservedSeatsStatisticResponse) => {
+        setAreaStats(data);
+      }
+    );
 
     socket.on("error", (data) => {
       console.error("Error received from server:", data.message);
@@ -184,6 +210,7 @@ export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
     currentAreaId,
     setCurrentAreaId,
     exitArea,
+    areaStats,
   };
 
   return (

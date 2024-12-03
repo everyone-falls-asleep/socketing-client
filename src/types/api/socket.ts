@@ -87,6 +87,12 @@ export interface AreaJoinedResponse {
   seats: Seat[];
 }
 
+export interface ReservedSeatsStatisticResponse {
+  areaId: string;
+  totalSeatsNum: number;
+  reservedSeatsNum: number;
+}
+
 export interface SeatsSelectedResponse {
   seatId: string;
   selectedBy: string | null;
@@ -107,6 +113,7 @@ export interface ServerToClientEvents {
   error: (response: ErrorResponse) => void;
   areaExited: (message: string) => void;
   seatsReserved: (response: OrderResponse) => void; // 예매된 사용자에게만. 이거 받으면 결제창으로 응답 데이터 전달하며 화면 전환
+  reservedSeatsStatistic: (response: ReservedSeatsStatisticResponse) => void;
 }
 
 export interface ClientToServerEvents {

@@ -15,8 +15,14 @@ interface ParsedSvgData {
 }
 
 function SvgWrapper({ svgString, seats, areas, renderSeat }: SvgWrapperProps) {
-  const { joinArea, setSeatsMap, currentAreaId, setCurrentAreaId, exitArea } =
-    useContext(ReservationContext);
+  const {
+    joinArea,
+    setSeatsMap,
+    currentAreaId,
+    setCurrentAreaId,
+    exitArea,
+    areaStats,
+  } = useContext(ReservationContext);
   const [svgContent, setSvgContent] = useState<{
     viewBox: string;
     content: string;
@@ -55,6 +61,23 @@ function SvgWrapper({ svgString, seats, areas, renderSeat }: SvgWrapperProps) {
 
   if (!svgContent.viewBox) return null;
 
+  const getColorByRatio = (totalSeats: number, reservedSeats: number) => {
+    const ratio = (totalSeats - reservedSeats) / totalSeats;
+    if (ratio > 0.7) return "#4CAF50"; // 70% 이상 남음 - 초록색
+    if (ratio > 0.3) return "#FFC107"; // 30-70% 남음 - 노란색
+    return "#F44336"; // 30% 미만 남음 - 빨간색
+  };
+
+  const modifySvgFill = (svgString: string, areaId: string) => {
+    if (!areaStats || areaStats.areaId !== areaId) return svgString;
+
+    const color = getColorByRatio(
+      areaStats.totalSeatsNum,
+      areaStats.reservedSeatsNum
+    );
+    return svgString.replace(/fill="[^"]*"/, `fill="${color}"`);
+  };
+
   return (
     <svg
       width="100%"
@@ -69,7 +92,9 @@ function SvgWrapper({ svgString, seats, areas, renderSeat }: SvgWrapperProps) {
         {areas?.map((area) => (
           <g
             key={area.id}
-            dangerouslySetInnerHTML={{ __html: area.svg }}
+            dangerouslySetInnerHTML={{
+              __html: modifySvgFill(area.svg, area.id),
+            }}
             onClick={() => {
               if (currentAreaId === area.id) {
                 return;

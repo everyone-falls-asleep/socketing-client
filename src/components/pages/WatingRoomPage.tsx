@@ -57,16 +57,14 @@ const WaitingRoomPage = () => {
 
   useEffect(() => {
     if (isTurn) {
-      console.log("입장하세요!");
       enterReservationPage();
     }
   }, [isTurn]);
 
   useEffect(() => {
     if (myPosition && totalWaiting) {
-      setProgress(((totalWaiting - myPosition) / totalWaiting) * 100);
+      setProgress(((totalWaiting - (myPosition - 1)) / totalWaiting) * 100);
     }
-    console.log(progress);
   }, [myPosition, totalWaiting]);
 
   if (eventLoading) return <p>{fetchErrorMessages.isLoading}</p>;

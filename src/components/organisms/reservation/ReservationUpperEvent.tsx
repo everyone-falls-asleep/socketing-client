@@ -35,9 +35,6 @@ const ReservationUpperEvent = (eventData: Event) => {
         >
           <div className="flex flex-row items-end mb-1 md:mb-2 gap-2">
             <h1 className="text-lg md:text-2xl font-bold">{eventData.title}</h1>
-            <p className="text-sm md:text-base font-bold text-gray-800">
-              99,000원
-            </p>
           </div>
           <div className="space-y-1 text-gray-700">
             <div className="flex flex-col md:flex-row gap-1 md:gap-5">
