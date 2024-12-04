@@ -34,7 +34,7 @@ export const createResourceQuery = <T>(
       queryKey,
       queryFn: ({ queryKey }) => {
         const [, resourceId] = queryKey as [string, string?];
-        return fetchFn(resourceId ?? "default");
+        return fetchFn(resourceId ?? "");
       },
     });
   };

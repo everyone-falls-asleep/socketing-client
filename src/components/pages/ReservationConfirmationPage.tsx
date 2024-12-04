@@ -1,12 +1,12 @@
-import ReservationOverviewTemplate from "../templates/reservation-overview/ReservationConfirmationTemplate";
+// import ReservationOverviewTemplate from "../templates/reservation-overview/ReservationConfirmationTemplate";
 import { useLocation } from "react-router-dom";
 import MainLayout from "../layout/MainLayout";
-import { PaymentDetails } from "../../types/api/payment";
+import { PaymentDetailsResponse } from "../../types/api/payment";
 
 const ReservationConfirmationPage = () => {
   const location = useLocation();
-  const state = location.state as { updateResponse?: PaymentDetails };
-  const paymentData = state.updateResponse;
+  const state = location.state as { paymentData?: PaymentDetailsResponse };
+  const paymentData = state.paymentData;
   if (!paymentData) return;
 
   return (
@@ -31,7 +31,7 @@ const ReservationConfirmationPage = () => {
           </a>
         </div>
       </div>
-      <ReservationOverviewTemplate data={paymentData} />
+      {/* <ReservationOverviewTemplate data={orderData} /> */}
     </MainLayout>
   );
 };
