@@ -67,7 +67,6 @@ export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
   const updateSeats = (seats: SeatsSelectedResponse[]) => {
     setSeatsMap((prev) => {
       const newMap = new Map(prev);
-
       seats.forEach((seat) => {
         const currentSeat = newMap.get(seat.seatId);
         if (currentSeat) {
@@ -86,7 +85,6 @@ export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
               prev.filter((s) => s.id !== seat.seatId)
             );
           }
-
           newMap.set(seat.seatId, {
             ...currentSeat,
             ...seat,
@@ -157,6 +155,7 @@ export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
       const newSeatsMap = new Map();
       data.seats.forEach((seat) => newSeatsMap.set(seat.id, seat));
       setSeatsMap(newSeatsMap);
+      setSelectedSeats([]);
     });
 
     socket.on("seatsSelected", (data: SeatsSelectedResponse[]) => {
