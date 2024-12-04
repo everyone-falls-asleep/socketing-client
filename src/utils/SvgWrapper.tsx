@@ -57,7 +57,7 @@ function SvgWrapper({ svgString, seats, areas, renderSeat }: SvgWrapperProps) {
     } catch (error) {
       console.error("Error parsing SVG string:", error);
     }
-  }, [svgString]);
+  }, [svgString, areaStats]);
 
   if (!svgContent.viewBox) return null;
 
@@ -75,13 +75,13 @@ function SvgWrapper({ svgString, seats, areas, renderSeat }: SvgWrapperProps) {
     const areaData = areaStats.get(areaId);
     if (!areaData) return svgString;
 
-    const color = getColorByRatio(
-      areaData.totalSeatsNum,
-      areaData.reservedSeatsNum
-    );
-    return svgString.replace(/fill="[^"]*"/, `fill="${color}"`);
-  };
+    const color =
+      currentAreaId === areaId
+        ? "rgba(105, 114, 201, 1)"
+        : getColorByRatio(areaData.totalSeatsNum, areaData.reservedSeatsNum);
 
+    return svgString.replace(/fill="rgba\([^"]*\)"/, `fill="${color}"`);
+  };
   return (
     <svg
       width="100%"
