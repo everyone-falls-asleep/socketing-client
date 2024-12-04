@@ -75,7 +75,7 @@ function SvgWrapper({ svgString, seats, areas, renderSeat }: SvgWrapperProps) {
 
     areaStats.forEach((stat) => {
       const areaElement = document.querySelector(
-        `.areas .${stat.areaId} .area-data`
+        `.areas [class='${stat.areaId}'] .area-data`
       );
       if (areaElement) {
         const ratio = stat.reservedSeatsNum / stat.totalSeatsNum;
