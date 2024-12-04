@@ -1,10 +1,12 @@
 import { toast } from "react-toastify";
 import Button from "../atoms/buttons/Button";
 import MainLayout from "../layout/MainLayout";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { PaymentDetails } from "../../types/api/payment";
 import { updatePayment } from "../../api/reservations/paymentsApi";
+import { getUserPoints } from "../../api/users/usersApi";
+import { UserContext } from "../../store/UserContext";
 
 const PaymentPage = () => {
   const navigate = useNavigate();
@@ -16,21 +18,43 @@ const PaymentPage = () => {
   const paymentData = state.paymentData;
   const totalAmount = state.totalAmount;
 
-  const socketPay = 200000;
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
   const [modalMessage, setModalMessage] = useState<string>("");
   const [progress, setProgress] = useState<number>(0); // 진행률 상태
-
+  const { userId } = useContext(UserContext);
+  const [userPoints, setUserPoints] = useState<number>(-1); // 포인트 상태
   const delay = (ms: number) =>
     new Promise((resolve) => setTimeout(resolve, ms));
+
+  const fetchUserPoints = async () => {
+    try {
+      if (!userId) {
+        toast.error("사용자 정보를 가져올 수 없습니다.");
+        return;
+      }
+      const response = await getUserPoints(userId);
+      if (response.code === 0 && response.data) {
+        setUserPoints(response.data.point ?? 0); // undefined일 경우 0으로 설정
+      } else {
+        toast.error("포인트를 불러오지 못했습니다");
+      }
+    } catch (error) {
+      console.error("포인트 조회 중 오류 발생:", error);
+      toast.error("포인트 조회 중 문제가 발생했습니다.");
+    }
+  };
 
   const handleSocketPay = async () => {
     if (!paymentData) {
       toast.error("결제 데이터가 누락되었습니다!");
       return;
     }
+    if (userPoints === -1) {
+      toast.error("먼저 보유 소켓를 조회해주세요!");
+      return;
+    }
 
-    if (socketPay < totalAmount) {
+    if (userPoints < totalAmount) {
       toast.error("잔액 부족!");
       return;
     }
@@ -97,10 +121,23 @@ const PaymentPage = () => {
               </div>
               <div>
                 <p className="font-bold text-gray-800 mt-4 flex items-baseline justify-between space-x-5">
-                  <Button size="sm" variant="dark">
+                  <Button
+                    size="sm"
+                    variant="dark"
+                    onClick={() => {
+                      fetchUserPoints().catch((error) => {
+                        console.error("조회 중 오류 발생:", error);
+                        toast.error("조회 중 문제가 발생했습니다.");
+                      });
+                    }}
+                  >
                     보유 소켓 조회
                   </Button>{" "}
-                  <span>{socketPay.toLocaleString()} 원</span>
+                  <span>
+                    {userPoints === -1
+                      ? "조회를 눌러주세요"
+                      : `${userPoints.toLocaleString()} 원`}
+                  </span>
                 </p>
               </div>
             </div>

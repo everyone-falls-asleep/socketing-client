@@ -6,6 +6,11 @@ export interface LoginData {
   role?: string;
 }
 
+export interface UserPoint {
+  id: string;
+  point: number;
+}
+
 export interface User {
   id: string;
   nickname: string;
@@ -28,3 +33,4 @@ export interface AuthTokenData {
 export type LoginResponse = ApiResponse<AuthTokenData>;
 
 export type UserResponse = ApiResponse<User>;
+export type UserPointResponse = ApiResponse<UserPoint>;
