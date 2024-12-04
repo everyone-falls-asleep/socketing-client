@@ -77,7 +77,7 @@ const FriendRegisterModal = ({ isOpen, onClose }: FriendRegisterModalProps) => {
   return (
     <Modal isOpen={isOpen} onClose={handleClose}>
       <div className="space-y-4">
-        <h3 className="text-lg font-bold">연석 친구 등록하기</h3>
+        <h3 className="text-lg font-bold">함께 할 친구 등록하기</h3>
         <form
           onSubmit={(e) => void handleSubmit(onSubmit)(e)}
           className="space-y-4"

@@ -47,7 +47,7 @@ const ScheduleCard = ({
     if (!eventFriends) return;
 
     if (eventFriends.length < 1) {
-      toast.error("연석 친구를 먼저 등록해 주세요.");
+      toast.error("함께 할 친구를 먼저 등록해 주세요.");
       return;
     }
     navigate(`/waiting/${eventId}/${eventDateId}`, {
@@ -77,7 +77,7 @@ const ScheduleCard = ({
             disabled={isDisabled}
             className="text-sm"
           >
-            {isDisabled ? "연석 준비 중" : "연석 예매하기"}
+            {isDisabled ? "함께 예매 준비 중" : "함께 예매하기"}
           </Button>
           <Button
             variant="primary"
@@ -109,7 +109,7 @@ const ScheduleCard = ({
             onClick={handleAdjacentReservationClick}
             disabled={isDisabled}
           >
-            {isDisabled ? "연석" : "연석 예매"}
+            {isDisabled ? "준비 중" : "함께 예매"}
           </Button>
           <Button
             variant="primary"

@@ -18,7 +18,10 @@ const SeatContainer: React.FC<SeatContainerProps> = ({ svg }) => {
   const [serverInfo, setServerInfo] = useState({
     time: "",
   });
-  const [showLegend, setShowLegend] = useState(false); // 토글기능
+  const [showLegend, setShowLegend] = useState(false);
+  const [lastTouchDistance, setLastTouchDistance] = useState<number | null>(
+    null
+  );
 
   const seatsData = Array.from(seatsMap.values());
   const areasData = Array.from(areasMap.values());
@@ -38,6 +41,66 @@ const SeatContainer: React.FC<SeatContainerProps> = ({ svg }) => {
     };
   }, [socket, isConnected]);
 
+  // 두 터치 포인트 사이의 거리를 계산하는 함수
+  const getTouchDistance = (
+    touch1: React.Touch,
+    touch2: React.Touch
+  ): number => {
+    const dx = touch1.clientX - touch2.clientX;
+    const dy = touch1.clientY - touch2.clientY;
+    return Math.sqrt(dx * dx + dy * dy);
+  };
+
+  // 터치 이벤트 핸들러
+  const handleTouchStart = (e: React.TouchEvent): void => {
+    if (e.touches.length === 1) {
+      // 단일 터치 (드래그용)
+      setIsDragging(true);
+      setStartPoint({
+        x: e.touches[0].clientX,
+        y: e.touches[0].clientY,
+      });
+    } else if (e.touches.length === 2) {
+      // 두 손가락 터치 (핀치 줌용)
+      const distance = getTouchDistance(e.touches[0], e.touches[1]);
+      setLastTouchDistance(distance);
+    }
+  };
+
+  const handleTouchMove = (e: React.TouchEvent): void => {
+    e.preventDefault(); // 브라우저의 기본 스크롤을 방지
+
+    if (e.touches.length === 1 && isDragging) {
+      // 단일 터치 드래그
+      const deltaX = e.touches[0].clientX - startPoint.x;
+      const deltaY = e.touches[0].clientY - startPoint.y;
+
+      setTranslate((prev) => ({
+        x: prev.x + deltaX,
+        y: prev.y + deltaY,
+      }));
+
+      setStartPoint({
+        x: e.touches[0].clientX,
+        y: e.touches[0].clientY,
+      });
+    } else if (e.touches.length === 2 && lastTouchDistance !== null) {
+      // 핀치 줌
+      const newDistance = getTouchDistance(e.touches[0], e.touches[1]);
+      const delta = (newDistance - lastTouchDistance) * 0.01;
+      const newScale = Math.min(Math.max(0.5, scale + delta), 3);
+
+      setScale(newScale);
+      setLastTouchDistance(newDistance);
+    }
+  };
+
+  const handleTouchEnd = (): void => {
+    setIsDragging(false);
+    setLastTouchDistance(null);
+  };
+
+  // 마우스 이벤트 핸들러
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent): void => {
       if (isDragging && containerRef.current) {
@@ -96,6 +159,9 @@ const SeatContainer: React.FC<SeatContainerProps> = ({ svg }) => {
         className="relative flex-1 overflow-hidden bg-gray-50"
         style={{ height: "100%", touchAction: "none" }}
         onMouseDown={handleMouseDown}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
       >
         <div
           className="absolute inset-0"
@@ -114,7 +180,7 @@ const SeatContainer: React.FC<SeatContainerProps> = ({ svg }) => {
         </div>
       </div>
 
-      {/* Zoom Controls */}
+      {/* Zoom Controls - 데스크톱에서만 표시 */}
       <div className="hidden md:flex absolute bottom-11 left-1/2 transform -translate-x-1/2 bg-white rounded-lg shadow-lg p-2 gap-2">
         <button
           onClick={() => setScale(Math.min(scale + 0.2, 3))}
@@ -138,12 +204,13 @@ const SeatContainer: React.FC<SeatContainerProps> = ({ svg }) => {
           -
         </button>
       </div>
+
       {/* Server Info */}
       <div className="absolute bottom-0 left-0 right-0 bg-white p-2 text-sm flex justify-between items-center h-10 border-t">
         <div>Server Time: {serverInfo.time}</div>
       </div>
 
-      {/* 좌석 상태 토글 버튼*/}
+      {/* 좌석 상태 토글 버튼 */}
       <button
         className="absolute top-0 right-0 rounded-md p-2 shadow-lg flex items-center justify-center text-sm border bg-white opacity-70"
         onClick={() => setShowLegend((prev) => !prev)}

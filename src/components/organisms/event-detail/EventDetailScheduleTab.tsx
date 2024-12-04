@@ -53,7 +53,7 @@ const EventDetailScheduleTab = () => {
             className="bg-black text-white mx-2 p-1 text-center rounded-lg font-bold transition-colors duration-200 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed"
             onClick={() => setIsFriendRegisterModalOpen(true)}
           >
-            연석 친구 등록 ({eventFriends?.length} 명)
+            함께 할 친구 등록 ({eventFriends?.length} 명)
           </button>
           <ScheduleList
             filteredEvent={filteredEvent}
@@ -66,7 +66,7 @@ const EventDetailScheduleTab = () => {
             className="bg-black text-white  p-1 text-center rounded-lg font-bold transition-colors duration-200 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed"
             onClick={() => setIsFriendRegisterModalOpen(true)}
           >
-            연석 친구 등록 ({eventFriends?.length} 명)
+            함께 할 친구 등록 ({eventFriends?.length} 명)
           </button>
           <ScheduleList
             filteredEvent={filteredEvent}

@@ -62,15 +62,14 @@ function SvgWrapper({ svgString, seats, areas, renderSeat }: SvgWrapperProps) {
     if (!areaStats) return;
 
     const interpolateColor = (ratio: number) => {
-      // Blue to gray interpolation
-      const startColor = { r: 0, g: 122, b: 255 }; // #007AFF
-      const endColor = { r: 128, g: 128, b: 128 }; // #808080
-
-      const r = Math.round(startColor.r + (endColor.r - startColor.r) * ratio);
-      const g = Math.round(startColor.g + (endColor.g - startColor.g) * ratio);
-      const b = Math.round(startColor.b + (endColor.b - startColor.b) * ratio);
-
-      return `rgb(${r},${g},${b})`;
+      // 0-1 사이의 값을 3개 구역으로 나눔
+      if (ratio <= 0.5) {
+        return "rgba(8, 79, 206, 0.983)"; // 원래 시작색
+      } else if (ratio > 0.5 && ratio < 1) {
+        return "rgba(132, 162, 229, 0.991)"; // 중간 색상
+      } else {
+        return "rgba(183, 183, 183, 1)"; // 끝색(회색)
+      }
     };
 
     areaStats.forEach((stat) => {

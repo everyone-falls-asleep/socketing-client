@@ -196,7 +196,7 @@ export const processImageWithOpenCV = async (
 
       if (area < minContourArea) continue;
 
-      const epsilon = 0.01 * window.cv.arcLength(contour, true);
+      const epsilon = 0.001 * window.cv.arcLength(contour, true);
       const approxCurve = new window.cv.Mat();
       window.cv.approxPolyDP(contour, approxCurve, epsilon, true);
 
