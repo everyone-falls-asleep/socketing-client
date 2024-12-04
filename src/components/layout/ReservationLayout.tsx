@@ -19,7 +19,7 @@ const ReservationLayout: React.FC<ReservationLayoutProps> = ({
 
       <div className="flex md:flex-1 flex-col md:flex-row">
         {/* 센터 콘텐츠 */}
-        <div className="md:flex-1 h-[450px] md:h-[calc(100vh-276px)] px-10 md:px-20 py-5">
+        <div className="md:flex-1 h-[280px] md:h-[calc(100vh-276px)] px-5 md:px-20 py-3">
           {centerContent}
         </div>
 
