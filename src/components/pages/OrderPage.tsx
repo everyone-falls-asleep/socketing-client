@@ -4,6 +4,9 @@ import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
 import { OrderResponseData } from "../../types/api/socket";
+import { createNewPayment } from "../../api/reservations/paymentsApi";
+import { NewPayment } from "../../types/api/payment";
+import { PaymentMethod } from "../../types/api/payment";
 
 const OrderPage = () => {
   const navigate = useNavigate();
@@ -14,7 +17,7 @@ const OrderPage = () => {
   const [isAgreed, setIsAgreed] = useState(false); // 구매 동의 체크박스 상태
   const [paymentMethod, setPaymentMethod] = useState<string | null>(null); // 선택된 결제 방법
 
-  const handlePayment = () => {
+  const handlePayment = async () => {
     if (!isAgreed) {
       toast.error("구매조건 확인 및 결제 진행에 동의해주세요!");
       return;
@@ -25,8 +28,38 @@ const OrderPage = () => {
       return;
     }
 
-    toast.success("결제가 진행됩니다!");
-    navigate(`/payment`);
+    if (!orderData) {
+      toast.error("주문 데이터가 없습니다!");
+      return;
+    }
+
+    const totalAmount = orderData.reservations.reduce(
+      (acc, reservation) => acc + reservation.seat.area.price,
+      0
+    );
+
+    const paymentData: NewPayment = {
+      orderId: orderData.order.id,
+      paymentMethod: paymentMethod as PaymentMethod,
+      totalAmount,
+    };
+
+    try {
+      const response = await createNewPayment(paymentData);
+
+      if (response.code === 0) {
+        toast.success("결제가 진행됩니다!");
+        // 결제 페이지로 이동하며 데이터 전달
+        navigate(`/payment`, {
+          state: { paymentData: response.data, totalAmount },
+        });
+      } else {
+        toast.error(`결제 실패: ${response.message}`);
+      }
+    } catch (error) {
+      console.error("결제 요청 실패:", error);
+      toast.error("결제 처리 중 오류가 발생했습니다.");
+    }
   };
 
   if (!orderData) return;
@@ -110,6 +143,7 @@ const OrderPage = () => {
                   ))}
                   <hr className="my-2" />
                   <div className="flex justify-between font-bold text-gray-800">
+                    <span>총 결제금액</span>
                     <span>
                       {reservations.reduce(
                         (acc, reservation) => acc + reservation.seat.area.price,
@@ -117,7 +151,6 @@ const OrderPage = () => {
                       )}
                       원
                     </span>
-                    <span>{}</span>
                   </div>
                 </div>
               </div>
@@ -128,12 +161,12 @@ const OrderPage = () => {
                 <div className="text-sm">
                   <input
                     type="radio"
-                    id="socketPay"
+                    id="socket_pay"
                     className="mr-2"
                     name="paymentMethod"
-                    onChange={() => setPaymentMethod("socketPay")}
+                    onChange={() => setPaymentMethod("socket_pay")}
                   />
-                  <label htmlFor="socketPay">소켓 페이</label>
+                  <label htmlFor="socket_pay">소켓 페이</label>
                 </div>
               </div>
 
@@ -149,7 +182,15 @@ const OrderPage = () => {
                     구매조건 확인 및 결제 진행에 동의
                   </label>
                 </div>
-                <Button onClick={handlePayment} className="text-sm w-full">
+                <Button
+                  onClick={() => {
+                    handlePayment().catch((error) => {
+                      console.error("결제 처리 중 오류 발생:", error);
+                      toast.error("결제 처리 중 문제가 발생했습니다.");
+                    });
+                  }}
+                  className="text-sm w-full"
+                >
                   결제하기
                 </Button>
               </div>
