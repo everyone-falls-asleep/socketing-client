@@ -2,18 +2,32 @@ import { toast } from "react-toastify";
 import Button from "../atoms/buttons/Button";
 import MainLayout from "../layout/MainLayout";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { PaymentDetails } from "../../types/api/payment";
+import { updatePayment } from "../../api/reservations/paymentsApi";
 
 const PaymentPage = () => {
-  const totalAmount = 198000;
   const navigate = useNavigate();
-
+  const location = useLocation();
+  const state = location.state as {
+    paymentData: PaymentDetails;
+    totalAmount: number;
+  };
+  const paymentData = state.paymentData;
+  const totalAmount = state.totalAmount;
   const [socketPay, setSocketPay] = useState<number>(2000000);
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
   const [modalMessage, setModalMessage] = useState<string>("");
   const [progress, setProgress] = useState<number>(0); // 진행률 상태
 
-  const handleSocketPay = () => {
+  const delay = (ms: number) =>
+    new Promise((resolve) => setTimeout(resolve, ms));
+  const handleSocketPay = async () => {
+    if (!paymentData) {
+      toast.error("결제 데이터가 누락되었습니다!");
+      return;
+    }
+
     if (socketPay < totalAmount) {
       toast.error("잔액 부족!");
       return;
@@ -34,7 +48,7 @@ const PaymentPage = () => {
       setProgress((currentStep / steps) * 100);
 
       if (currentStep === Math.floor(steps / 3)) {
-        setModalMessage("결제 금액: -" + totalAmount.toLocaleString() + " 원");
+        setModalMessage("결제 금액: -" + totalAmount + " 원");
       }
 
       if (currentStep === Math.floor((steps * 2) / 3)) {
@@ -46,15 +60,32 @@ const PaymentPage = () => {
 
       if (currentStep >= steps) {
         clearInterval(timer);
-        setModalMessage("결제 완료! 🎉");
-
-        setTimeout(() => {
-          setIsProcessing(false);
-          navigate("/"); //일단은 홈페이지로 보내자!
-        }, 1000);
       }
     }, interval);
+
+    try {
+      await delay(duration); // 진행 바 완료 후 실행
+      const response = await updatePayment({
+        orderId: paymentData.order.id,
+        paymentId: paymentData.payment.id,
+        newPaymentStatus: "completed", // 결제 상태 변경
+      });
+      setModalMessage("결제 완료! 🎉");
+
+      setTimeout(() => {
+        setIsProcessing(false);
+        toast.success("결제가 완료되었습니다!");
+        navigate(`/reservation-confirmation`, {
+          state: { updatedResponse: response.data },
+        });
+      }, 1000);
+    } catch (error) {
+      console.error("결제 상태 업데이트 실패:", error);
+      toast.error("결제 상태 업데이트 중 오류가 발생했습니다.");
+      setIsProcessing(false);
+    }
   };
+
   return (
     <MainLayout>
       <div className="bg-gray-100 h-[calc(100vh-132px)] flex justify-center">
@@ -65,7 +96,7 @@ const PaymentPage = () => {
             <div className="bg-white p-6 rounded-lg shadow-md">
               <h2 className="text-lg flex justify-between font-bold">
                 <span>총 결제금액</span>
-                <span>{totalAmount.toLocaleString()}원</span>
+                <span>{totalAmount}원</span>
               </h2>
             </div>
             {/* 소켓 페이 */}
@@ -83,7 +114,15 @@ const PaymentPage = () => {
               </div>
             </div>
             <div className="flex justify-center">
-              <Button onClick={handleSocketPay} className="w-[310px]">
+              <Button
+                onClick={() => {
+                  handleSocketPay().catch((error) => {
+                    console.error("결제 처리 중 오류 발생:", error);
+                    toast.error("결제 처리 중 문제가 발생했습니다.");
+                  });
+                }}
+                className="w-[310px]"
+              >
                 소켓 결제
               </Button>
             </div>
