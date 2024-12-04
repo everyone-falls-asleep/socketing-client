@@ -181,6 +181,7 @@ const ContourToSVG: React.FC<ContourToSVGProps> = ({
         {showAreas && (
           <path
             d={contour.path}
+            className="area-data"
             fill="rgba(105, 114, 201, 0.983)"
             stroke="#f1e5e5"
             strokeWidth={"5"}
@@ -191,6 +192,7 @@ const ContourToSVG: React.FC<ContourToSVGProps> = ({
         )}
         <path
           d={contour.path}
+          className="area-path-data"
           fill="none"
           stroke={isSelected ? "red" : "#f1e5e5"}
           strokeWidth={"3"}

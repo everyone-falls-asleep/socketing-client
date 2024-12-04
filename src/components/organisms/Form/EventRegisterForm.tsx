@@ -126,7 +126,7 @@ const EventRegisterForm = () => {
 
     const clonedSvg = svgElement.cloneNode(true) as SVGElement;
 
-    const removableGroups = clonedSvg.querySelectorAll("g.seats, g.area");
+    const removableGroups = clonedSvg.querySelectorAll("g.seats, g.areas");
     removableGroups.forEach((group) => group.remove());
 
     console.log("Generated SVG:", clonedSvg.outerHTML);
