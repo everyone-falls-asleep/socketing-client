@@ -63,17 +63,21 @@ function SvgWrapper({ svgString, seats, areas, renderSeat }: SvgWrapperProps) {
 
   const getColorByRatio = (totalSeats: number, reservedSeats: number) => {
     const ratio = (totalSeats - reservedSeats) / totalSeats;
-    if (ratio > 0.7) return "#4CAF50"; // 70% 이상 남음 - 초록색
-    if (ratio > 0.3) return "#FFC107"; // 30-70% 남음 - 노란색
-    return "#F44336"; // 30% 미만 남음 - 빨간색
+    if (ratio > 0.8) return "rgba(105, 114, 201, 0.983)"; // 80% 이상 남음 - 원래 색상
+    if (ratio > 0.6) return "rgba(105, 114, 201, 0.7)"; // 60-80% - 약간 흐림
+    if (ratio > 0.4) return "rgba(105, 114, 201, 0.5)"; // 40-60% - 더 흐림
+    if (ratio > 0.2) return "rgba(105, 114, 201, 0.3)"; // 20-40% - 많이 흐림
+    return "rgba(105, 114, 201, 0.1)"; // 20% 미만 - 거의 회색
   };
-
   const modifySvgFill = (svgString: string, areaId: string) => {
-    if (!areaStats || areaStats.areaId !== areaId) return svgString;
+    if (!areaStats || !areaId) return svgString;
+
+    const areaData = areaStats.get(areaId);
+    if (!areaData) return svgString;
 
     const color = getColorByRatio(
-      areaStats.totalSeatsNum,
-      areaStats.reservedSeatsNum
+      areaData.totalSeatsNum,
+      areaData.reservedSeatsNum
     );
     return svgString.replace(/fill="[^"]*"/, `fill="${color}"`);
   };

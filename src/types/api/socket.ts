@@ -113,7 +113,7 @@ export interface ServerToClientEvents {
   error: (response: ErrorResponse) => void;
   areaExited: (message: string) => void;
   seatsReserved: (response: OrderResponse) => void; // 예매된 사용자에게만. 이거 받으면 결제창으로 응답 데이터 전달하며 화면 전환
-  reservedSeatsStatistic: (response: ReservedSeatsStatisticResponse) => void;
+  reservedSeatsStatistic: (response: ReservedSeatsStatisticResponse[]) => void;
 }
 
 export interface ClientToServerEvents {

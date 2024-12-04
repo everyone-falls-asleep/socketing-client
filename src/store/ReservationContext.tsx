@@ -30,7 +30,7 @@ interface ReservationContextType {
   currentAreaId: string | null;
   setCurrentAreaId: (currentAreaId: string) => void;
   exitArea: (areaId: string) => void;
-  areaStats: ReservedSeatsStatisticResponse;
+  areaStats: Map<string, ReservedSeatsStatisticResponse>;
 }
 
 export const ReservationContext = createContext<ReservationContextType>(
@@ -60,11 +60,9 @@ export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
   const [selectedSeats, setSelectedSeats] = useState<Seat[]>([]);
   const [currentAreaId, setCurrentAreaId] = useState<string | null>(null);
   const [numberOfTickets, setNumberOfTickets] = useState(1);
-  const [areaStats, setAreaStats] = useState<ReservedSeatsStatisticResponse>({
-    areaId: "",
-    totalSeatsNum: 0,
-    reservedSeatsNum: 0,
-  });
+  const [areaStats, setAreaStats] = useState<
+    Map<string, ReservedSeatsStatisticResponse>
+  >(new Map());
 
   const updateSeats = (seats: SeatsSelectedResponse[]) => {
     setSeatsMap((prev) => {
@@ -167,8 +165,9 @@ export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
 
     socket.on(
       "reservedSeatsStatistic",
-      (data: ReservedSeatsStatisticResponse) => {
-        setAreaStats(data);
+      (data: ReservedSeatsStatisticResponse[]) => {
+        const statsMap = new Map(data.map((stat) => [stat.areaId, stat]));
+        setAreaStats(statsMap);
       }
     );
 
