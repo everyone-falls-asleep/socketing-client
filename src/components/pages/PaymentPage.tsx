@@ -15,13 +15,15 @@ const PaymentPage = () => {
   };
   const paymentData = state.paymentData;
   const totalAmount = state.totalAmount;
-  const [socketPay, setSocketPay] = useState<number>(2000000);
+
+  const socketPay = 200000;
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
   const [modalMessage, setModalMessage] = useState<string>("");
   const [progress, setProgress] = useState<number>(0); // 진행률 상태
 
   const delay = (ms: number) =>
     new Promise((resolve) => setTimeout(resolve, ms));
+
   const handleSocketPay = async () => {
     if (!paymentData) {
       toast.error("결제 데이터가 누락되었습니다!");
@@ -35,9 +37,9 @@ const PaymentPage = () => {
 
     setIsProcessing(true);
     setProgress(0);
-    setModalMessage("현재 보유 소켓 " + socketPay.toLocaleString() + " 원");
+    setModalMessage("결제가 진행 중입니다...");
 
-    const duration = 6000; // 진행 바의 총 지속 시간 (ms)
+    const duration = 4000; // 진행 바의 총 지속 시간 (ms)
     const interval = 100; // 진행 바 업데이트 주기 (ms)
     const steps = duration / interval;
 
@@ -46,17 +48,6 @@ const PaymentPage = () => {
     const timer = setInterval(() => {
       currentStep += 1;
       setProgress((currentStep / steps) * 100);
-
-      if (currentStep === Math.floor(steps / 3)) {
-        setModalMessage("결제 금액: -" + totalAmount + " 원");
-      }
-
-      if (currentStep === Math.floor((steps * 2) / 3)) {
-        setSocketPay((prev) => prev - totalAmount);
-        setModalMessage(
-          "남은 소켓: " + (socketPay - totalAmount).toLocaleString() + " 원"
-        );
-      }
 
       if (currentStep >= steps) {
         clearInterval(timer);
@@ -96,7 +87,7 @@ const PaymentPage = () => {
             <div className="bg-white p-6 rounded-lg shadow-md">
               <h2 className="text-lg flex justify-between font-bold">
                 <span>총 결제금액</span>
-                <span>{totalAmount}원</span>
+                <span>{totalAmount.toLocaleString()} 원</span>
               </h2>
             </div>
             {/* 소켓 페이 */}
@@ -136,7 +127,6 @@ const PaymentPage = () => {
             <h2 className="text-xl font-bold">{modalMessage}</h2>
 
             <>
-              <p className="text-gray-500 mt-2">결제가 진행 중입니다...</p>
               <div className="w-full bg-gray-200 rounded-full h-3">
                 <div
                   className="bg-[#F66687] h-3 rounded-full"

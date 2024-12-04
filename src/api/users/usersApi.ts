@@ -17,6 +17,11 @@ const getUserInfoByEmail = async (email: string): Promise<UserResponse> => {
   return response.data;
 };
 
+// const getUserPoints = async (user_id: string): Promise<UserResponse> => {
+//   const response = await axios.get<UserResponse>(API_URL + user_id + "/points");
+//   return response.data;
+// };
+
 const updateUserNickname = async (
   user_id: string,
   newNickname: string

@@ -88,7 +88,7 @@ const OrderPage = () => {
                     <h3 className="text-xl font-bold mb-2">{event.title}</h3>
                     <p className="text-gray-600 text-sm mb-1">{event.place}</p>
                     <p className="text-gray-600 text-sm mb-1">
-                      2024년 12월 31일 밤 11시 59분
+                      2024년 12월 12일
                     </p>
                     <p className="text-gray-600 text-sm">{event.cast}</p>
                   </div>

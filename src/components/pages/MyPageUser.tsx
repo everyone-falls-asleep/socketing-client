@@ -17,7 +17,6 @@ const MyPageUser = () => {
     "orders", // 쿼리 키의 기본 이름
     (eventId) => getAllOrder(eventId) // fetchFn으로 getAllOrder 사용
   );
-  // const eventId = ""; // 나중에 필요시 넣기
   const { data, isLoading, isError } = useOrders();
 
   if (isLoading) return <p>{fetchErrorMessages.isLoading}</p>;
