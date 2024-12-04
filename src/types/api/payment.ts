@@ -2,6 +2,7 @@ import { ApiResponse } from "./common";
 import { Reservation } from "./reservation";
 import { User } from "./user";
 // import { Event } from "./event"
+import { GetOrder } from "./order.ts";
 
 export type PaymentMethod =
   | "bank_transfer"
@@ -17,8 +18,9 @@ export type PaymentStatus =
 
 interface Order {
   id: string; // 주문 ID
-  createdAt?: string; // 주문 생성 시간
-  updatedAt?: string; // 주문 수정 시간
+  createdAt: string; // 주문 생성 시간
+  updatedAt: string; // 주문 수정 시간
+  deletedAt?: string;
 }
 
 export interface Payment {
@@ -42,7 +44,6 @@ export interface PaymentDetails {
   payment: Payment; // 결제 정보
   user?: User; // 사용자 정보
   reservations?: Reservation[]; // 예약 정보
-  // event?: Event;
 }
 
 export interface NewPayment {
@@ -51,4 +52,17 @@ export interface NewPayment {
   totalAmount: number;
 }
 
+export interface UpdatedPayment extends GetOrder {
+  orderUpdatedAt: string;
+  orderDeletedAt: string | null;
+  paymentId: string;
+  paymentStatus: PaymentStatus;
+  paymentMethod: PaymentMethod;
+  paymentAmount: number;
+  paymentPaidAt: string;
+  paymentCreatedAt: string;
+  paymentUpdatedAt: string;
+}
+
 export type PaymentDetailsResponse = ApiResponse<PaymentDetails>;
+export type UpdatedPaymentResponse = ApiResponse<UpdatedPayment>;

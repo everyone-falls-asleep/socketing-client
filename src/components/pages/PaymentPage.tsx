@@ -76,7 +76,7 @@ const PaymentPage = () => {
         setIsProcessing(false);
         toast.success("결제가 완료되었습니다!");
         navigate(`/reservation-confirmation`, {
-          state: { updateResponse: response.data },
+          state: { updatedResponse: response.data },
         });
       }, 1000);
     } catch (error) {

@@ -1,36 +1,35 @@
-import SubTitle from "../../atoms/titles/subtitle/SubTitle";
 import Font from "../../atoms/fonts/Font";
-import { OrderResponseData } from "../../../types/api/socket";
 import { fetchErrorMessages } from "../../../constants/errorMessages";
-// import { formatToKoreanDateAndTime } from "../../../utils/dateUtils";
+import { formatToKoreanDateAndTime } from "../../../utils/dateUtils";
+import { UpdatedPayment } from "../../../types/api/payment";
 
 interface ReservationConfirmProps {
-  data: OrderResponseData;
+  data: UpdatedPayment;
 }
 
 const ReservationConfirmationTemplate = ({ data }: ReservationConfirmProps) => {
-  if (!data.event) {
+  if (!data) {
     return <div>{fetchErrorMessages.noReservationData}</div>;
   }
-  const eventData = data.event;
-  const orderData = data.order;
 
   return (
     <>
-      <div className="max-w-3xl mx-auto p-10">
+      <div className="max-w-3xl mx-auto p-5 md:p-10">
         <div className="bg-white rounded-md shadow-lg overflow-hidden">
           {/* Header Section with Event Image */}
           <div className="relative h-48 ">
             <img
-              src={eventData.thumbnail}
-              alt={eventData.title}
+              src={data.eventThumbnail}
+              alt={data.eventTitle}
               className="w-full h-full object-cover opacity-50"
             />
             <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/20">
-              <SubTitle className="!text-white font-bold mb-2">
-                {eventData.title}
-              </SubTitle>
-              <Font className="text-white/90">출연진: {eventData.cast}</Font>
+              <p className="!text-white text-2xl md:text-4xl font-bold mb-2">
+                {data.eventTitle}
+              </p>
+              <Font className="text-white/90 font-bold text-lg md:text-xl">
+                {data.eventCast}
+              </Font>
             </div>
           </div>
 
@@ -39,13 +38,11 @@ const ReservationConfirmationTemplate = ({ data }: ReservationConfirmProps) => {
             {/* User Info */}
             <div className="flex items-center space-x-4 p-4 bg-gray-50 rounded-lg">
               <div className="w-12 h-12 bg-rose-100 rounded-full flex items-center justify-center">
-                <span className="font-bold">
-                  {orderData.user.email.slice(0, 1)}
-                </span>
+                <span className="font-bold">{data.userEmail.slice(0, 1)}</span>
               </div>
               <div>
                 <Font className="font-bold text-gray-800">
-                  {orderData.user.email.slice(0, 3)}
+                  {data.userEmail.slice(0, 3)}
                 </Font>
               </div>
             </div>
@@ -55,10 +52,9 @@ const ReservationConfirmationTemplate = ({ data }: ReservationConfirmProps) => {
               <div className="flex items-start space-x-3 p-3 hover:bg-gray-50 rounded-lg transition">
                 <div className="w-6 text-gray-400">📅</div>
                 <div>
-                  <Font className="font-bold text-gray-700">일시</Font>
+                  <Font className="font-bold text-gray-700 mb-1">일시</Font>
                   <Font className="text-gray-600">
-                    {/* {formatToKoreanDateAndTime(reservation.eventDate.date)} */}
-                    2024.12.19 수요일 7PM
+                    {formatToKoreanDateAndTime(data.eventDate)}
                   </Font>
                 </div>
               </div>
@@ -66,19 +62,22 @@ const ReservationConfirmationTemplate = ({ data }: ReservationConfirmProps) => {
               <div className="flex items-start space-x-3 p-3 hover:bg-gray-50 rounded-lg transition">
                 <div className="w-6 text-gray-400">📍</div>
                 <div>
-                  <Font className="font-bold text-gray-700">장소</Font>
-                  <Font className="text-gray-600">{eventData.place}</Font>
+                  <Font className="font-bold text-gray-700 mb-1">장소</Font>
+                  <Font className="text-gray-600">{data.eventPlace}</Font>
                 </div>
               </div>
 
               <div className="flex items-start space-x-3 p-3 hover:bg-gray-50 rounded-lg transition">
                 <div className="w-6 text-gray-400">🎫</div>
                 <div>
-                  <Font className="font-bold text-gray-700">좌석</Font>
+                  <Font className="font-bold text-gray-700 mb-1">좌석</Font>
                   <Font className="text-gray-600">
-                    {data.reservations[0].seat.area.label}구역{" "}
-                    {data.reservations[0].seat.row}열{" "}
-                    {data.reservations[0].seat.number}번
+                    {data.reservations.map((reservation, index) => (
+                      <div key={reservation.seatId || index} className="mb-1">
+                        {reservation.seatAreaLabel}구역 {reservation.seatRow}열{" "}
+                        {reservation.seatNumber}번
+                      </div>
+                    ))}
                   </Font>
                 </div>
               </div>

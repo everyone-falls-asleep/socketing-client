@@ -2,6 +2,7 @@ import axios from "axios";
 import {
   NewPayment,
   PaymentDetailsResponse,
+  UpdatedPaymentResponse,
   UpdatePayment,
 } from "../../types/api/payment";
 import { baseURL } from "../../constants/api";
@@ -41,18 +42,14 @@ const updatePayment = async ({
   orderId,
   paymentId,
   newPaymentStatus,
-}: UpdatePayment): Promise<PaymentDetailsResponse> => {
+}: UpdatePayment): Promise<UpdatedPaymentResponse> => {
   try {
     const token = localStorage.getItem("authToken");
     if (!token) {
       throw new Error("인증 토큰이 없습니다. 로그인해주세요.");
     }
-    console.log("updatePayment 요청 데이터:", {
-      orderId,
-      paymentId,
-      newPaymentStatus,
-    });
-    const response = await axios.patch<PaymentDetailsResponse>(
+
+    const response = await axios.patch<UpdatedPaymentResponse>(
       API_URL,
       {
         orderId, // 주문 ID 추가
@@ -65,7 +62,6 @@ const updatePayment = async ({
         },
       }
     );
-    console.log("updatePayment 응답 데이터:", response.data);
     return response.data;
   } catch (error) {
     console.error("결제 상태 업데이트 실패:", error);

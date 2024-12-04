@@ -28,17 +28,18 @@ export interface GetOrder {
   userEmail: string;
   userProfileImage: string | null;
   userRole: string;
-  eventDateId: string;
+  eventDateId?: string;
   eventDate: string;
   eventTitle: string;
   eventThumbnail: string;
   eventPlace: string;
   eventCast: string;
-  eventAgeLimit: number;
+  eventAgeLimit: number | null;
   reservations: Reservations[];
 }
 
 export interface Reservations {
+  reservationId?: string;
   seatId: string; // 좌석 ID
   seatCx: number; // 좌표 X
   seatCy: number; // 좌표 Y
