@@ -1,115 +1,90 @@
-import AdminReservationSeatContainer from "../organisms/admin/AdminReservationSeatContainer";
 import ReservationUpperEvent from "../organisms/reservation/ReservationUpperEvent";
-import { fetchReservationsByEvent } from "../../api/reservations/reservationsApi";
-import { createResourceQuery } from "../../hooks/useCustomQuery";
-import { ReservationsResponse } from "../../types/api/reservation";
-import { fetchErrorMessages } from "../../constants/errorMessages";
-import { fetchAllSeats, fetchOneEvent } from "../../api/events/eventsApi";
-import { SeatResponse, SingleEventResponse } from "../../types/api/event";
+// import { fetchReservationsByEvent } from "../../api/reservations/reservationsApi";
+// import { fetchErrorMessages } from "../../constants/errorMessages";
 import { useParams } from "react-router-dom";
 import ReservationCalendarSideBar from "../organisms/reservation/ReservationCalendarSideBar";
-import { UserSeat } from "../../types/api/event";
 import ReservationLayout from "../layout/ReservationLayout";
 import ReservationAllInfo from "../organisms/reservation/ReservationAllInfo";
 import MainLayout from "../layout/MainLayout";
-import { Seat } from "../../types/api/reservation";
+import { EventManagement } from "../../types/api/managers";
+import { fetchOneEventForManager } from "../../api/managers/managersApi";
+import { useEffect, useState } from "react";
 
 const AdminDetailPage = () => {
-  const { id } = useParams();
+  const { eventId, eventDateId } = useParams();
 
-  const useReservations = createResourceQuery<ReservationsResponse>(
-    "all-reservations-by-event",
-    fetchReservationsByEvent
-  );
+  const [eventData, setEventData] = useState<EventManagement | null>(null);
 
-  const useEvent = createResourceQuery<SingleEventResponse>(
-    "single-event",
-    fetchOneEvent
-  );
-
-  const useSeat = createResourceQuery<SeatResponse>("seats", fetchAllSeats);
-
-  const {
-    data: reservationData,
-    isLoading: reservationLoading,
-    isError: reservationError,
-  } = useReservations(id);
-
-  const {
-    data: eventData,
-    isLoading: eventLoading,
-    isError: eventError,
-  } = useEvent(id);
-
-  const {
-    data: seatsData,
-    isLoading: seatsLoading,
-    isError: seatsError,
-  } = useSeat(id);
-
-  if (reservationLoading || eventLoading || seatsLoading)
-    return <p>{fetchErrorMessages.isLoading}</p>;
-  if (reservationError || eventError || seatsError)
-    return <p>{fetchErrorMessages.general}</p>;
-  if (!reservationData?.data) {
-    return <>{fetchErrorMessages.noReservationData}</>;
-  }
-  if (!eventData?.data) {
-    return <>{fetchErrorMessages.noEventData}</>;
-  }
-  if (!seatsData?.data) {
-    return <>{fetchErrorMessages.noSeatsData}</>;
-  }
-
-  const seatsByEventDate = reservationData.data.reduce(
-    (acc, entry) => {
-      const eventId = entry.eventDate.id;
-      if (!acc[eventId]) {
-        acc[eventId] = [];
+  // if (!eventId || !eventDateId) {
+  //   return <p>{fetchErrorMessages.general}</p>
+  // }
+  const getEventManagement = async () => {
+    try {
+      const response = await fetchOneEventForManager(
+        eventId ?? "",
+        eventDateId ?? ""
+      );
+      if (!response.data) {
+        return;
       }
-      acc[eventId].push(entry.seat);
-      return acc;
-    },
-    {} as { [key: string]: Seat[] }
-  );
-
-  console.log(seatsByEventDate);
-
-  const userSeats: UserSeat[] = reservationData.data.reduce((acc, entry) => {
-    const userId = entry.user.id;
-    // const seat = entry.seat;
-
-    // Find existing UserSeat entry for the user
-    let userEntry = acc.find((item) => item.user_id === userId);
-
-    if (!userEntry) {
-      // If no entry exists, create a new one
-      userEntry = { user_id: userId, seats: [] };
-      acc.push(userEntry);
+      setEventData(response.data);
+    } catch (error) {
+      console.log("Error : ", error);
     }
+  };
 
-    // Add the seat to the user's seats
-    // userEntry.seats.push(seat);
+  useEffect(() => {
+    void getEventManagement();
+  }, [eventId, eventDateId]);
 
-    return acc;
-  }, [] as UserSeat[]);
+  if (!eventData) {
+    return <p>데이터를 불러올 수 없습니다.</p>;
+  }
+  console.log(eventData);
+  const allSeats = eventData.areas.flatMap((area) => area.seats);
 
-  console.log("user_seats: ", userSeats);
+  let totalReservations = 0;
+  let totalAmount = 0;
+
+  // Iterate through each event date
+  eventData.eventDates.forEach((eventDate) => {
+    // Iterate through each reservation
+    eventDate.reservations.forEach((reservation) => {
+      // Increment total reservations
+      totalReservations++;
+
+      // Sum up payments for this reservation
+      const reservationPayments = reservation.order.payments;
+      const reservationTotalAmount = reservationPayments.reduce(
+        (sum, payment) => sum + payment.paymentAmount,
+        0
+      );
+      totalAmount += reservationTotalAmount;
+    });
+  });
+
+  console.log(totalReservations);
+  console.log(totalAmount);
 
   return (
     <MainLayout>
       <ReservationLayout
-        topContent={<ReservationUpperEvent {...eventData?.data} />}
+        topContent={<ReservationUpperEvent {...eventData} />}
         centerContent={
-          <AdminReservationSeatContainer
-            seatsData={seatsData.data}
-            selectedSeatsData={userSeats} // 일단 첫번째 eventDate의 좌석으로만 처리
-            svg={eventData.data.svg ?? ""}
+          <ReservationAllInfo
+            totalReservations={totalReservations}
+            totalAmount={totalAmount}
+            totalSeats={allSeats.length}
           />
+          // <AdminReservationSeatContainer
+          //   seatsData={allSeats}
+          //   selectedSeatsData={userSeats} // 일단 첫번째 eventDate의 좌석으로만 처리
+          //   svg={eventData.svg}
+          // />
         }
-        rightTopContent={<ReservationAllInfo />}
+        rightTopContent={<></>}
         rightBottomContent={
-          <ReservationCalendarSideBar dateData={eventData.data.eventDates} />
+          <ReservationCalendarSideBar dateData={eventData.eventDates} />
         }
       />
     </MainLayout>

@@ -181,7 +181,11 @@ const MyPageManager = () => {
                               </p>
                             </div>
                             <Button
-                              onClick={() => navigate(`/admin/${event.id}`)}
+                              onClick={() =>
+                                navigate(
+                                  `/admin/${event.id}/${event.eventDates[0].id}`
+                                )
+                              }
                               className="hidden md:inline-block"
                               disabled={
                                 new Date(event.ticketingStartTime) > currentTime
@@ -190,7 +194,11 @@ const MyPageManager = () => {
                               예매 현황 보기
                             </Button>
                             <Button
-                              onClick={() => navigate(`/admin/${event.id}`)}
+                              onClick={() =>
+                                navigate(
+                                  `/admin/${event.id}/${event.eventDates[0].id}`
+                                )
+                              }
                               size="sm"
                               className="mt-3 md:hidden"
                               disabled={

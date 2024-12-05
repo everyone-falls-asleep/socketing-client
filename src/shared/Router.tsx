@@ -49,7 +49,10 @@ const Router = () => {
           element={<ReservationConfirmationPage />}
         />
         <Route path="admin" element={<MyPageManager />} />
-        <Route path="admin/:id" element={<AdminDetailPage />} />
+        <Route
+          path="admin/:eventId/:eventDateId"
+          element={<AdminDetailPage />}
+        />
         <Route path="mypage/detail" element={<MyDetailPage />} />
       </Routes>
     </BrowserRouter>

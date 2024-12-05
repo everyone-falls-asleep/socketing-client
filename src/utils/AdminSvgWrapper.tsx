@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Seat, UserSeat } from "../types/api/event";
+import { Seat, UserSeat } from "../types/api/managers";
 
 interface SvgWrapperProps {
   svgString: string;

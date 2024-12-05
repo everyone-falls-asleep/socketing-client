@@ -31,6 +31,7 @@ export interface Payment {
   paidAt: string | null; // 결제 완료 시간 (null이면 결제x)
   createdAt?: string;
   updatedAt?: string;
+  deletedAt?: string;
 }
 
 export interface UpdatePayment {

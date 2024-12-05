@@ -1,4 +1,5 @@
-import { UserSeat, Seat } from "../../../types/api/event";
+// import { UserSeat, Seat } from "../../../types/api/event";
+import { Seat, UserSeat } from "../../../types/api/managers";
 import AdminSeatContainer from "./AdminSeatContainer";
 
 interface ReservationSeatContainerProps {

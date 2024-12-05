@@ -1,5 +1,5 @@
 import React, { useRef } from "react";
-import { Seat, UserSeat } from "../../../types/api/event";
+import { Seat, UserSeat } from "../../../types/api/managers";
 import {
   AdminSeatObj,
   SelectedAdminSeatObj,
@@ -24,6 +24,7 @@ const AdminSeatContainer: React.FC<SeatContainerProps> = ({
   const translate = { x: 0, y: 0 };
   const scale = 1;
 
+  console.log(selectedSeatsData);
   const renderSeat = (seatData: Seat) => {
     const userEntry = selectedSeatsData.find((userSeat) =>
       userSeat.seats.some((selectedSeat) => selectedSeat.id === seatData.id)
