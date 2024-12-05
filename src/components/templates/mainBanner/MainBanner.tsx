@@ -66,9 +66,7 @@ const MainBanner = ({ event }: MainBannerProps) => {
               onClick={() => {
                 const userId = localStorage.getItem("userId");
                 if (userId) {
-                  navigate(
-                    `/reservation/${event.id}/${event.eventDates?.[0]?.id || "error"}`
-                  );
+                  navigate(`/event/${event.id}`);
                 } else {
                   toast.success(
                     "예약 페이지에 접근하기 위해서는 로그인이 필요합니다."
