@@ -1,4 +1,3 @@
-import ReservationUpperEvent from "../organisms/reservation/ReservationUpperEvent";
 // import { fetchReservationsByEvent } from "../../api/reservations/reservationsApi";
 // import { fetchErrorMessages } from "../../constants/errorMessages";
 import { useParams } from "react-router-dom";
@@ -9,6 +8,7 @@ import MainLayout from "../layout/MainLayout";
 import { EventManagement } from "../../types/api/managers";
 import { fetchOneEventForManager } from "../../api/managers/managersApi";
 import { useEffect, useState } from "react";
+import AdminReservationUpperEvent from "../organisms/reservation/AdminReservationUpperEvent";
 
 const AdminDetailPage = () => {
   const { eventId, eventDateId } = useParams();
@@ -69,7 +69,7 @@ const AdminDetailPage = () => {
   return (
     <MainLayout>
       <ReservationLayout
-        topContent={<ReservationUpperEvent {...eventData} />}
+        topContent={<AdminReservationUpperEvent {...eventData} />}
         centerContent={
           <ReservationAllInfo
             totalReservations={totalReservations}

@@ -1,7 +1,8 @@
-import { Event } from "../../../types/api/event";
+// import { Event } from "../../../types/api/event";
+import { EventManagement } from "../../../types/api/managers";
 import { formatToKoreanDateAndTime } from "../../../utils/dateUtils";
 
-const ReservationUpperEvent = (eventData: Event) => {
+const AdminReservationUpperEvent = (eventData: EventManagement) => {
   return (
     <>
       {/* 배경 이미지 */}
@@ -63,4 +64,4 @@ const ReservationUpperEvent = (eventData: Event) => {
   );
 };
 
-export default ReservationUpperEvent;
+export default AdminReservationUpperEvent;
