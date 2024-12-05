@@ -48,9 +48,11 @@ const FourSectionLayout: React.FC<FourSectionLayoutProps> = ({
             {centerContent}
           </div>
 
-          <div className="hidden md:flex md:w-1/5 flex-col bg-white border-l">
-            <div className="border-b p-4 space-y-3">{rightTopContent}</div>
-            <div className="flex-1 p-4 ">{rightBottomContent}</div>
+          <div className="hidden md:flex md:w-1/4 flex-col max-h-full overflow-y-auto bg-white border-l">
+            <div className="border-b max-h-[220px]">{rightTopContent}</div>
+            <div className="flex-1 p-4  overflow-y-auto">
+              {rightBottomContent}
+            </div>
           </div>
         </div>
         {/* 아래는 모바일 반응형 */}

@@ -68,7 +68,7 @@ const SeatControlPanel: React.FC = () => {
   }
 
   return (
-    <div className="h-full p-6 space-y-6 overflow-auto bg-gray-50">
+    <div className="h-full p-2 space-y-3 overflow-auto bg-gray-50">
       <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
         <h3 className="text-md font-semibold text-gray-800 mb-2">
           현재 타입: {typeToKorean[selectedContourData.type]}
@@ -91,7 +91,7 @@ const SeatControlPanel: React.FC = () => {
       )}
 
       {selectedContourData.type === "area" && (
-        <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200 space-y-4">
+        <div className="bg-white p-3 rounded-lg shadow-sm border border-gray-200 space-y-4">
           <div className="space-y-3">
             <label className="block text-sm font-medium text-gray-700">
               구역 이름 수정
@@ -113,7 +113,7 @@ const SeatControlPanel: React.FC = () => {
               className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               placeholder="구역 가격을 입력하세요"
             />
-            <div className="flex gap-2">
+            <div className="flex flex-col gap-2">
               <button
                 onClick={updateAreaInfo}
                 className="flex-1 py-2 px-4 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors"
