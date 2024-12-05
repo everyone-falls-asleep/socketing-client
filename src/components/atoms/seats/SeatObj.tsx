@@ -38,7 +38,7 @@ const SeatObj: React.FC<SeatProps> = ({ seatData }) => {
     <g onClick={handleClick} className="seat-group">
       {seatStatus === "selected" && (
         <circle
-          r="15"
+          r="10"
           fill="none"
           stroke="#F66687"
           strokeWidth="2"
@@ -47,7 +47,7 @@ const SeatObj: React.FC<SeatProps> = ({ seatData }) => {
       )}
 
       <circle
-        r="10"
+        r="8"
         fill={statusColor}
         stroke="#1F2937"
         strokeWidth="2"
@@ -56,7 +56,7 @@ const SeatObj: React.FC<SeatProps> = ({ seatData }) => {
 
       {seatStatus === "temporary_hold" && seatData.expirationTime && (
         <circle
-          r="10"
+          r="8"
           fill="none"
           stroke="#FBBF24"
           strokeWidth="2"
@@ -75,7 +75,7 @@ const SeatObj: React.FC<SeatProps> = ({ seatData }) => {
 
       {seatStatus === "available" && !seatData.selectedBy && (
         <circle
-          r="10"
+          r="8"
           fill="none"
           stroke="#FFF"
           strokeWidth="2"
