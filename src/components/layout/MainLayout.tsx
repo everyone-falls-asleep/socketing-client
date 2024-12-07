@@ -1,5 +1,4 @@
 import Header from "../templates/header/Header";
-import Footer from "../templates/footer/Footer";
 
 interface MainLayoutProps {
   children: React.ReactNode;
@@ -9,8 +8,7 @@ const MainLayout = ({ children }: MainLayoutProps) => {
   return (
     <div>
       <Header />
-      <main>{children}</main>
-      <Footer />
+      <main className="h-[calc(100vh-76px)] overflow-y-auto">{children}</main>
     </div>
   );
 };
