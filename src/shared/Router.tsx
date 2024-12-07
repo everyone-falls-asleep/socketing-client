@@ -10,7 +10,8 @@ import { WrappedWaitingRoomPage } from "../components/wrappers/WrappedWaitingRoo
 import SearchResultsPage from "../components/pages/SearchResultsPage";
 import RegisterEventPage from "../components/pages/RegisterEventPage";
 import { WrappedReservationPage } from "../components/wrappers/WrappedReservationPage";
-import AdminDetailPage from "../components/pages/AdminDetailPage";
+// import ManagerDetailPage from "../components/pages/ManagerDetailPage";
+import { WrappedManagerDetailPage } from "../components/wrappers/WrappedManagerDetailPage";
 import MyDetailPage from "../components/pages/MyDetailPage";
 import MyPageManager from "../components/pages/MyPageManager";
 import PaymentPage from "../components/pages/PaymentPage";
@@ -48,10 +49,10 @@ const Router = () => {
           path="reservation-info"
           element={<ReservationConfirmationPage />}
         />
-        <Route path="admin" element={<MyPageManager />} />
+        <Route path="manager" element={<MyPageManager />} />
         <Route
-          path="admin/:eventId/:eventDateId"
-          element={<AdminDetailPage />}
+          path="manager/:eventId/:eventDateId"
+          element={<WrappedManagerDetailPage />}
         />
         <Route path="mypage/detail" element={<MyDetailPage />} />
       </Routes>
