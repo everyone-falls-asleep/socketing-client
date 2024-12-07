@@ -7,10 +7,12 @@ import { PaymentDetails } from "../../types/api/payment";
 import { updatePayment } from "../../api/reservations/paymentsApi";
 import { getUserPoints } from "../../api/users/usersApi";
 import { UserContext } from "../../store/UserContext";
+import { useQueryClient } from "@tanstack/react-query";
 
 const PaymentPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const queryClient = useQueryClient();
   const state = location.state as {
     paymentData: PaymentDetails;
     totalAmount: number;
@@ -22,10 +24,10 @@ const PaymentPage = () => {
   const [modalMessage, setModalMessage] = useState<string>("");
   const [progress, setProgress] = useState<number>(0); // 진행률 상태
   const { userId } = useContext(UserContext);
-  const [userPoints, setUserPoints] = useState<number>(-1); // 포인트 상태
+  const [userPoints, setUserPoints] = useState<number>(-1);
   const delay = (ms: number) =>
     new Promise((resolve) => setTimeout(resolve, ms));
-
+  if (!userId) return;
   const fetchUserPoints = async () => {
     try {
       if (!userId) {
@@ -36,11 +38,11 @@ const PaymentPage = () => {
       if (response.code === 0 && response.data) {
         setUserPoints(response.data.point ?? 0); // undefined일 경우 0으로 설정
       } else {
-        toast.error("포인트를 불러오지 못했습니다");
+        toast.error("금액을 불러오지 못했습니다");
       }
     } catch (error) {
-      console.error("포인트 조회 중 오류 발생:", error);
-      toast.error("포인트 조회 중 문제가 발생했습니다.");
+      console.error("금액 조회 중 오류 발생:", error);
+      toast.error("금액 조회 중 문제가 발생했습니다.");
     }
   };
 
@@ -50,7 +52,7 @@ const PaymentPage = () => {
       return;
     }
     if (userPoints === -1) {
-      toast.error("먼저 보유 소켓를 조회해주세요!");
+      toast.error("먼저 보유하신 금액를 조회해주세요!");
       return;
     }
 
@@ -85,11 +87,17 @@ const PaymentPage = () => {
         paymentId: paymentData.payment.id,
         newPaymentStatus: "completed", // 결제 상태 변경
       });
+
+      await queryClient.invalidateQueries({
+        queryKey: [`my-orders-${userId}`],
+      }); // orders 쿼리 무효화
+
       setModalMessage("결제 완료! 🎉");
 
       setTimeout(() => {
         setIsProcessing(false);
         toast.success("결제가 완료되었습니다!");
+
         navigate(`/reservation-confirmation`, {
           state: { updatedResponse: response.data },
         });

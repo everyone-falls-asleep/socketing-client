@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import MainLayout from "../layout/MainLayout";
 import Button from "../atoms/buttons/Button";
@@ -8,16 +8,19 @@ import MyProfile from "../organisms/Form/MyProfile";
 import { formatToKoreanDateAndTime } from "../../utils/dateUtils";
 import { getAllOrder } from "../../api/orders/ordersApi";
 import { GetAllOrderResponse } from "../../types/api/order";
+import { UserContext } from "../../store/UserContext";
 
 const MyPageUser = () => {
   const [activeTab, setActiveTab] = useState("upcoming"); // 현재 활성화된 탭 상태
   const navigate = useNavigate();
 
+  const { userId } = useContext(UserContext);
+
   const useOrders = createResourceQuery<GetAllOrderResponse>(
-    "orders", // 쿼리 키의 기본 이름
+    `my-orders-${userId}`, // 쿼리 키의 기본 이름
     (eventId) => getAllOrder(eventId) // fetchFn으로 getAllOrder 사용
   );
-  const { data, isLoading, isError } = useOrders();
+  const { data, isLoading, isError } = useOrders("");
 
   if (isLoading) return <p>{fetchErrorMessages.isLoading}</p>;
   if (isError) return <p>{fetchErrorMessages.general}</p>;
