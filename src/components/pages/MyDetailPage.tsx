@@ -1,43 +1,39 @@
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import MainLayout from "../layout/MainLayout";
 import { GetOrder } from "../../types/api/order";
 import Font from "../atoms/fonts/Font";
 import { fetchErrorMessages } from "../../constants/errorMessages";
 import { formatToKoreanDateAndTime } from "../../utils/dateUtils";
+import Button from "../atoms/buttons/Button";
+import { useState } from "react";
 
 const MyDetailPage = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const state = location.state as { order: GetOrder };
   const order = state.order;
+  const [isModalOpen, setIsModalOpen] = useState(false);
   if (!order) {
     return <div>{fetchErrorMessages.noReservationData}</div>;
   }
 
+  // 모달 열기
+  const openModal = () => setIsModalOpen(true);
+
+  // 모달 닫기
+  const closeModal = () => setIsModalOpen(false);
+
+  // 예매 취소 확인
+  const handleCancelReservation = () => {
+    closeModal(); // 모달 닫기
+    navigate("/mypage"); // 마이페이지로 이동
+  };
+
   return (
     <>
       <MainLayout>
-        <div className="max-w-3xl mx-auto px-10 pt-10">
-          <p className="text-center text-xl md:text-2xl font-bold mb-2">
-            {"예매가 완료되었습니다."}
-          </p>
-
-          {/* 유저테스트를 위한 */}
-          <div className="flex flex-col items-center justify-center rounded-md h-[100px] bg-gray-100 space-y-2">
-            <label className="text-lg font-bold text-gray-700">
-              ❗️❗️설문조사에 참여해주세요 ❗️❗️🙏
-            </label>
-            <a
-              href="https://docs.google.com/forms/d/e/1FAIpQLSc2kS5zHgkzFog7PYnzRHwRLWjPIGhBEteYToUZ9IZK1PkAFw/viewform"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="px-6 py-2 bg-gradient-to-r from-red-500 to-yellow-500 text-white font-bold rounded-lg shadow-lg hover:from-red-600 hover:to-yellow-600 transition-transform transform hover:scale-105"
-            >
-              설문조사 링크 열기
-            </a>
-          </div>
-        </div>
-        <div className="max-w-3xl mx-auto p-5 md:p-10">
-          <div className="bg-white rounded-md shadow-lg overflow-hidden">
+        <div className="max-w-3xl mx-auto p-5 md:p-10 overflow-y-auto max-h-[calc(100%-64px)]">
+          <div className="bg-white rounded-md shadow-lg">
             {/* Header Section with Event Image */}
             <div className="relative h-48 ">
               <img
@@ -115,7 +111,45 @@ const MyDetailPage = () => {
               </div>
             </div>
           </div>
+
+          {/* 예매 취소 버튼 */}
+          <div className="fixed bottom-0 right-8 md:left-0 md:right-0 pb-4  flex justify-center">
+            <Button
+              onClick={openModal}
+              className="bg-se-500 text-white px-6 py-3 rounded-lg hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-300"
+            >
+              예매 취소
+            </Button>
+          </div>
         </div>
+        {/* 모달 */}
+        {isModalOpen && (
+          <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
+            <div className="bg-white rounded-lg shadow-lg p-6 w-96">
+              <h2 className="text-xl font-bold mb-4">예매 취소</h2>
+              <p className="text-gray-600 mb-6">
+                정말 예매를 취소하시겠습니까?
+              </p>
+              <div className="flex justify-end space-x-4">
+                <Button
+                  size="sm"
+                  onClick={handleCancelReservation}
+                  className="px-4 py-2 rounded-lg bg-red-500 text-white hover:bg-red-600"
+                >
+                  예매 취소
+                </Button>
+                <Button
+                  size="sm"
+                  variant="secondary"
+                  onClick={closeModal}
+                  className="px-4 py-2 rounded-lg border border-gray-300 hover:bg-gray-100"
+                >
+                  뒤로 가기
+                </Button>
+              </div>
+            </div>
+          </div>
+        )}
       </MainLayout>
     </>
   );
