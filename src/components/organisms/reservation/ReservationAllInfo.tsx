@@ -1,16 +1,20 @@
-import { useManagerContext } from "../../../store/ManagerContext";
+// import Button from "../../atoms/buttons/Button";
+import PropTypes from "prop-types";
 
-const ReservationAllInfo = () => {
-  const { seats } = useManagerContext();
+interface ReservationAllInfoProps {
+  totalReservations: number;
+  totalAmount: number;
+  totalSeats: number;
+}
 
+const ReservationAllInfo: React.FC<ReservationAllInfoProps> = ({
+  totalReservations = 0,
+  totalAmount = 0,
+  totalSeats = 0,
+}) => {
   const formatNumber = (num: number) => {
     return num?.toLocaleString() || "0";
   };
-
-  const totalSeats = seats.length;
-  const totalReservations = seats.filter(
-    (seat) => seat.reservations.length > 0
-  ).length;
 
   return (
     <div className="border flex flex-col justify-center items-center p-6 text-gray-800 bg-white rounded-lg space-y-4">
@@ -19,7 +23,7 @@ const ReservationAllInfo = () => {
       <p className="text-xl text-center">
         <span className="font-bold">총 매출 금액:</span>
         <div className="pt-2">
-          <span>{formatNumber(100000)}원</span>
+          <span>{formatNumber(totalAmount)}원</span>
         </div>
       </p>
       <p className="text-xl text-center">
@@ -42,6 +46,12 @@ const ReservationAllInfo = () => {
       </p> */}
     </div>
   );
+};
+
+ReservationAllInfo.propTypes = {
+  totalReservations: PropTypes.number as PropTypes.Validator<number>,
+  totalAmount: PropTypes.number as PropTypes.Validator<number>,
+  totalSeats: PropTypes.number as PropTypes.Validator<number>,
 };
 
 export default ReservationAllInfo;
