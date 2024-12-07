@@ -69,8 +69,8 @@ const OrderPage = () => {
 
   return (
     <MainLayout>
-      <div className="bg-gray-100 h-[calc(100vh-132px)] flex justify-center">
-        <div className="h-full max-w-4xl py-10 px-6 overflow-y-auto">
+      <div className="bg-gray-100 flex justify-center h-full">
+        <div className="max-w-4xl py-10 px-6">
           <h1 className="text-2xl font-bold mb-6">결제 정보</h1>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {/* 왼쪽 */}
