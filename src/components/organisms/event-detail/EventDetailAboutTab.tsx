@@ -13,7 +13,7 @@ const EventDetailAboutTab = () => {
       <div id="event-content-title" className="tab-content-title-container">
         <h2 className="tab-content-title">공연 소개</h2>
       </div>
-      <div id="event-about" className="content-container">
+      <div id="event-about" className="content-container overflow-y-auto">
         <div
           key={event.id}
           className="event-details px-2 md:p-2 flex flex-col md:flex-row justify-start md:gap-10"

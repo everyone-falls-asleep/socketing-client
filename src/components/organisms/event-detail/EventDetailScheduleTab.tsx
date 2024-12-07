@@ -34,9 +34,37 @@ const EventDetailScheduleTab = () => {
   return (
     <>
       <div className="tab-content-title-container">
-        <h2 className="tab-content-title md:ml-2">공연 일정</h2>
+        <h2 className="hidden md:block tab-content-title md:ml-10">
+          공연 일정
+        </h2>
       </div>
-      <div className="flex flex-col items-center md:items-start lg:mt-10 md:flex-row px-4 md:gap-7 lg:gap-10">
+      <div className="flex flex-col items-center md:items-start md:flex-row ">
+        {/* 모바일 반응형 */}
+        <div className="md:hidden w-[100%] flex flex-col gap-2 pb-3 border-gray-200 max-h-64 overflow-y-auto">
+          <button
+            className="bg-black text-white p-1 text-center rounded-lg font-bold transition-colors duration-200 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed"
+            onClick={() => setIsFriendRegisterModalOpen(true)}
+          >
+            함께 할 친구 등록 ({eventFriends?.length} 명)
+          </button>
+          <>
+            {eventFriends && eventFriends.length > 0 && (
+              <div className="flex h-11 p-4 rounded-lg border items-center shadow transition justify-between overflow-x-auto overflow-y-hidden">
+                <div className="flex-shrink-0 flex items-center pb-1 justify-center rounded-md gap-3">
+                  {eventFriends.map((eventFriend, index) => (
+                    <div key={index} className="font-bold">
+                      {eventFriend.email.slice(0, 3)}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </>
+          <ScheduleList
+            filteredEvent={filteredEvent}
+            selectedDates={selectedDates}
+          />
+        </div>
         {/* 달력 */}
         <div className="calendar mt-1 w-[100%] md:w-[50%]">
           <ScheduleHeader
@@ -55,19 +83,20 @@ const EventDetailScheduleTab = () => {
           >
             함께 할 친구 등록 ({eventFriends?.length} 명)
           </button>
-          <ScheduleList
-            filteredEvent={filteredEvent}
-            selectedDates={selectedDates}
-          />
-        </div>
-        {/* 모바일 반응형 */}
-        <div className="md:hidden w-[100%] flex flex-col gap-2 pt-3 border-t-2 border-gray-200 max-h-64 overflow-y-auto">
-          <button
-            className="bg-black text-white  p-1 text-center rounded-lg font-bold transition-colors duration-200 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed"
-            onClick={() => setIsFriendRegisterModalOpen(true)}
-          >
-            함께 할 친구 등록 ({eventFriends?.length} 명)
-          </button>
+
+          <>
+            {eventFriends && eventFriends.length > 0 && (
+              <div className="flex h-auto rounded-lg border items-center shadow-lg transition p-4 mx-2 mb-2 justify-between flex-wrap overflow-y-hidden">
+                <div className="flex-wrap flex items-center justify-center rounded-md">
+                  {eventFriends.map((eventFriend, index) => (
+                    <div key={index} className="p-2 text-lg font-bold">
+                      {eventFriend.email.slice(0, 3)}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </>
           <ScheduleList
             filteredEvent={filteredEvent}
             selectedDates={selectedDates}

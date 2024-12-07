@@ -44,10 +44,15 @@ const ScheduleCard = ({
 
   const handleAdjacentReservationClick = () => {
     if (!checkLogin()) return;
-    if (!eventFriends) return;
 
-    if (eventFriends.length < 1) {
-      toast.error("함께 할 친구를 먼저 등록해 주세요.");
+    if (!eventFriends || eventFriends.length < 1) {
+      toast.error(
+        "예매하기 위에 있는 버튼으로 함께 할 친구를 먼저 등록해 주세요."
+      );
+      return;
+    }
+    if (!isTicketingStarted) {
+      toast.error("티켓팅이 아직 시작되지 않았습니다.");
       return;
     }
     navigate(`/waiting/${eventId}/${eventDateId}`, {
@@ -74,8 +79,7 @@ const ScheduleCard = ({
           <Button
             variant="dark"
             onClick={handleAdjacentReservationClick}
-            disabled={isDisabled}
-            className="text-sm"
+            className={`text-sm ${isDisabled ? "opacity-30" : ""}`}
           >
             {isDisabled ? "함께 예매 준비 중" : "함께 예매하기"}
           </Button>
@@ -107,9 +111,9 @@ const ScheduleCard = ({
             variant="dark"
             size="sm"
             onClick={handleAdjacentReservationClick}
-            disabled={isDisabled}
+            className={`${isDisabled ? "opacity-30" : ""}`}
           >
-            {isDisabled ? "준비 중" : "함께 예매"}
+            {isDisabled ? "함께 준비" : "함께 예매"}
           </Button>
           <Button
             variant="primary"

@@ -111,8 +111,8 @@ const PaymentPage = () => {
 
   return (
     <MainLayout>
-      <div className="bg-gray-100 h-[calc(100vh-132px)] flex justify-center">
-        <div className="h-full w-[400px] py-10 px-6">
+      <div className="bg-gray-100 h-full flex justify-center">
+        <div className="w-[400px] py-10 px-6">
           <h1 className="text-2xl font-bold mb-6 text-center"> 결제하기</h1>
           <div className="flex flex-col gap-6 ">
             {/* 최종 결제 금액 */}
