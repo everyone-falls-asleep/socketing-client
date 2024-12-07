@@ -183,7 +183,7 @@ const MyPageManager = () => {
                             <Button
                               onClick={() =>
                                 navigate(
-                                  `/manager/${event.id}/${event.eventDates[0].id}`
+                                  `/admin/${event.id}/${event.eventDates[0].id}`
                                 )
                               }
                               className="hidden md:inline-block"
@@ -196,7 +196,7 @@ const MyPageManager = () => {
                             <Button
                               onClick={() =>
                                 navigate(
-                                  `/manager/${event.id}/${event.eventDates[0].id}`
+                                  `/admin/${event.id}/${event.eventDates[0].id}`
                                 )
                               }
                               size="sm"
@@ -262,14 +262,14 @@ const MyPageManager = () => {
                               </p>
                             </div>
                             <Button
-                              onClick={() => navigate(`/manager/${event.id}`)}
+                              onClick={() => navigate(`/admin/${event.id}`)}
                               variant="dark"
                               className="hidden md:inline-block"
                             >
                               전체 예매 결과
                             </Button>
                             <Button
-                              onClick={() => navigate(`/manager/${event.id}`)}
+                              onClick={() => navigate(`/admin/${event.id}`)}
                               variant="dark"
                               size="sm"
                               className="mt-3 md:hidden"

@@ -12,7 +12,7 @@ const fetchOneEventForManager = async (
   eventDateId: string
 ): Promise<EventManagementResponse> => {
   const response = await api.get<EventManagementResponse>(
-    `${API_URL}${eventId}/reservation-status?eventDateId=${eventDateId}`
+    `${API_URL}${eventId}?eventDateId=${eventDateId}`
   );
   return response.data;
 };

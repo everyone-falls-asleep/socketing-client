@@ -1,23 +1,33 @@
 import { User } from "./user";
 import { ApiResponse } from "./common";
+import { Payment } from "./payment";
 
 export interface Order {
   id: string;
 
-  user: User;
+  payments: Payment[];
 
   createdAt?: string;
   deletedAt?: string;
-  updatedAt?: string;
 }
 
 interface Reservation {
   id: string;
+  createdAt?: string;
+  updatedAt?: string;
+  deletedAt?: string;
   order: Order;
 }
 
-export interface Area {
+interface EventDate {
   id: string;
+  date: string;
+  createdAt?: string;
+  updatedAt?: string;
+  reservations: Reservation[];
+}
+
+interface Area {
   label: string;
   price: number;
   svg: string;
@@ -30,7 +40,11 @@ export interface Seat {
   cy: number;
   row: number;
   number: number;
-  reservations: Reservation[];
+}
+
+export interface UserSeat {
+  user_id: string;
+  seats: Seat[];
 }
 
 export interface EventManagement {
@@ -46,6 +60,7 @@ export interface EventManagement {
   ticketingStartTime: string;
 
   user: User;
+  eventDates: EventDate[];
   areas: Area[];
 }
 

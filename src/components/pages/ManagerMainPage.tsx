@@ -63,7 +63,7 @@ const ManagerMainPage = () => {
                 <button
                   className={`px-6 py-3 font-bold rounded-lg transition-colors ${"bg-rose-400"}`}
                   onClick={() =>
-                    navigate(`/manager/${event.id}/${event.eventDates[0].id}`)
+                    navigate(`/admin/${event.id}/${event.eventDates[0].id}`)
                   }
                 >
                   예매 현황 보기

@@ -1,7 +1,8 @@
+// import { Event } from "../../../types/api/event";
 import { EventManagement } from "../../../types/api/managers";
-// import { formatToKoreanDateAndTime } from "../../../utils/dateUtils";
+import { formatToKoreanDateAndTime } from "../../../utils/dateUtils";
 
-const ManagerReservationUpperEvent = (eventData: EventManagement) => {
+const AdminReservationUpperEvent = (eventData: EventManagement) => {
   return (
     <>
       {/* 배경 이미지 */}
@@ -42,14 +43,14 @@ const ManagerReservationUpperEvent = (eventData: EventManagement) => {
                 <p className="text-sm md:text-base font-bold">장소</p>
                 <p className="text-sm md:text-base">{eventData.place}</p>
               </div>
-              {/* <div className="flex  gap-2">
+              <div className="flex  gap-2">
                 <p className="text-sm md:text-base font-bold">시간</p>
                 <p className="text-sm md:text-base">
                   {formatToKoreanDateAndTime(eventData.eventDates[0].date)}
                   {eventData.eventDates.length > 1 &&
                     ` 외 ${eventData.eventDates.length - 1}회`}{" "}
                 </p>
-              </div> */}
+              </div>
               <div className="flex gap-2">
                 <p className="text-sm md:text-base font-bold">출연</p>
                 <p className="text-sm md:text-base">{eventData.cast}</p>
@@ -63,4 +64,4 @@ const ManagerReservationUpperEvent = (eventData: EventManagement) => {
   );
 };
 
-export default ManagerReservationUpperEvent;
+export default AdminReservationUpperEvent;
