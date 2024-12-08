@@ -58,7 +58,7 @@ const OrderPage = () => {
     const seatIds = orderData.seats.map((seat) => seat.id);
 
     const paymentData: NewPayment = {
-      orderId: orderData.order?.id,
+      orderId: orderData.id,
       paymentMethod: paymentMethod as PaymentMethod,
       totalAmount,
       eventDateId: eventData.eventDates[0].id,
