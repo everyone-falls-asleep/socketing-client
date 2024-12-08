@@ -13,15 +13,18 @@ const MyDetailPage = () => {
   const state = location.state as { order: GetOrder };
   const order = state.order;
   const [isCancleModalOpen, setIsCancleModalOpen] = useState(false);
+  const [isShowModalOpen, setIsShowModalOpen] = useState(false);
   if (!order) {
     return <div>{fetchErrorMessages.noReservationData}</div>;
   }
 
   // 모달 열기
   const openCancleModal = () => setIsCancleModalOpen(true);
+  const openShowModal = () => setIsShowModalOpen(true);
 
   // 모달 닫기
   const closeCancleModal = () => setIsCancleModalOpen(false);
+  const closeShowModal = () => setIsShowModalOpen(false);
 
   // 예매 취소 확인
   const handleCancelReservation = () => {
@@ -92,7 +95,7 @@ const MyDetailPage = () => {
                   <div className="flex flex-col flex-1">
                     <div className="flex justify-between items-center mb-2">
                       <div className="font-bold text-gray-700 mb-2">좌석</div>
-                      <Button variant="dark" size="sm">
+                      <Button onClick={openShowModal} variant="dark" size="sm">
                         좌석 위치 확인
                       </Button>
                     </div>
@@ -150,6 +153,24 @@ const MyDetailPage = () => {
                   className="px-4 py-2 rounded-lg border border-gray-300 hover:bg-gray-100"
                 >
                   뒤로 가기
+                </Button>
+              </div>
+            </div>
+          </div>
+        )}
+        {isShowModalOpen && (
+          <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
+            <div className="bg-white rounded-lg shadow-lg p-6 w-96">
+              <h2 className="text-xl font-bold">내 좌석 위치</h2>
+              <div className="py-4">여기에 맵 넣어주세용</div>
+              <div className="flex justify-end space-x-4">
+                <Button
+                  size="sm"
+                  variant="secondary"
+                  onClick={closeShowModal}
+                  className="px-4 py-2 rounded-lg border border-gray-300 hover:bg-gray-100"
+                >
+                  닫기
                 </Button>
               </div>
             </div>
