@@ -1,20 +1,33 @@
 import Button from "../atoms/buttons/Button";
 import MainLayout from "../layout/MainLayout";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
 import { OrderResponseData } from "../../types/api/socket";
 import { createNewPayment } from "../../api/reservations/paymentsApi";
 import { NewPayment } from "../../types/api/payment";
 import { PaymentMethod } from "../../types/api/payment";
+import { UserContext } from "../../store/UserContext";
+import { useQueryClient } from "@tanstack/react-query";
+import { Event } from "../../types/api/event";
+import { getUserPoints } from "../../api/users/usersApi";
+import { formatToKoreanDateAndTime } from "../../utils/dateUtils";
 
 const OrderPage = () => {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const location = useLocation();
-  const state = location.state as { orderData?: OrderResponseData };
+  const state = location.state as {
+    orderData: OrderResponseData;
+    eventData: Event;
+  };
   const orderData = state.orderData;
+  const eventData = state.eventData;
+
+  const { userId } = useContext(UserContext);
 
   const [isAgreed, setIsAgreed] = useState(false); // 구매 동의 체크박스 상태
+  const [userPoints, setUserPoints] = useState<number>(-1);
   const [paymentMethod, setPaymentMethod] = useState<string | null>(null); // 선택된 결제 방법
 
   const handlePayment = async () => {
@@ -22,7 +35,10 @@ const OrderPage = () => {
       toast.error("구매조건 확인 및 결제 진행에 동의해주세요!");
       return;
     }
-
+    if (userPoints === -1) {
+      toast.error("먼저 보유하신 금액를 조회해주세요!");
+      return;
+    }
     if (!paymentMethod) {
       toast.error("결제 방법을 선택해주세요!");
       return;
@@ -33,15 +49,20 @@ const OrderPage = () => {
       return;
     }
 
-    const totalAmount = orderData.reservations.reduce(
-      (acc, reservation) => acc + reservation.seat.area.price,
-      0
-    );
+    const totalAmount = orderData.area.price * orderData.seats.length;
+
+    if (userPoints < totalAmount) {
+      toast.error("잔액 부족!");
+      return;
+    }
+    const seatIds = orderData.seats.map((seat) => seat.id);
 
     const paymentData: NewPayment = {
-      orderId: orderData.order.id,
+      orderId: orderData.order?.id,
       paymentMethod: paymentMethod as PaymentMethod,
       totalAmount,
+      eventDateId: eventData.eventDates[0].id,
+      seatIds,
     };
 
     try {
@@ -49,9 +70,13 @@ const OrderPage = () => {
 
       if (response.code === 0) {
         toast.success("결제가 진행됩니다!");
-        // 결제 페이지로 이동하며 데이터 전달
-        navigate(`/payment`, {
-          state: { paymentData: response.data, totalAmount },
+
+        await queryClient.invalidateQueries({
+          queryKey: [`my-orders-${userId}`],
+        }); // orders 쿼리 무효화
+
+        navigate(`/reservation-confirmation`, {
+          state: { paymentData: response.data },
         });
       } else {
         toast.error(`결제 실패: ${response.message}`);
@@ -61,15 +86,36 @@ const OrderPage = () => {
       toast.error("결제 처리 중 오류가 발생했습니다.");
     }
   };
+  const delay = (ms: number) =>
+    new Promise((resolve) => setTimeout(resolve, ms));
+  if (!userId) return;
 
+  const fetchUserPoints = async () => {
+    try {
+      if (!userId) {
+        toast.error("사용자 정보를 가져올 수 없습니다.");
+        return;
+      }
+      await delay(500);
+      const response = await getUserPoints(userId);
+      if (response.code === 0 && response.data) {
+        setUserPoints(response.data.point ?? 0); // undefined일 경우 0으로 설정
+      } else {
+        toast.error("금액을 불러오지 못했습니다");
+      }
+    } catch (error) {
+      console.error("금액 조회 중 오류 발생:", error);
+      toast.error("금액 조회 중 문제가 발생했습니다.");
+    }
+  };
   if (!orderData) return;
   const order = orderData.order;
-  const event = orderData.event;
-  const reservations = orderData.reservations;
+  if (!order) return;
+  const seats = orderData.seats;
 
   return (
     <MainLayout>
-      <div className="bg-gray-100 flex justify-center h-full">
+      <div className="bg-gray-100 flex justify-center md:h-full">
         <div className="max-w-4xl py-10 px-6">
           <h1 className="text-2xl font-bold mb-6">결제 정보</h1>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -80,31 +126,32 @@ const OrderPage = () => {
                 <h2 className="text-lg font-bold mb-4">공연 티켓 정보</h2>
                 <div className="flex items-center">
                   <img
-                    src={event.thumbnail}
+                    src={eventData.thumbnail}
                     alt="공연 포스터"
                     className="w-24 h-28 rounded-md object-cover mr-4"
                   />
                   <div>
-                    <h3 className="text-xl font-bold mb-2">{event.title}</h3>
-                    <p className="text-gray-600 text-sm mb-1">{event.place}</p>
+                    <h3 className="text-xl font-bold mb-2">
+                      {eventData.title}
+                    </h3>
                     <p className="text-gray-600 text-sm mb-1">
-                      2024년 12월 12일
+                      {eventData.place}
                     </p>
-                    <p className="text-gray-600 text-sm">{event.cast}</p>
+                    <p className="text-gray-600 text-sm mb-1">
+                      {formatToKoreanDateAndTime(eventData.eventDates[0].date)}
+                    </p>
+                    <p className="text-gray-600 text-sm">{eventData.cast}</p>
                   </div>
                 </div>
                 <hr className="my-4" />
 
                 <div className="space-y-3">
                   <div>
-                    {reservations.map((reservation) => (
-                      <div
-                        className="flex justify-between"
-                        key={reservation.id}
-                      >
+                    {seats.map((seat) => (
+                      <div className="flex justify-between" key={seat.id}>
                         <span>
-                          {reservation.seat.area.label}구역{" "}
-                          {reservation.seat.row}열 {reservation.seat.number}번
+                          {orderData.area.label ?? ""}구역 {seat.row}열{" "}
+                          {seat.number}번
                         </span>
                       </div>
                     ))}
@@ -132,24 +179,19 @@ const OrderPage = () => {
               <div className="bg-white p-6 rounded-lg shadow-md">
                 <h2 className="text-lg font-bold mb-4">최종 결제금액</h2>
                 <div className="space-y-2 text-sm text-gray-600">
-                  {reservations.map((reservation) => (
-                    <div className="flex justify-between" key={reservation.id}>
+                  {seats.map((seat) => (
+                    <div className="flex justify-between" key={seat.id}>
                       <span>
-                        {reservation.seat.area.label}구역 {reservation.seat.row}
-                        열 {reservation.seat.number}번
+                        {orderData.area.label}구역 {seat.row}열 {seat.number}번
                       </span>
-                      <span>{reservation.seat.area.price}원</span>
+                      <span>{orderData.area.price}원</span>
                     </div>
                   ))}
                   <hr className="my-2" />
                   <div className="flex justify-between font-bold text-gray-800">
                     <span>총 결제금액</span>
                     <span>
-                      {reservations.reduce(
-                        (acc, reservation) => acc + reservation.seat.area.price,
-                        0
-                      )}
-                      원
+                      {orderData.area.price * orderData.seats.length}원
                     </span>
                   </div>
                 </div>
@@ -166,7 +208,26 @@ const OrderPage = () => {
                     name="paymentMethod"
                     onChange={() => setPaymentMethod("socket_pay")}
                   />
-                  <label htmlFor="socket_pay">소켓 페이</label>
+                  <label htmlFor="socket_pay">보유 금액</label>
+                  <p className="font-bold text-gray-800 mt-4 flex items-baseline justify-between space-x-5">
+                    <Button
+                      size="sm"
+                      variant="dark"
+                      onClick={() => {
+                        fetchUserPoints().catch((error) => {
+                          console.error("조회 중 오류 발생:", error);
+                          toast.error("조회 중 문제가 발생했습니다.");
+                        });
+                      }}
+                    >
+                      보유 금액 조회
+                    </Button>{" "}
+                    <span>
+                      {userPoints === -1
+                        ? "조회를 눌러주세요"
+                        : `${userPoints.toLocaleString()} 원`}
+                    </span>
+                  </p>
                 </div>
               </div>
 

@@ -43,6 +43,7 @@ interface OrderReservation {
 }
 
 interface OrderSeat {
+  id: string;
   row: number;
   number: number;
   area: OrderArea;
@@ -54,16 +55,28 @@ interface OrderArea {
 }
 
 export interface Order {
-  id: string;
+  id?: string;
   updatedAt: string;
   createdAt: string;
   user: OrderUser;
 }
 
+export interface OrderEventDate {
+  id: string;
+  date: string;
+}
+export interface Area {
+  price: number;
+  label: string;
+}
+
 export interface OrderResponseData {
-  event: OrderEvent;
-  order: Order;
-  reservations: OrderReservation[];
+  event?: OrderEvent;
+  eventDate: OrderEventDate;
+  order?: Order;
+  reservations?: OrderReservation[];
+  seats: Seat[];
+  area: Area;
 }
 
 export interface OrderResponse {

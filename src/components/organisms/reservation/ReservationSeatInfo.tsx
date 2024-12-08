@@ -4,8 +4,9 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import Button from "../../atoms/buttons/Button";
 import { OrderResponse } from "../../../types/api/socket";
+import { Event } from "../../../types/api/event";
 
-const ReservationSeatInfo = () => {
+const ReservationSeatInfo = (eventData: Event) => {
   const navigate = useNavigate();
   const { selectedSeats, reserveSeat, areasMap, socket, currentAreaId } =
     useContext(ReservationContext);
@@ -18,7 +19,7 @@ const ReservationSeatInfo = () => {
       socket.on("reservedSeats", (response: OrderResponse) => {
         console.log(response.data);
         navigate("/order", {
-          state: { orderData: response.data },
+          state: { orderData: response.data, eventData },
         });
       });
     } catch {

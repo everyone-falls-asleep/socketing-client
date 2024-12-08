@@ -14,7 +14,6 @@ import { WrappedReservationPage } from "../components/wrappers/WrappedReservatio
 import { WrappedManagerDetailPage } from "../components/wrappers/WrappedManagerDetailPage";
 import MyDetailPage from "../components/pages/MyDetailPage";
 import MyPageManager from "../components/pages/MyPageManager";
-import PaymentPage from "../components/pages/PaymentPage";
 import OrderPage from "../components/pages/OrderPage";
 
 const Router = () => {
@@ -32,7 +31,6 @@ const Router = () => {
           element={<WrappedReservationPage />}
         />
         <Route path="order" element={<OrderPage />} />
-        <Route path="payment" element={<PaymentPage />} />
         <Route
           path="search-results/:searchTerm"
           element={<SearchResultsPage />}
