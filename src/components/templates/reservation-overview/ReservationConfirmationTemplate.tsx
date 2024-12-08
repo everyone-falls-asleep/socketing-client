@@ -21,7 +21,7 @@ const ReservationConfirmationTemplate = ({ data }: ReservationConfirmProps) => {
             <img
               src={data.eventThumbnail}
               alt={data.eventTitle}
-              className="w-full h-full object-cover opacity-50"
+              className="w-full h-full object-cover rounded-t-lg opacity-50"
             />
             <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/20">
               <p className="!text-white text-2xl md:text-4xl font-bold mb-2">

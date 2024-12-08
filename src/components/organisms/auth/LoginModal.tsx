@@ -57,6 +57,8 @@ const LoginModal: React.FC<LoginModalProps> = ({
             type: "manual",
             message: loginErrorMessages.validation.emailInvalid,
           });
+        } else if (code === 2) {
+          toast.error(loginErrorMessages.noMatch);
         } else {
           toast.error(loginErrorMessages.generic);
         }
