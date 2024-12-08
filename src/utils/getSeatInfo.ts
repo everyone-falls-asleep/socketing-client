@@ -24,9 +24,7 @@ export const getSeatStatus = (
 ): SeatStatus => {
   if (!eventDateId) return "available";
 
-  const isReserved = seatData.reservations.some(
-    (reservation) => reservation.eventDate.id === eventDateId
-  );
+  const isReserved = seatData.reservedBy !== null;
 
   if (isReserved) return "reserved";
   if (seatData.selectedBy) {

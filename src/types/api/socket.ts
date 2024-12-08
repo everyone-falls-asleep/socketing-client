@@ -7,17 +7,10 @@ export interface Seat {
   cy: number;
   row: number;
   number: number;
-  reservations: Array<{
-    id: string;
-    eventDate: {
-      id: string;
-      date: string;
-    };
-  }>;
   selectedBy?: string | null;
   updatedAt: string;
   expirationTime: string;
-  reservedBy?: string;
+  reservedBy?: string | null;
   areaId: string;
 }
 
