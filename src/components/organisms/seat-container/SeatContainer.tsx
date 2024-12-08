@@ -2,22 +2,20 @@ import React, { useRef, useState, useEffect, useContext } from "react";
 import { ReservationContext } from "../../../store/ReservationContext";
 import SeatObj from "../../atoms/seats/SeatObj";
 import SvgWrapper from "../../../utils/SvgWrapper";
+import SeatTimer from "../../molecules/timer/SeatTimer";
 
 interface SeatContainerProps {
   svg: string;
 }
 
 const SeatContainer: React.FC<SeatContainerProps> = ({ svg }) => {
-  const { socket, isConnected, seatsMap, areasMap } =
-    useContext(ReservationContext);
+  const { seatsMap, areasMap } = useContext(ReservationContext);
   const containerRef = useRef<HTMLDivElement>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [startPoint, setStartPoint] = useState({ x: 0, y: 0 });
   const [translate, setTranslate] = useState({ x: 0, y: 0 });
   const [scale, setScale] = useState(1);
-  const [serverInfo, setServerInfo] = useState({
-    time: "",
-  });
+
   const [showLegend, setShowLegend] = useState(false);
   const [lastTouchDistance, setLastTouchDistance] = useState<number | null>(
     null
@@ -26,22 +24,6 @@ const SeatContainer: React.FC<SeatContainerProps> = ({ svg }) => {
   const seatsData = Array.from(seatsMap.values());
   const areasData = Array.from(areasMap.values());
 
-  useEffect(() => {
-    if (!socket || !isConnected) return;
-
-    socket.on("serverTime", (timestamp: string) => {
-      setServerInfo((prev) => ({
-        ...prev,
-        time: new Date(timestamp).toLocaleString(),
-      }));
-    });
-
-    return () => {
-      socket.off("serverTime");
-    };
-  }, [socket, isConnected]);
-
-  // 두 터치 포인트 사이의 거리를 계산하는 함수
   const getTouchDistance = (
     touch1: React.Touch,
     touch2: React.Touch
@@ -51,27 +33,23 @@ const SeatContainer: React.FC<SeatContainerProps> = ({ svg }) => {
     return Math.sqrt(dx * dx + dy * dy);
   };
 
-  // 터치 이벤트 핸들러
   const handleTouchStart = (e: React.TouchEvent): void => {
     if (e.touches.length === 1) {
-      // 단일 터치 (드래그용)
       setIsDragging(true);
       setStartPoint({
         x: e.touches[0].clientX,
         y: e.touches[0].clientY,
       });
     } else if (e.touches.length === 2) {
-      // 두 손가락 터치 (핀치 줌용)
       const distance = getTouchDistance(e.touches[0], e.touches[1]);
       setLastTouchDistance(distance);
     }
   };
 
   const handleTouchMove = (e: React.TouchEvent): void => {
-    e.preventDefault(); // 브라우저의 기본 스크롤을 방지
+    e.preventDefault();
 
     if (e.touches.length === 1 && isDragging) {
-      // 단일 터치 드래그
       const deltaX = e.touches[0].clientX - startPoint.x;
       const deltaY = e.touches[0].clientY - startPoint.y;
 
@@ -85,7 +63,6 @@ const SeatContainer: React.FC<SeatContainerProps> = ({ svg }) => {
         y: e.touches[0].clientY,
       });
     } else if (e.touches.length === 2 && lastTouchDistance !== null) {
-      // 핀치 줌
       const newDistance = getTouchDistance(e.touches[0], e.touches[1]);
       const delta = (newDistance - lastTouchDistance) * 0.01;
       const newScale = Math.min(Math.max(0.5, scale + delta), 3);
@@ -100,7 +77,6 @@ const SeatContainer: React.FC<SeatContainerProps> = ({ svg }) => {
     setLastTouchDistance(null);
   };
 
-  // 마우스 이벤트 핸들러
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent): void => {
       if (isDragging && containerRef.current) {
@@ -180,7 +156,6 @@ const SeatContainer: React.FC<SeatContainerProps> = ({ svg }) => {
         </div>
       </div>
 
-      {/* Zoom Controls - 데스크톱에서만 표시 */}
       <div className="hidden md:flex absolute bottom-11 left-1/2 transform -translate-x-1/2 bg-white rounded-lg shadow-lg p-2 gap-2">
         <button
           onClick={() => setScale(Math.min(scale + 0.2, 3))}
@@ -205,12 +180,6 @@ const SeatContainer: React.FC<SeatContainerProps> = ({ svg }) => {
         </button>
       </div>
 
-      {/* Server Info */}
-      <div className="absolute bottom-0 left-0 right-0 bg-white p-2 text-sm flex justify-between items-center h-10 border-t">
-        <div>Server Time: {serverInfo.time}</div>
-      </div>
-
-      {/* 좌석 상태 토글 버튼 */}
       <button
         className="absolute top-0 right-0 rounded-md p-2 shadow-lg flex items-center justify-center text-sm border bg-white opacity-70"
         onClick={() => setShowLegend((prev) => !prev)}
@@ -218,7 +187,6 @@ const SeatContainer: React.FC<SeatContainerProps> = ({ svg }) => {
         {showLegend ? "▲" : "좌석 색 정보 ▼"}
       </button>
 
-      {/* 좌석상태 정보 */}
       {showLegend && (
         <div className="absolute top-10 right-0 bg-white rounded-lg shadow-lg p-4 flex flex-col text-sm space-y-2 opacity-90">
           <div className="flex items-center space-x-3">
@@ -239,6 +207,7 @@ const SeatContainer: React.FC<SeatContainerProps> = ({ svg }) => {
           </div>
         </div>
       )}
+      <SeatTimer />
     </div>
   );
 };

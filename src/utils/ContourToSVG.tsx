@@ -301,7 +301,7 @@ const ContourToSVG: React.FC<ContourToSVGProps> = ({
                           : "rgba(0, 255, 26, 0.833)"
                       }
                       stroke={isSelected ? "red" : "gray"}
-                      strokeWidth={isSelected ? "3" : "2"}
+                      strokeWidth={isSelected ? "2" : "1"}
                       opacity="0.8"
                       cursor="pointer"
                       onClick={(e) => {
@@ -312,20 +312,24 @@ const ContourToSVG: React.FC<ContourToSVGProps> = ({
                       }}
                     />
 
-                    {contour.number && contour.number > 0 && (
-                      <text
-                        x={contour.cx}
-                        y={contour.cy}
-                        textAnchor="middle"
-                        dominantBaseline="middle"
-                        fill="black"
-                        fontSize={calculateFontSize(contour.boundingBox)}
-                        fontWeight="bold"
-                        pointerEvents="none"
-                      >
-                        {contour.number}
-                      </text>
-                    )}
+                    {contour.row &&
+                      contour.row > 0 &&
+                      contour.number &&
+                      contour.number > 0 && (
+                        <text
+                          x={contour.cx}
+                          y={contour.cy}
+                          textAnchor="middle"
+                          dominantBaseline="middle"
+                          fill="black"
+                          fontWeight="bold"
+                          fontSize={"5"}
+                          pointerEvents="none"
+                        >
+                          {`${contour.row}-
+                          ${contour.number} `}
+                        </text>
+                      )}
                   </g>
                 );
               })}

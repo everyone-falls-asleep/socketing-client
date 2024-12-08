@@ -21,6 +21,7 @@ interface ReservationContextType {
   selectSeats: (seatId: string, areaId: string, numberOfSeats: number) => void;
   currentUserId: string | null;
   selectedSeats: Seat[];
+  setSelectedSeats: (seats: Seat[]) => void;
   reserveSeat: (seatIds: string[]) => void;
   numberOfTickets: number;
   setNumberOfTickets: (count: number) => void;
@@ -70,12 +71,19 @@ export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
       seats.forEach((seat) => {
         const currentSeat = newMap.get(seat.seatId);
         if (currentSeat) {
+          const updatedSeat = {
+            ...currentSeat,
+            ...seat,
+            areaId: currentSeat.areaId,
+          };
+
+          newMap.set(seat.seatId, updatedSeat);
           if (seat.selectedBy === socket?.id) {
             setSelectedSeats((prev) => {
               if (!prev.some((s) => s.id === seat.seatId)) {
-                return [...prev, currentSeat];
+                return [...prev, updatedSeat];
               }
-              return prev;
+              return prev.map((s) => (s.id === seat.seatId ? updatedSeat : s));
             });
           } else if (
             currentSeat.selectedBy === socket?.id &&
@@ -85,11 +93,6 @@ export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
               prev.filter((s) => s.id !== seat.seatId)
             );
           }
-          newMap.set(seat.seatId, {
-            ...currentSeat,
-            ...seat,
-            areaId: currentSeat.areaId,
-          });
         }
       });
       return newMap;
@@ -198,6 +201,7 @@ export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
     selectSeats,
     currentUserId,
     selectedSeats,
+    setSelectedSeats,
     reserveSeat,
     numberOfTickets,
     setNumberOfTickets,
