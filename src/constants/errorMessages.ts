@@ -12,7 +12,7 @@ export const loginErrorMessages = {
     emailInvalid: "이메일을 입력해주세요.",
     passwordInvalid: "비밀번호를 입력해주세요.",
   },
-  noMatch: "아이디 또는 비밀번호가 잘못되었습니다.",
+  noMatch: "조회되지 않는 유저입니다. 회원가입해주세요.",
   generic: "로그인에 실패하였습니다.",
 };
 

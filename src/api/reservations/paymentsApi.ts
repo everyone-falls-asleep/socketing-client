@@ -13,8 +13,8 @@ const createNewPayment = async ({
   orderId,
   paymentMethod,
   totalAmount,
-  // eventDateId,
-  // seatIds,
+  eventDateId,
+  seatIds,
 }: NewPayment): Promise<UpdatedPaymentResponse> => {
   const token = localStorage.getItem("authToken");
 
@@ -28,8 +28,8 @@ const createNewPayment = async ({
       orderId,
       paymentMethod,
       totalAmount,
-      // eventDateId,
-      // seatIds,
+      eventDateId,
+      seatIds,
     },
     {
       headers: {

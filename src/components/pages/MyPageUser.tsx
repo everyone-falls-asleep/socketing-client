@@ -212,11 +212,11 @@ const MyPageUser = () => {
         {/* Main Content */}
         <main className="flex-1">
           <div className="max-w-4xl mx-auto p-8">
-            <h1 className="hidden md:inline-block text-2xl font-bold uppercase text-gray-800 mb-3">
+            <h1 className="hidden lg:inline-block text-2xl font-bold uppercase text-gray-800 mb-3">
               {section === "my-profile" ? "My Profile" : "My Tickets"}
             </h1>
             {/* 모바일 Tabs */}
-            <p className="md:hidden flex justify-around text-2xl font-bold uppercase text-gray-800 mb-3">
+            <p className="lg:hidden flex justify-around md:justify-start md:gap-6 md:px-2 text-2xl font-bold uppercase text-gray-800 mb-3">
               <span
                 className={`cursor-pointer ${
                   section === "my-tickets" ? "text-rose-500 font-bold" : ""
