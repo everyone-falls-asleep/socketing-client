@@ -16,7 +16,6 @@ const SeatContainer: React.FC<SeatContainerProps> = ({ svg }) => {
   const [startPoint, setStartPoint] = useState({ x: 0, y: 0 });
   const [translate, setTranslate] = useState({ x: 0, y: 0 });
   const [scale, setScale] = useState(1);
-  const [containerSize, setContainerSize] = useState({ width: 0, height: 0 });
 
   const [showLegend, setShowLegend] = useState(false);
   const [lastTouchDistance, setLastTouchDistance] = useState<number | null>(
@@ -25,21 +24,6 @@ const SeatContainer: React.FC<SeatContainerProps> = ({ svg }) => {
 
   const seatsData = Array.from(seatsMap.values());
   const areasData = Array.from(areasMap.values());
-
-  useEffect(() => {
-    if (!containerRef.current) return;
-
-    const observer = new ResizeObserver((entries) => {
-      for (const entry of entries) {
-        const { width, height } = entry.contentRect;
-        setContainerSize({ width, height });
-      }
-    });
-
-    observer.observe(containerRef.current);
-
-    return () => observer.disconnect();
-  }, []);
 
   const zoomToArea = (areaId: string) => {
     const area = areasMap.get(areaId);
@@ -52,32 +36,26 @@ const SeatContainer: React.FC<SeatContainerProps> = ({ svg }) => {
 
     const bbox = areaElement.getBBox();
     const svgElement = svgRef.current;
+    const containerRect = containerRef.current.getBoundingClientRect();
 
     const viewBox = svgElement.viewBox.baseVal;
 
-    const svgWidth = svgElement.width.baseVal.value || svgElement.clientWidth;
-    const svgHeight =
-      svgElement.height.baseVal.value || svgElement.clientHeight;
+    const svgWidth = svgElement.width.baseVal.value || viewBox.width;
+    const svgHeight = svgElement.height.baseVal.value || viewBox.height;
 
     const scaleX = svgWidth / viewBox.width;
     const scaleY = svgHeight / viewBox.height;
 
-    const FIXED_SCALE = 2;
+    const FIXED_SCALE = window.innerWidth <= 768 ? 2 : 1.5;
+    const areaCenterX = (bbox.x - viewBox.x) * scaleX;
+    const areaCenterY = (bbox.y - viewBox.y) * scaleY;
 
-    const transformedX = (bbox.x - viewBox.x) * scaleX;
-    const transformedY = (bbox.y - viewBox.y) * scaleY;
-    const transformedWidth = bbox.width * scaleX;
-    const transformedHeight = bbox.height * scaleY;
+    const areaWidth = bbox.width * scaleX;
+    const areaHeight = bbox.height * scaleY;
 
     const newTranslate = {
-      x:
-        containerSize.width / (2 * FIXED_SCALE) -
-        transformedX -
-        transformedWidth / 2,
-      y:
-        containerSize.height / (2 * FIXED_SCALE) -
-        transformedY -
-        transformedHeight / 2,
+      x: containerRect.width / 2 / FIXED_SCALE - areaCenterX - areaWidth / 2,
+      y: containerRect.height / 2 / FIXED_SCALE - areaCenterY - areaHeight / 2,
     };
 
     setScale(FIXED_SCALE);
@@ -107,8 +85,6 @@ const SeatContainer: React.FC<SeatContainerProps> = ({ svg }) => {
   };
 
   const handleTouchMove = (e: React.TouchEvent): void => {
-    e.preventDefault();
-
     if (e.touches.length === 1 && isDragging) {
       const deltaX = e.touches[0].clientX - startPoint.x;
       const deltaY = e.touches[0].clientY - startPoint.y;
@@ -136,6 +112,24 @@ const SeatContainer: React.FC<SeatContainerProps> = ({ svg }) => {
     setIsDragging(false);
     setLastTouchDistance(null);
   };
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    // Add non-passive event listeners
+    const options = { passive: false };
+
+    const preventDefaultTouchMove = (e: TouchEvent) => {
+      e.preventDefault();
+    };
+
+    container.addEventListener("touchmove", preventDefaultTouchMove, options);
+
+    return () => {
+      container.removeEventListener("touchmove", preventDefaultTouchMove);
+    };
+  }, []);
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent): void => {

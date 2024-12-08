@@ -33,6 +33,8 @@ const SvgWrapper = forwardRef<SVGSVGElement, SvgWrapperProps>(
       content: "",
     });
 
+    const [hoveredAreaId, setHoveredAreaId] = useState<string | null>(null);
+
     useEffect(() => {
       if (!svgString) return;
 
@@ -65,12 +67,16 @@ const SvgWrapper = forwardRef<SVGSVGElement, SvgWrapperProps>(
       if (!areaStats) return;
 
       const interpolateColor = (ratio: number) => {
-        if (ratio <= 0.5) {
+        if (ratio >= 0 && ratio < 0.25) {
           return "rgba(8, 79, 206, 0.983)";
-        } else if (ratio > 0.5 && ratio < 1) {
+        } else if (ratio >= 0.25 && ratio < 0.5) {
+          return "rgba(66, 125, 224, 0.98)";
+        } else if (ratio >= 0.5 && ratio < 0.75) {
           return "rgba(132, 162, 229, 0.991)";
+        } else if (ratio >= 0.75 && ratio < 1) {
+          return "rgba(157, 170, 206, 0.98)";
         } else {
-          return "rgba(183, 183, 183, 1)";
+          return "#808080";
         }
       };
 
@@ -91,7 +97,6 @@ const SvgWrapper = forwardRef<SVGSVGElement, SvgWrapperProps>(
         return;
       }
 
-      // Get the area path element
       const areaElement = document.querySelector(
         `.areas [class='${area.id}'] .area-data`
       );
@@ -99,13 +104,36 @@ const SvgWrapper = forwardRef<SVGSVGElement, SvgWrapperProps>(
         onAreaClick(area.id);
       }
 
-      // Handle area selection logic
       setSeatsMap(new Map());
       if (currentAreaId !== null) {
         exitArea(currentAreaId);
       }
       joinArea(area.id);
       setCurrentAreaId(area.id);
+    };
+
+    const handleMouseEnter = (areaId: string) => {
+      if (currentAreaId !== areaId) {
+        setHoveredAreaId(areaId);
+      }
+    };
+
+    // CSS styles for hover effects
+    const getAreaStyles = (areaId: string) => {
+      const isHovered = hoveredAreaId === areaId;
+      const isSelected = currentAreaId === areaId;
+
+      return {
+        cursor: isSelected ? "default" : "pointer",
+        transition: "all 0.3s ease",
+        filter:
+          !isSelected && isHovered
+            ? "brightness(1.2) drop-shadow(0 0 3px rgba(0,0,0,0.3))"
+            : "none",
+        opacity: !isSelected && isHovered ? 0.9 : 1,
+        stroke: isSelected ? "#2563eb" : "none",
+        strokeWidth: isSelected ? "2" : "0",
+      };
     };
 
     if (!svgContent.viewBox) return null;
@@ -127,6 +155,9 @@ const SvgWrapper = forwardRef<SVGSVGElement, SvgWrapperProps>(
               className={area.id}
               dangerouslySetInnerHTML={{ __html: area.svg }}
               onClick={() => handleAreaClick(area)}
+              onMouseEnter={() => handleMouseEnter(area.id)}
+              onMouseLeave={() => setHoveredAreaId(null)}
+              style={getAreaStyles(area.id)}
             />
           ))}
         </g>
