@@ -11,10 +11,12 @@ interface SeatContainerProps {
 const SeatContainer: React.FC<SeatContainerProps> = ({ svg }) => {
   const { seatsMap, areasMap } = useContext(ReservationContext);
   const containerRef = useRef<HTMLDivElement>(null);
+  const svgRef = useRef<SVGSVGElement>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [startPoint, setStartPoint] = useState({ x: 0, y: 0 });
   const [translate, setTranslate] = useState({ x: 0, y: 0 });
   const [scale, setScale] = useState(1);
+  const [containerSize, setContainerSize] = useState({ width: 0, height: 0 });
 
   const [showLegend, setShowLegend] = useState(false);
   const [lastTouchDistance, setLastTouchDistance] = useState<number | null>(
@@ -23,6 +25,64 @@ const SeatContainer: React.FC<SeatContainerProps> = ({ svg }) => {
 
   const seatsData = Array.from(seatsMap.values());
   const areasData = Array.from(areasMap.values());
+
+  useEffect(() => {
+    if (!containerRef.current) return;
+
+    const observer = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        const { width, height } = entry.contentRect;
+        setContainerSize({ width, height });
+      }
+    });
+
+    observer.observe(containerRef.current);
+
+    return () => observer.disconnect();
+  }, []);
+
+  const zoomToArea = (areaId: string) => {
+    const area = areasMap.get(areaId);
+    if (!area || !containerRef.current || !svgRef.current) return;
+
+    const areaElement = svgRef.current.querySelector(
+      `.areas [class='${areaId}'] .area-data`
+    );
+    if (!(areaElement instanceof SVGPathElement)) return;
+
+    const bbox = areaElement.getBBox();
+    const svgElement = svgRef.current;
+
+    const viewBox = svgElement.viewBox.baseVal;
+
+    const svgWidth = svgElement.width.baseVal.value || svgElement.clientWidth;
+    const svgHeight =
+      svgElement.height.baseVal.value || svgElement.clientHeight;
+
+    const scaleX = svgWidth / viewBox.width;
+    const scaleY = svgHeight / viewBox.height;
+
+    const FIXED_SCALE = 2;
+
+    const transformedX = (bbox.x - viewBox.x) * scaleX;
+    const transformedY = (bbox.y - viewBox.y) * scaleY;
+    const transformedWidth = bbox.width * scaleX;
+    const transformedHeight = bbox.height * scaleY;
+
+    const newTranslate = {
+      x:
+        containerSize.width / (2 * FIXED_SCALE) -
+        transformedX -
+        transformedWidth / 2,
+      y:
+        containerSize.height / (2 * FIXED_SCALE) -
+        transformedY -
+        transformedHeight / 2,
+    };
+
+    setScale(FIXED_SCALE);
+    setTranslate(newTranslate);
+  };
 
   const getTouchDistance = (
     touch1: React.Touch,
@@ -84,8 +144,8 @@ const SeatContainer: React.FC<SeatContainerProps> = ({ svg }) => {
         const deltaY = e.clientY - startPoint.y;
 
         setTranslate((prev) => ({
-          x: prev.x + deltaX,
-          y: prev.y + deltaY,
+          x: prev.x + deltaX / scale,
+          y: prev.y + deltaY / scale,
         }));
 
         setStartPoint({
@@ -142,16 +202,18 @@ const SeatContainer: React.FC<SeatContainerProps> = ({ svg }) => {
         <div
           className="absolute inset-0"
           style={{
-            transform: `translate(${translate.x}px, ${translate.y}px) scale(${scale})`,
-            transformOrigin: "center",
-            transition: isDragging ? "none" : "transform 0.1s ease-out",
+            transform: `translate(${translate.x * scale}px, ${translate.y * scale}px) scale(${scale})`,
+            transformOrigin: "0 0",
+            transition: isDragging ? "none" : "transform 0.3s ease-out",
           }}
         >
           <SvgWrapper
+            ref={svgRef}
             svgString={svg}
             seats={seatsData}
             areas={areasData}
             renderSeat={(seat) => <SeatObj seatData={seat} />}
+            onAreaClick={zoomToArea}
           />
         </div>
       </div>

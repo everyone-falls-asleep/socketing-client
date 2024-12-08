@@ -62,15 +62,7 @@ const SeatObj: React.FC<SeatProps> = ({ seatData }) => {
           strokeWidth="2"
           strokeDasharray="100"
           className="animate-[countdown_10s_linear_infinite]"
-        >
-          <animate
-            attributeName="stroke-dashoffset"
-            from="0"
-            to="100"
-            dur="10s"
-            repeatCount="1"
-          />
-        </circle>
+        ></circle>
       )}
 
       {seatStatus === "available" && !seatData.selectedBy && (
