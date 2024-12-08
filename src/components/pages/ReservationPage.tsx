@@ -56,7 +56,7 @@ const ReservationPage: React.FC = () => {
         topContent={<ReservationUpperEvent {...eventData.data} />}
         centerContent={<ReservationSeatContainer svg={eventData.data.svg} />}
         rightTopContent={<ReservationMinimap />}
-        rightBottomContent={<ReservationSeatInfo />}
+        rightBottomContent={<ReservationSeatInfo {...eventData.data} />}
       />
     </MainLayout>
   );

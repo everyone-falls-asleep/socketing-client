@@ -1,7 +1,6 @@
 import axios from "axios";
 import {
   NewPayment,
-  PaymentDetailsResponse,
   UpdatedPaymentResponse,
   UpdatePayment,
 } from "../../types/api/payment";
@@ -14,19 +13,23 @@ const createNewPayment = async ({
   orderId,
   paymentMethod,
   totalAmount,
-}: NewPayment): Promise<PaymentDetailsResponse> => {
+  // eventDateId,
+  // seatIds,
+}: NewPayment): Promise<UpdatedPaymentResponse> => {
   const token = localStorage.getItem("authToken");
 
   if (!token) {
     throw new Error("인증 토큰이 없습니다.");
   }
 
-  const response = await axios.post<PaymentDetailsResponse>(
+  const response = await axios.post<UpdatedPaymentResponse>(
     API_URL,
     {
       orderId,
       paymentMethod,
       totalAmount,
+      // eventDateId,
+      // seatIds,
     },
     {
       headers: {

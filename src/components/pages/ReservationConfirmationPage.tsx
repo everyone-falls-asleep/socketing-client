@@ -5,9 +5,9 @@ import { UpdatedPayment } from "../../types/api/payment";
 
 const ReservationConfirmationPage = () => {
   const location = useLocation();
-  const state = location.state as { updatedResponse: UpdatedPayment };
-  const updatedResponse = state.updatedResponse;
-  if (!updatedResponse) return;
+  const state = location.state as { paymentData: UpdatedPayment };
+  const paymentData = state.paymentData;
+  if (!paymentData) return;
 
   return (
     <MainLayout>
@@ -31,7 +31,7 @@ const ReservationConfirmationPage = () => {
           </a>
         </div>
       </div>
-      <ReservationOverviewTemplate data={updatedResponse} />
+      <ReservationOverviewTemplate data={paymentData} />
     </MainLayout>
   );
 };
