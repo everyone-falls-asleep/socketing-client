@@ -1,4 +1,5 @@
 import { useForm, Controller } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 import { CreateAreaRequest, NewEvent } from "../../../types/api/event";
 import Input from "../../atoms/inputs/Input";
 import Button from "../../atoms/buttons/Button";
@@ -16,6 +17,7 @@ import {
 import { NewAreasResponse } from "../../../types/api/event";
 
 const EventRegisterForm = () => {
+  const navigate = useNavigate();
   const {
     setEvent,
     setImageUrl,
@@ -77,6 +79,7 @@ const EventRegisterForm = () => {
   >(createNewArea, {
     onSuccess: () => {
       toast.success("공연과 좌석이 성공적으로 등록되었습니다.");
+      navigate("/");
     },
     onError: (error: AxiosError<ApiErrorResponse>) => {
       if (error.response?.data) {
@@ -251,7 +254,7 @@ const EventRegisterForm = () => {
             )}
           </div>
 
-          <div className="flex w-[130px] flex-col items-start">
+          {/* <div className="flex w-[130px] flex-col items-start">
             <label className="font-bold mb-1">연령 제한</label>
             <Input
               className=""
@@ -264,7 +267,7 @@ const EventRegisterForm = () => {
             {errors.ageLimit && (
               <span className="text-red-500">{errors.ageLimit.message}</span>
             )}
-          </div>
+          </div> */}
           <div className="space-y-2">
             <div className="flex flex-col items-start">
               <label className="font-bold mb-1">

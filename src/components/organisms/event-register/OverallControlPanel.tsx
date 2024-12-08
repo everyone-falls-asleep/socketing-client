@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useEventCreate } from "../../../store/EventCreateContext";
 import { createOutlinePath, calculateBoundingBox } from "../../../utils/svg";
 import { Contour } from "../../../types/components/common";
+import Button from "../../atoms/buttons/Button";
 
 const OverallControlPanel: React.FC = () => {
   const {
@@ -141,22 +142,20 @@ const OverallControlPanel: React.FC = () => {
   };
 
   return (
-    <div className="h-full p-6 space-y-6 overflow-auto">
-      <button
-        className={`px-4 py-2 rounded ${editMode ? "bg-blue-500" : "bg-gray-300"}`}
+    <div className="h-full p-6 space-y-4 overflow-auto">
+      <Button className="w-full" onClick={convertAllToSeats}>
+        전체 좌석 생성
+      </Button>
+      <Button
+        className={`w-full ${editMode ? "bg-black text-white" : "bg-gray-300"}`}
+        variant={`${editMode ? "dark" : "secondary"}`}
         onClick={() => {
           setEditMode(!editMode);
           setSelectedContours([]);
         }}
       >
-        드래그 모드
-      </button>
-      <button
-        className="w-full px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
-        onClick={convertAllToSeats}
-      >
-        전체 좌석 생성
-      </button>
+        드래그 모드 (shift 키)
+      </Button>
       {selectedContours.length > 0 && (
         <div className="space-y-4">
           <div className="space-y-2">
@@ -176,17 +175,19 @@ const OverallControlPanel: React.FC = () => {
               className="w-full px-3 py-2 border rounded-md"
               placeholder="구역 가격을 입력하세요"
             />
-            <button
+            <Button
               onClick={() => {
                 createAreaFromSelectedSeats();
                 setAreaLabel("");
                 setAreaPrice(50000);
               }}
+              variant="dark"
               disabled={!areaLabel || !areaPrice}
-              className="w-full px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:bg-gray-300"
+              size="sm"
+              className="w-full"
             >
               구역 생성
-            </button>
+            </Button>
           </div>
         </div>
       )}

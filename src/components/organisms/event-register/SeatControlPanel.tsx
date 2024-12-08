@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useEventCreate } from "../../../store/EventCreateContext";
 import { Contour } from "../../../types/components/common";
+import Button from "../../atoms/buttons/Button";
 
 const SeatControlPanel: React.FC = () => {
   const {
@@ -68,9 +69,9 @@ const SeatControlPanel: React.FC = () => {
   }
 
   return (
-    <div className="h-full p-2 space-y-3 overflow-auto bg-gray-50">
+    <div className="h-full p-3 space-y-3 overflow-auto bg-gray-50">
       <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
-        <h3 className="text-md font-semibold text-gray-800 mb-2">
+        <h3 className="text-md font-semibold text-gray-800">
           현재 타입: {typeToKorean[selectedContourData.type]}
         </h3>
       </div>
@@ -114,14 +115,15 @@ const SeatControlPanel: React.FC = () => {
               placeholder="구역 가격을 입력하세요"
             />
             <div className="flex flex-col gap-2">
-              <button
+              <Button
                 onClick={updateAreaInfo}
-                className="flex-1 py-2 px-4 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors"
+                size="sm"
+                variant="dark"
                 disabled={!areaLabel || areaPrice <= 0}
               >
                 구역 정보 수정
-              </button>
-              <button
+              </Button>
+              <Button
                 onClick={() => {
                   setContours(
                     (prevContours) =>
@@ -148,11 +150,11 @@ const SeatControlPanel: React.FC = () => {
                   );
                   setSelectedContour(null);
                 }}
-                className="py-2 px-4 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors"
-                type="button"
+                size="sm"
+                className="bg-rose-500"
               >
                 구역 삭제
-              </button>
+              </Button>
             </div>
           </div>
           <div className="pt-4 border-t border-gray-200">

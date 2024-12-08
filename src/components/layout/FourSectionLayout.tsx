@@ -49,7 +49,7 @@ const FourSectionLayout: React.FC<FourSectionLayoutProps> = ({
           </div>
 
           <div className="hidden md:flex md:w-1/4 flex-col max-h-full overflow-y-auto bg-white border-l">
-            <div className="border-b max-h-[220px]">{rightTopContent}</div>
+            <div className="border-b h-[220px]">{rightTopContent}</div>
             <div className="flex-1 p-4  overflow-y-auto">
               {rightBottomContent}
             </div>

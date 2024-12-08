@@ -14,14 +14,10 @@ const RegisterEventPage: React.FC = () => {
     <EventCreateProvider>
       <FourSectionLayout
         topContent={<EventRegisterForm />}
-        leftSidebarContent={<OverallControlPanel />}
+        leftSidebarContent={<SeatControlPanel />}
         centerContent={<SeatMaker isDateSidebarOpen={isLeftSidebarOpen} />}
         rightTopContent={<ImageMinimap />}
-        rightBottomContent={
-          <div className="bg-gray-100 shadow-md rounded-lg p-4">
-            <SeatControlPanel />
-          </div>
-        }
+        rightBottomContent={<OverallControlPanel />}
         isLeftSidebarOpen={isLeftSidebarOpen}
         toggleSidebar={() => setIsLeftSidebarOpen(!isLeftSidebarOpen)}
       />
