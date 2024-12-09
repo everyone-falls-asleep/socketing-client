@@ -12,6 +12,7 @@ import { getUserPoints } from "../../api/users/usersApi";
 import { formatToKoreanDateAndTime } from "../../utils/dateUtils";
 import { useReservationContext } from "../../store/ReservationContext";
 import { UserContext } from "../../store/UserContext";
+import { useQueryClient } from "@tanstack/react-query";
 
 const OrderPage = () => {
   const navigate = useNavigate();
@@ -22,7 +23,7 @@ const OrderPage = () => {
   };
   const orderData = state.orderData;
   const eventData = state.eventData;
-
+  const queryClient = useQueryClient();
   const { userId } = useContext(UserContext);
   const { requestOrder, socket } = useReservationContext();
 
@@ -30,7 +31,7 @@ const OrderPage = () => {
   const [userPoints, setUserPoints] = useState<number>(-1);
   const [paymentMethod, setPaymentMethod] = useState<string | null>(null); // 선택된 결제 방법
 
-  const handlePayment = () => {
+  const handlePayment = async () => {
     if (!isAgreed) {
       toast.error("구매조건 확인 및 결제 진행에 동의해주세요!");
       return;
@@ -74,9 +75,9 @@ const OrderPage = () => {
       // if (response.code === 0) {
       //   toast.success("결제가 진행됩니다!");
 
-      // await queryClient.invalidateQueries({
-      //   queryKey: [`my-orders-${userId}`],
-      // }); // orders 쿼리 무효화
+      await queryClient.invalidateQueries({
+        queryKey: [`my-orders-${userId}`],
+      }); // orders 쿼리 무효화
       socket.on("orderApproved", (response: ApprovedOrderResponse) => {
         navigate(`/reservation-confirmation`, {
           state: { paymentData: response.data },
@@ -246,7 +247,10 @@ const OrderPage = () => {
                 </div>
                 <Button
                   onClick={() => {
-                    handlePayment();
+                    handlePayment().catch((error) => {
+                      console.error("결제 처리 중 오류 발생:", error);
+                      toast.error("결제 처리 중 문제가 발생했습니다.");
+                    });
                   }}
                   className="text-sm w-full"
                 >

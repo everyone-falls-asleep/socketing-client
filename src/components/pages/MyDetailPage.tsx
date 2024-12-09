@@ -12,10 +12,13 @@ import { useContext, useState } from "react";
 import { cancelOrder, getOneOrder } from "../../api/orders/ordersApi";
 import { toast } from "react-toastify";
 import { UserContext } from "../../store/UserContext";
+import { useQueryClient } from "@tanstack/react-query";
 import { createResourceQuery } from "../../hooks/useCustomQuery";
 
 const MyDetailPage = () => {
   const { orderId } = useParams<{ orderId: string }>();
+  const queryClient = useQueryClient();
+
   const navigate = useNavigate();
   const { userId } = useContext(UserContext);
   const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
@@ -30,8 +33,7 @@ const MyDetailPage = () => {
   if (isLoading) return <p>{fetchErrorMessages.isLoading}</p>;
   if (isError) return <p>{fetchErrorMessages.general}</p>;
   if (!order) return <p>{fetchErrorMessages.noReservationData}</p>;
-  console.log(order.reservations);
-  console.log("orderdata:", order);
+
   const handleCancelOrder = async () => {
     try {
       const response = await cancelOrder(orderId!);
@@ -69,9 +71,12 @@ const MyDetailPage = () => {
   const closeShowModal = () => setIsShowModalOpen(false);
 
   // 예매 취소 확인
-  const handleCancelReservation = () => {
+  const handleCancelReservation = async () => {
     closeCancelModal(); // 모달 닫기
-    void handleCancelOrder();
+    await handleCancelOrder();
+    await queryClient.invalidateQueries({
+      queryKey: [`my-orders-${userId}`],
+    }); // orders 쿼리 무효화
     navigate("/mypage"); // 마이페이지로 이동
   };
 
@@ -184,7 +189,12 @@ const MyDetailPage = () => {
               <div className="flex justify-end space-x-4">
                 <Button
                   size="sm"
-                  onClick={handleCancelReservation}
+                  onClick={() => {
+                    handleCancelReservation().catch((error) => {
+                      console.error("취소 처리 중 오류 발생:", error);
+                      toast.error("취소 처리 중 문제가 발생했습니다.");
+                    });
+                  }}
                   className="px-4 py-2 rounded-lg bg-red-500 text-white hover:bg-red-600"
                 >
                   예매 취소

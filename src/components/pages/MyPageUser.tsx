@@ -93,17 +93,21 @@ const MyPageUser = () => {
               <Button
                 onClick={() => navigate(`/mypage/detail/${order.orderId}`)}
                 className="hidden md:inline-block"
-                // disabled={reservation.orderCanceledAt !== null}
+                disabled={order.orderCanceledAt !== null}
               >
-                예매 정보 보기
+                {order.orderCanceledAt !== null
+                  ? "취소된 티켓"
+                  : "예매 정보 보기"}
               </Button>
               <Button
                 onClick={() => navigate(`/mypage/detail/${order.orderId}`)}
                 size="sm"
                 className="mt-3 md:hidden"
-                // disabled={reservation.orderCanceledAt !== null}
+                disabled={order.orderCanceledAt !== null}
               >
-                예매 정보 보기
+                {order.orderCanceledAt !== null
+                  ? "취소된 티켓"
+                  : "예매 정보 보기"}
               </Button>
             </li>
           ))

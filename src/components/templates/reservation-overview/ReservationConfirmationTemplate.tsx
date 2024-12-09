@@ -38,11 +38,11 @@ const ReservationConfirmationTemplate = ({ data }: ReservationConfirmProps) => {
             {/* User Info */}
             <div className="flex items-center space-x-4 p-4 bg-gray-50 rounded-lg">
               <div className="w-12 h-12 bg-rose-100 rounded-full flex items-center justify-center">
-                <span className="font-bold">{data.userEmail}</span>
+                <span className="font-bold">{data.userEmail.slice(0, 1)}</span>
               </div>
               <div>
                 <Font className="font-bold text-gray-800">
-                  {data.userEmail}
+                  {data.userEmail.slice(0, 3)}
                 </Font>
               </div>
             </div>
