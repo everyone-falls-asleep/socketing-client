@@ -24,7 +24,7 @@ export const getSeatStatus = (
 ): SeatStatus => {
   if (!eventDateId) return "available";
 
-  const isReserved = seatData.reservedBy !== null;
+  const isReserved = seatData.reservedUserId !== null;
 
   if (isReserved) return "reserved";
   if (seatData.selectedBy) {
@@ -38,7 +38,7 @@ export const getSeatStatus = (
       ? "selected"
       : "temporary_hold";
   }
-  if (seatData.reservedBy) {
+  if (seatData.reservedUserId) {
     return "reserved";
   }
 

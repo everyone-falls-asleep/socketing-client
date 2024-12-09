@@ -11,7 +11,7 @@ export interface Seat {
   selectedBy?: string | null;
   updatedAt: string;
   expirationTime: string;
-  reservedBy?: string | null;
+  reservedUserId?: string | null;
   areaId: string;
 }
 
