@@ -41,10 +41,13 @@ const ReservationSeatInfo = (eventData: Event) => {
             <>
               <Button
                 onClick={() => void handleReservationSocketSubmit()}
-                className="p-4 w-full transition-colors "
+                className="p-4 w-full transition-colors flex items-center justify-between"
                 variant="primary"
               >
-                선택 좌석 예매하기
+                <span>선택 좌석 예매하기</span>
+                <div className="size-6 text-sm rounded-full flex items-center justify-center text-black bg-gray-300">
+                  {selectedSeats.length}
+                </div>
               </Button>
               {selectedSeats.map((seat) => (
                 <div

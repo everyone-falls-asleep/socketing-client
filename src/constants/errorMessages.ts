@@ -1,3 +1,5 @@
+const tokenErrorMessage = "로그인 세션이 만료되었습니다. 다시 로그인해주세요.";
+
 export const registerErrorMessages = {
   validation: {
     emailInvalid: "이메일 형식이 올바르지 않습니다.",
@@ -5,6 +7,15 @@ export const registerErrorMessages = {
   },
   duplicateUser: "이미 가입된 사용자입니다.",
   generic: "회원가입에 실패하였습니다.",
+};
+
+export const cancelOrderErrorMessages = {
+  success: "주문이 성공적으로 취소되었습니다.",
+  unauthorized: tokenErrorMessage,
+  notFound: "티켓을 찾을 수 없습니다.",
+  alreadyCanceled: "이 티켓은 이미 취소되었습니다.",
+  internalServerError:
+    "서버 내부 오류가 발생했습니다. 나중에 다시 시도해주세요.",
 };
 
 export const loginErrorMessages = {
@@ -24,8 +35,6 @@ export const fetchErrorMessages = {
   noSvgData: "오류 발생: 좌석 배치도를 불러올 수 없습니다.",
   noReservationData: "오류 발생: 예약 정보를 불러올 수 없습니다.",
 };
-
-const tokenErrorMessage = "로그인 세션이 만료되었습니다. 다시 로그인해주세요.";
 
 export const postEventErrorMessages = {
   invalidToken: tokenErrorMessage,
