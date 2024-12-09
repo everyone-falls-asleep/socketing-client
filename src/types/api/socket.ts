@@ -77,6 +77,7 @@ export interface ServerToClientEvents {
   serverTime: (time: string) => void;
   error: (response: ErrorResponse) => void;
   areaExited: (message: string) => void;
+  roomExited: (message: string) => void;
   orderMade: (response: OrderResponse) => void;
   orderApproved: (response: ApprovedOrderResponse) => void;
   reservedSeatsStatistic: (response: ReservedSeatsStatisticResponse[]) => void;
@@ -116,6 +117,7 @@ export interface ClientToServerEvents {
     eventDateId: string;
     areaId: string;
   }) => void;
+  exitRoom: (params: { eventId: string; eventDateId: string }) => void;
 }
 
 // Main Socket Type

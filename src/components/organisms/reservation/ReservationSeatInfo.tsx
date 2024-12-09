@@ -16,6 +16,8 @@ const ReservationSeatInfo = (eventData: Event) => {
     currentAreaId,
     eventId,
     eventDateId,
+    exitArea,
+    exitRoom,
   } = useContext(ReservationContext);
 
   const handleReservationSocketSubmit = () => {
@@ -24,7 +26,11 @@ const ReservationSeatInfo = (eventData: Event) => {
     reserveSeat(seatIds); // 소켓 서버 수정 필요
     try {
       socket.on("orderMade", (response: OrderResponse) => {
-        console.log(response);
+        if (currentAreaId) {
+          exitArea(currentAreaId);
+          exitRoom();
+        }
+
         navigate(`reservation/${eventId}/${eventDateId}/order`, {
           state: { orderData: response.data, eventData },
         });

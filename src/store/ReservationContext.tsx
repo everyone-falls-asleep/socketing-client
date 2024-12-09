@@ -31,6 +31,7 @@ interface ReservationContextType {
   currentAreaId: string | null;
   setCurrentAreaId: (currentAreaId: string) => void;
   exitArea: (areaId: string) => void;
+  exitRoom: () => void;
   areaStats: ReservedSeatsStatisticResponse[];
 }
 
@@ -113,6 +114,11 @@ export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
   const exitArea = (areaId: string) => {
     if (!socket || !eventId || !eventDateId) return;
     socket.emit("exitArea", { eventId, eventDateId, areaId });
+  };
+
+  const exitRoom = () => {
+    if (!socket || !eventId || !eventDateId) return;
+    socket.emit("exitRoom", { eventId, eventDateId });
   };
 
   const selectSeats = (
@@ -225,6 +231,7 @@ export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
     currentAreaId,
     setCurrentAreaId,
     exitArea,
+    exitRoom,
     areaStats,
   };
 
