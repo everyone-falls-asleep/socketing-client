@@ -3,19 +3,18 @@ import MainLayout from "../layout/MainLayout";
 import { useContext, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
-import { OrderResponseData } from "../../types/api/socket";
-import { createNewPayment } from "../../api/reservations/paymentsApi";
-import { NewPayment } from "../../types/api/payment";
-import { PaymentMethod } from "../../types/api/payment";
-import { UserContext } from "../../store/UserContext";
-import { useQueryClient } from "@tanstack/react-query";
+import {
+  ApprovedOrderResponse,
+  OrderResponseData,
+} from "../../types/api/socket";
 import { Event } from "../../types/api/event";
 import { getUserPoints } from "../../api/users/usersApi";
 import { formatToKoreanDateAndTime } from "../../utils/dateUtils";
+import { useReservationContext } from "../../store/ReservationContext";
+import { UserContext } from "../../store/UserContext";
 
 const OrderPage = () => {
   const navigate = useNavigate();
-  const queryClient = useQueryClient();
   const location = useLocation();
   const state = location.state as {
     orderData: OrderResponseData;
@@ -25,12 +24,13 @@ const OrderPage = () => {
   const eventData = state.eventData;
 
   const { userId } = useContext(UserContext);
+  const { requestOrder, socket } = useReservationContext();
 
   const [isAgreed, setIsAgreed] = useState(false); // 구매 동의 체크박스 상태
   const [userPoints, setUserPoints] = useState<number>(-1);
   const [paymentMethod, setPaymentMethod] = useState<string | null>(null); // 선택된 결제 방법
 
-  const handlePayment = async () => {
+  const handlePayment = () => {
     if (!isAgreed) {
       toast.error("구매조건 확인 및 결제 진행에 동의해주세요!");
       return;
@@ -55,32 +55,33 @@ const OrderPage = () => {
       toast.error("잔액 부족!");
       return;
     }
-    const seatIds = orderData.seats.map((seat) => seat.id);
+    // const seatIds = orderData.seats.map((seat) => seat.id);
 
-    const paymentData: NewPayment = {
-      orderId: orderData.id,
-      paymentMethod: paymentMethod as PaymentMethod,
-      totalAmount,
-      eventDateId: eventData.eventDates[0].id,
-      seatIds,
-    };
+    // const paymentData: NewPayment = {
+    //   orderId: orderData.id,
+    //   paymentMethod: paymentMethod as PaymentMethod,
+    //   totalAmount,
+    //   eventDateId: eventData.eventDates[0].id,
+    //   seatIds,
+    // };
 
     try {
-      const response = await createNewPayment(paymentData);
+      if (!socket || !userId) return;
 
-      if (response.code === 0) {
-        toast.success("결제가 진행됩니다!");
+      //const response = await createNewPayment(paymentData);
+      requestOrder(userId, orderData.id);
 
-        await queryClient.invalidateQueries({
-          queryKey: [`my-orders-${userId}`],
-        }); // orders 쿼리 무효화
+      // if (response.code === 0) {
+      //   toast.success("결제가 진행됩니다!");
 
+      // await queryClient.invalidateQueries({
+      //   queryKey: [`my-orders-${userId}`],
+      // }); // orders 쿼리 무효화
+      socket.on("orderApproved", (response: ApprovedOrderResponse) => {
         navigate(`/reservation-confirmation`, {
           state: { paymentData: response.data },
         });
-      } else {
-        toast.error(`결제 실패: ${response.message}`);
-      }
+      });
     } catch (error) {
       console.error("결제 요청 실패:", error);
       toast.error("결제 처리 중 오류가 발생했습니다.");
@@ -245,10 +246,7 @@ const OrderPage = () => {
                 </div>
                 <Button
                   onClick={() => {
-                    handlePayment().catch((error) => {
-                      console.error("결제 처리 중 오류 발생:", error);
-                      toast.error("결제 처리 중 문제가 발생했습니다.");
-                    });
+                    handlePayment();
                   }}
                   className="text-sm w-full"
                 >

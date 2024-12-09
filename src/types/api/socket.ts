@@ -1,4 +1,5 @@
 import { Socket } from "socket.io-client";
+import { PaymentMethod, UpdatedPaymentResponse } from "./payment";
 
 // Base Types
 export interface Seat {
@@ -28,6 +29,9 @@ export interface OrderResponseData {
 
 export interface OrderResponse {
   data: OrderResponseData;
+}
+export interface ApprovedOrderResponse {
+  data: UpdatedPaymentResponse;
 }
 
 export interface AreaSocket {
@@ -73,6 +77,7 @@ export interface ServerToClientEvents {
   error: (response: ErrorResponse) => void;
   areaExited: (message: string) => void;
   seatsReserved: (response: OrderResponse) => void; // 예매된 사용자에게만. 이거 받으면 결제창으로 응답 데이터 전달하며 화면 전환
+  orderApproved: (response: ApprovedOrderResponse) => void;
   reservedSeatsStatistic: (response: ReservedSeatsStatisticResponse[]) => void;
 }
 
@@ -96,6 +101,14 @@ export interface ClientToServerEvents {
     eventDateId: string;
     areaId: string;
     userId: string;
+  }) => void;
+  requestOrder: (params: {
+    userId: string;
+    orderId: string;
+    eventId: string;
+    eventDateId: string;
+    areaId: string;
+    paymentMethod: PaymentMethod;
   }) => void;
   exitArea: (params: {
     eventId: string;

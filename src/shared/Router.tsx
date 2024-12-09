@@ -26,10 +26,12 @@ const Router = () => {
         <Route path="mypage" element={<MyPageUser />} />
         <Route path="event/:id" element={<WrappedEventDetailPage />} />
         <Route path="register" element={<RegisterEventPage />} />
+
         <Route
-          path="reservation/:eventId/:eventDateId"
+          path="reservation/:eventId/:eventDateId/*"
           element={<WrappedReservationPage />}
         />
+
         <Route path="order" element={<OrderPage />} />
         <Route
           path="search-results/:searchTerm"

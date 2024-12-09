@@ -9,7 +9,6 @@ import {
 } from "../types/api/socket";
 import { toast } from "react-toastify";
 import { UserContext } from "./UserContext";
-
 interface ReservationContextType {
   socket: Socket | null;
   isConnected: boolean;
@@ -23,6 +22,7 @@ interface ReservationContextType {
   selectedSeats: Seat[];
   setSelectedSeats: (seats: Seat[]) => void;
   reserveSeat: (seatIds: string[]) => void;
+  requestOrder: (userId: string, orderId: string) => void;
   numberOfTickets: number;
   setNumberOfTickets: (count: number) => void;
   areasMap: Map<string, AreaSocket>;
@@ -142,6 +142,19 @@ export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
     });
   };
 
+  const requestOrder = (userId: string, orderId: string) => {
+    if (!socket || !eventId || !eventDateId || !userId || !currentAreaId)
+      return;
+    socket.emit("requestOrder", {
+      userId,
+      orderId,
+      eventId,
+      eventDateId,
+      areaId: currentAreaId,
+      paymentMethod: "socket_pay",
+    });
+  };
+
   useEffect(() => {
     if (!socket) return;
 
@@ -203,6 +216,7 @@ export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
     selectedSeats,
     setSelectedSeats,
     reserveSeat,
+    requestOrder,
     numberOfTickets,
     setNumberOfTickets,
     areasMap,

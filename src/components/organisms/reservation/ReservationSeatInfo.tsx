@@ -8,8 +8,15 @@ import { Event } from "../../../types/api/event";
 
 const ReservationSeatInfo = (eventData: Event) => {
   const navigate = useNavigate();
-  const { selectedSeats, reserveSeat, areasMap, socket, currentAreaId } =
-    useContext(ReservationContext);
+  const {
+    selectedSeats,
+    reserveSeat,
+    areasMap,
+    socket,
+    currentAreaId,
+    eventId,
+    eventDateId,
+  } = useContext(ReservationContext);
 
   const handleReservationSocketSubmit = () => {
     const seatIds: string[] = selectedSeats.map((seat) => seat.id);
@@ -18,7 +25,7 @@ const ReservationSeatInfo = (eventData: Event) => {
     try {
       socket.on("reservedSeats", (response: OrderResponse) => {
         console.log(response.data);
-        navigate("/order", {
+        navigate(`reservation/${eventId}/${eventDateId}/order`, {
           state: { orderData: response.data, eventData },
         });
       });
