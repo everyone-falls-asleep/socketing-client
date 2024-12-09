@@ -23,6 +23,7 @@ export interface Area {
 export interface OrderResponseData {
   id: string;
   createdAt: string;
+  expirationTime: string;
   seats: Seat[];
   area: Area;
 }
@@ -72,11 +73,11 @@ export interface ErrorResponse {
 export interface ServerToClientEvents {
   roomJoined: (response: RoomJoinedResponse) => void;
   areaJoined: (response: AreaJoinedResponse) => void;
-  seatsSelected: (response: SeatsSelectedResponse[]) => void; // 예매된 상태 다른 사용자들에게 전달하는 용으로도 쓰임
+  seatsSelected: (response: SeatsSelectedResponse[]) => void;
   serverTime: (time: string) => void;
   error: (response: ErrorResponse) => void;
   areaExited: (message: string) => void;
-  seatsReserved: (response: OrderResponse) => void; // 예매된 사용자에게만. 이거 받으면 결제창으로 응답 데이터 전달하며 화면 전환
+  orderMade: (response: OrderResponse) => void;
   orderApproved: (response: ApprovedOrderResponse) => void;
   reservedSeatsStatistic: (response: ReservedSeatsStatisticResponse[]) => void;
 }

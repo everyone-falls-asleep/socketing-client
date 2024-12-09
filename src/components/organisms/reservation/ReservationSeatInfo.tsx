@@ -23,8 +23,8 @@ const ReservationSeatInfo = (eventData: Event) => {
     if (!socket) return;
     reserveSeat(seatIds); // 소켓 서버 수정 필요
     try {
-      socket.on("reservedSeats", (response: OrderResponse) => {
-        console.log(response.data);
+      socket.on("orderMade", (response: OrderResponse) => {
+        console.log(response);
         navigate(`reservation/${eventId}/${eventDateId}/order`, {
           state: { orderData: response.data, eventData },
         });
