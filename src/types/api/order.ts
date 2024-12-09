@@ -23,6 +23,7 @@ export interface Order {
 export interface GetOrder {
   orderId: string;
   orderCreatedAt: string;
+  orderCanceledAt: string;
   userId: string;
   userNickname: string;
   userEmail: string;

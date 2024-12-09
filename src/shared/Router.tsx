@@ -54,7 +54,7 @@ const Router = () => {
           path="manager/:eventId/:eventDateId"
           element={<WrappedManagerDetailPage />}
         />
-        <Route path="mypage/detail" element={<MyDetailPage />} />
+        <Route path="mypage/detail/:orderId" element={<MyDetailPage />} />
       </Routes>
     </BrowserRouter>
   );

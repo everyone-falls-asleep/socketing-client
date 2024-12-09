@@ -1,34 +1,77 @@
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import MainLayout from "../layout/MainLayout";
-import { GetOrder } from "../../types/api/order";
+import { GetOneOrderResponse } from "../../types/api/order";
 import Font from "../atoms/fonts/Font";
-import { fetchErrorMessages } from "../../constants/errorMessages";
+import {
+  fetchErrorMessages,
+  cancelOrderErrorMessages,
+} from "../../constants/errorMessages";
 import { formatToKoreanDateAndTime } from "../../utils/dateUtils";
 import Button from "../atoms/buttons/Button";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { cancelOrder, getOneOrder } from "../../api/orders/ordersApi";
+import { toast } from "react-toastify";
+import { UserContext } from "../../store/UserContext";
+import { createResourceQuery } from "../../hooks/useCustomQuery";
 
 const MyDetailPage = () => {
-  const location = useLocation();
+  const { orderId } = useParams<{ orderId: string }>();
   const navigate = useNavigate();
-  const state = location.state as { order: GetOrder };
-  const order = state.order;
-  const [isCancleModalOpen, setIsCancleModalOpen] = useState(false);
+  const { userId } = useContext(UserContext);
+  const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
   const [isShowModalOpen, setIsShowModalOpen] = useState(false);
-  if (!order) {
-    return <div>{fetchErrorMessages.noReservationData}</div>;
-  }
+  const useOneOrder = createResourceQuery<GetOneOrderResponse>(
+    `my-order-${userId}`, // 쿼리 키의 기본 이름
+    (orderId) => getOneOrder(orderId) // fetchFn으로 getAllOrder 사용
+  );
+  const { data, isLoading, isError } = useOneOrder(orderId);
 
+  const order = data?.data;
+  if (isLoading) return <p>{fetchErrorMessages.isLoading}</p>;
+  if (isError) return <p>{fetchErrorMessages.general}</p>;
+  if (!order) return <p>{fetchErrorMessages.noReservationData}</p>;
+  console.log(order.reservations);
+  console.log("orderdata:", order);
+  const handleCancelOrder = async () => {
+    try {
+      const response = await cancelOrder(orderId!);
+      if (response.code === 0) {
+        toast.success(cancelOrderErrorMessages.success);
+      } else {
+        switch (response.code) {
+          case 8:
+            toast.error(cancelOrderErrorMessages.unauthorized);
+            break;
+          case 15:
+            toast.error(cancelOrderErrorMessages.notFound);
+            break;
+          case 22:
+            toast.error(cancelOrderErrorMessages.alreadyCanceled);
+            break;
+          case 6:
+            toast.error(cancelOrderErrorMessages.internalServerError);
+            break;
+          default:
+            toast.error("알 수 없는 오류가 발생했습니다.");
+        }
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("취소 처리 중 오류가 발생했습니다.");
+    }
+  };
   // 모달 열기
-  const openCancleModal = () => setIsCancleModalOpen(true);
+  const openCancelModal = () => setIsCancelModalOpen(true);
   const openShowModal = () => setIsShowModalOpen(true);
 
   // 모달 닫기
-  const closeCancleModal = () => setIsCancleModalOpen(false);
+  const closeCancelModal = () => setIsCancelModalOpen(false);
   const closeShowModal = () => setIsShowModalOpen(false);
 
   // 예매 취소 확인
   const handleCancelReservation = () => {
-    closeCancleModal(); // 모달 닫기
+    closeCancelModal(); // 모달 닫기
+    void handleCancelOrder();
     navigate("/mypage"); // 마이페이지로 이동
   };
 
@@ -123,7 +166,7 @@ const MyDetailPage = () => {
           {/* 예매 취소 버튼 */}
           <div className="fixed bottom-0 right-8 md:left-0 md:right-0 pb-4  flex justify-center">
             <Button
-              onClick={openCancleModal}
+              onClick={openCancelModal}
               className="bg-se-500 text-white px-6 py-3 rounded-lg hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-300"
             >
               예매 취소
@@ -131,7 +174,7 @@ const MyDetailPage = () => {
           </div>
         </div>
         {/* 모달 */}
-        {isCancleModalOpen && (
+        {isCancelModalOpen && (
           <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
             <div className="bg-white rounded-lg shadow-lg p-6 w-96">
               <h2 className="text-xl font-bold mb-4">예매 취소</h2>
@@ -149,7 +192,7 @@ const MyDetailPage = () => {
                 <Button
                   size="sm"
                   variant="secondary"
-                  onClick={closeCancleModal}
+                  onClick={closeCancelModal}
                   className="px-4 py-2 rounded-lg border border-gray-300 hover:bg-gray-100"
                 >
                   뒤로 가기

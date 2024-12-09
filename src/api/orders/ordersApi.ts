@@ -2,10 +2,9 @@ import axios from "axios";
 import {
   GetAllOrderResponse,
   GetOneOrderResponse,
-  NewOrder,
-  NewOrderResponse,
 } from "../../types/api/order";
 import { baseURL } from "../../constants/api";
+import { ApiResponse } from "../../types/api/common";
 
 const API_URL = baseURL + "orders/";
 
@@ -13,16 +12,10 @@ const api = axios.create({
   baseURL: API_URL,
 });
 
-const createNewOrder = async ({
-  eventId,
-  eventDateId,
-  seatIds,
-}: NewOrder): Promise<NewOrderResponse> => {
-  const response = await api.post<NewOrderResponse>(API_URL, {
-    eventId,
-    eventDateId,
-    seatIds,
-  });
+const cancelOrder = async (orderId: string): Promise<ApiResponse<"">> => {
+  const response = await api.post<ApiResponse<"">>(
+    API_URL + `${orderId}/cancel`
+  );
   return response.data;
 };
 
@@ -54,4 +47,4 @@ api.interceptors.request.use(
   }
 );
 
-export { createNewOrder, getAllOrder, getOneOrder };
+export { cancelOrder, getAllOrder, getOneOrder };

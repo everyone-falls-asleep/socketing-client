@@ -37,6 +37,7 @@ const MyPageUser = () => {
   const upcomingEvents = reservationData.filter(
     (reservation) => new Date(reservation.eventDate) >= currentTime
   );
+
   const renderReservationList = (events: GetOrder[], emptyMessage: string) => (
     <div className="mb-4">
       <ul className="space-y-4">
@@ -48,65 +49,59 @@ const MyPageUser = () => {
             <Button onClick={() => navigate("/")}>이벤트 보러가기</Button>
           </div>
         ) : (
-          events.map((reservation) => (
+          events.map((order) => (
             <li
-              key={reservation.orderId}
+              key={order.orderId}
               className="p-4 px-6 border border-gray-300 rounded-lg shadow-sm flex flex-col md:flex-row md:items-center space-x-4"
             >
               <div className="flex justify-around items-start m-2">
                 <img
-                  src={reservation.eventThumbnail}
-                  alt={reservation.eventTitle}
+                  src={order.eventThumbnail}
+                  alt={order.eventTitle}
                   className="md:w-16 h-24 rounded-lg object-cover"
                 />
               </div>
               <div className="flex-1 pl-3">
                 <h3 className="text-lg font-bold text-gray-700 mb-1">
-                  {reservation.eventTitle}
+                  {order.eventTitle}
                 </h3>
                 <p className="text-sm text-gray-500">
                   <span className="inline-block w-8 md:w-14 font-semibold">
                     예매
                   </span>
-                  {formatToKoreanDateAndTime(reservation.orderCreatedAt)}
+                  {formatToKoreanDateAndTime(order.orderCreatedAt)}
                 </p>
                 <p className="text-sm text-gray-500">
                   <span className="inline-block w-8 md:w-14 font-semibold">
                     일정
                   </span>
-                  {formatToKoreanDateAndTime(reservation.eventDate)}
+                  {formatToKoreanDateAndTime(order.eventDate)}
                 </p>
                 <p className="text-sm text-gray-500">
                   <span className="inline-block w-8 md:w-14 font-semibold">
                     장소
                   </span>
-                  {reservation.eventPlace}
+                  {order.eventPlace}
                 </p>
                 <p className="text-sm text-gray-500">
                   <span className="inline-block w-8 md:w-14 font-semibold">
                     출연
                   </span>
-                  {reservation.eventCast}
+                  {order.eventCast}
                 </p>
               </div>
               <Button
-                onClick={() =>
-                  navigate("/mypage/detail", {
-                    state: { order: reservation },
-                  })
-                }
+                onClick={() => navigate(`/mypage/detail/${order.orderId}`)}
                 className="hidden md:inline-block"
+                // disabled={reservation.orderCanceledAt !== null}
               >
                 예매 정보 보기
               </Button>
               <Button
-                onClick={() =>
-                  navigate("/mypage/detail", {
-                    state: { order: reservation },
-                  })
-                }
+                onClick={() => navigate(`/mypage/detail/${order.orderId}`)}
                 size="sm"
                 className="mt-3 md:hidden"
+                // disabled={reservation.orderCanceledAt !== null}
               >
                 예매 정보 보기
               </Button>
