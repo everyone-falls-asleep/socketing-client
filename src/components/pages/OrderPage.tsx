@@ -27,6 +27,7 @@ const OrderPage = () => {
   const queryClient = useQueryClient();
   const { userId } = useContext(UserContext);
   const { requestOrder, socket } = useReservationContext();
+  const storedName = localStorage.getItem("name");
 
   const [isAgreed, setIsAgreed] = useState(false); // 구매 동의 체크박스 상태
   const [userPoints, setUserPoints] = useState<number>(-1);
@@ -111,16 +112,17 @@ const OrderPage = () => {
       toast.error("금액 조회 중 문제가 발생했습니다.");
     }
   };
-  if (!orderData) return;
-  // const order = orderData.order;
-  // if (!order) return;
+  if (!orderData) return <p>예매 정보가 없습니다</p>;
   const seats = orderData.seats;
 
   return (
     <MainLayout>
       <div className="bg-gray-100 flex justify-center md:h-full">
         <div className="max-w-4xl py-10 px-6">
-          <h1 className="text-2xl font-bold mb-6">결제 정보</h1>
+          <div className="flex items-center justify-between mb-6">
+            <h1 className="text-2xl font-bold">결제 정보</h1>
+            <PaymentTimer />
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {/* 왼쪽 */}
             <div className="md:col-span-2 space-y-6">
@@ -166,12 +168,14 @@ const OrderPage = () => {
               <div className="bg-white p-6 rounded-lg shadow-md">
                 <h2 className="text-lg font-bold mb-4">주문자 정보</h2>
                 <div className="flex justify-between items-center">
-                  {/* <div className="space-y-1">
-                    <p className="text-sm text-gray-600">
+                  <div className="space-y-1">
+                    {/* <p className="text-sm text-gray-600">
                       {order.user.nickname}
+                    </p> */}
+                    <p className="text-sm text-gray-600">
+                      {storedName}@jungle.com
                     </p>
-                    <p className="text-sm text-gray-600">{order.user.email}</p>
-                  </div> */}
+                  </div>
                 </div>
               </div>
             </div>
@@ -261,7 +265,6 @@ const OrderPage = () => {
             </div>
           </div>
         </div>
-        <PaymentTimer />
       </div>
     </MainLayout>
   );

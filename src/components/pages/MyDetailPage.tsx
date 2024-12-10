@@ -98,8 +98,8 @@ const MyDetailPage = () => {
   return (
     <>
       <MainLayout>
-        <div className="max-w-3xl mx-auto p-5 md:p-10 overflow-y-auto max-h-[calc(100%-64px)]">
-          <div className="bg-white rounded-lg shadow-lg">
+        <div className="p-5 md:p-10 overflow-y-auto max-h-[calc(100%-64px)]">
+          <div className="max-w-3xl mx-auto bg-white rounded-lg shadow-lg">
             {/* Header Section with Event Image */}
             <div className="relative h-48 ">
               <img
@@ -191,7 +191,7 @@ const MyDetailPage = () => {
           <div className="fixed bottom-0 right-8 md:left-0 md:right-0 pb-4  flex justify-center">
             <Button
               onClick={openCancelModal}
-              className={`${order.orderCanceledAt !== null ? "hidden" : ""} bg-se-500 text-white px-6 py-3 rounded-lg hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-300`}
+              className={`${order.orderCanceledAt !== null ? "hidden" : ""}`}
             >
               예매 취소
             </Button>

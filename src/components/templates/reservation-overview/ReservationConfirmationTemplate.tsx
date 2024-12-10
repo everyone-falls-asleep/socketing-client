@@ -11,10 +11,9 @@ const ReservationConfirmationTemplate = ({ data }: ReservationConfirmProps) => {
   if (!data) {
     return <div>{fetchErrorMessages.noReservationData}</div>;
   }
-
   return (
     <>
-      <div className="max-w-3xl mx-auto p-5 md:p-10">
+      <div className="max-w-3xl mx-auto md:p-10 ">
         <div className="bg-white rounded-md shadow-lg overflow-hidden">
           {/* Header Section with Event Image */}
           <div className="relative h-48 ">

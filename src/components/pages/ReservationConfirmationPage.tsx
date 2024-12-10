@@ -7,11 +7,11 @@ const ReservationConfirmationPage = () => {
   const location = useLocation();
   const state = location.state as { paymentData: UpdatedPayment };
   const paymentData = state.paymentData;
-  if (!paymentData) return;
+  if (!paymentData) return <p>결제 정보가 없습니다</p>;
 
   return (
     <MainLayout>
-      <div className="max-w-3xl mx-auto px-10 pt-10">
+      <div className="mx-auto p-5 md:p-10 pt-5 overflow-y-auto max-h-[calc(100%-64px)]">
         <p className="text-center text-xl md:text-2xl font-bold mb-2">
           {"예매가 완료되었습니다."}
         </p>
@@ -30,8 +30,8 @@ const ReservationConfirmationPage = () => {
             설문조사 링크 열기
           </a>
         </div>
+        <ReservationOverviewTemplate data={paymentData} />
       </div>
-      <ReservationOverviewTemplate data={paymentData} />
     </MainLayout>
   );
 };

@@ -109,7 +109,7 @@ const WaitingRoomPage = () => {
         {/*{/* 상단 진행 상태 */}
         <div className="w-full max-w-4xl p-6">
           {/* 단계별 텍스트 */}
-          <div className="flex justify-between mt-10 md:mt-4 text-sm">
+          <div className="flex justify-between mt-10 md:mt-0 text-sm">
             {stages.map((stage, index) => (
               <div
                 key={index}
@@ -128,11 +128,10 @@ const WaitingRoomPage = () => {
         </div>
         {/* 대기실/큐 상태 */}
         <div className="flex flex-col items-center justify-center">
-          <p className="mt-2 p-3 md:text-lg">
-            {/* {currentStage === 1 &&
-                "대기실에 입장하셨습니다. 잠시 후 입장 대기가 시작됩니다."} */}
+          <p className="md:mt-2 px-5 md:text-lg whitespace-pre-line">
             {progress < 90 &&
-              "현재 입장 대기 중입니다. 좌석 선택을 위해 준비해주세요!"}
+              `현재 입장 대기 중입니다.
+              좌석 선택을 위해 준비해주세요!`}
             {progress > 90 && "곧 입장이 시작됩니다!"}
           </p>
           <h2 className="mt-4 text-2xl font-bold">
