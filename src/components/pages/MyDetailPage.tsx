@@ -159,7 +159,7 @@ const MyDetailPage = () => {
                     <div className="flex justify-between items-center mb-2">
                       <div className="font-bold text-gray-700 mb-2">좌석</div>
                       <Button
-                        onClick={void openShowModal}
+                        onClick={() => void openShowModal()}
                         variant="dark"
                         size="sm"
                       >
