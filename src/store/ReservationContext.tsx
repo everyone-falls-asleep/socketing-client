@@ -6,6 +6,7 @@ import {
   ReservedSeatsStatisticResponse,
   Seat,
   SeatsSelectedResponse,
+  OrderResponseData,
 } from "../types/api/socket";
 import { toast } from "react-toastify";
 import { UserContext } from "./UserContext";
@@ -33,6 +34,8 @@ interface ReservationContextType {
   exitArea: (areaId: string) => void;
   exitRoom: () => void;
   areaStats: ReservedSeatsStatisticResponse[];
+  currentOrder: OrderResponseData | null;
+  setCurrentOrder: (currentOrder: OrderResponseData | null) => void;
 }
 
 export const ReservationContext = createContext<ReservationContextType>(
@@ -64,6 +67,9 @@ export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
   const [numberOfTickets, setNumberOfTickets] = useState(1);
   const [areaStats, setAreaStats] = useState<ReservedSeatsStatisticResponse[]>(
     []
+  );
+  const [currentOrder, setCurrentOrder] = useState<OrderResponseData | null>(
+    null
   );
 
   const updateSeats = (seats: SeatsSelectedResponse[]) => {
@@ -233,6 +239,8 @@ export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
     exitArea,
     exitRoom,
     areaStats,
+    currentOrder,
+    setCurrentOrder,
   };
 
   return (

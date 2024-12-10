@@ -13,6 +13,7 @@ import { formatToKoreanDateAndTime } from "../../utils/dateUtils";
 import { useReservationContext } from "../../store/ReservationContext";
 import { UserContext } from "../../store/UserContext";
 import { useQueryClient } from "@tanstack/react-query";
+import PaymentTimer from "../molecules/timer/PaymentTimer";
 
 const OrderPage = () => {
   const navigate = useNavigate();
@@ -260,6 +261,7 @@ const OrderPage = () => {
             </div>
           </div>
         </div>
+        <PaymentTimer />
       </div>
     </MainLayout>
   );

@@ -18,6 +18,7 @@ const ReservationSeatInfo = (eventData: Event) => {
     eventDateId,
     exitArea,
     exitRoom,
+    setCurrentOrder,
   } = useContext(ReservationContext);
 
   const handleReservationSocketSubmit = () => {
@@ -30,7 +31,7 @@ const ReservationSeatInfo = (eventData: Event) => {
           exitArea(currentAreaId);
           exitRoom();
         }
-
+        setCurrentOrder(response.data);
         navigate(`reservation/${eventId}/${eventDateId}/order`, {
           state: { orderData: response.data, eventData },
         });
