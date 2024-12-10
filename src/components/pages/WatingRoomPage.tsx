@@ -7,6 +7,7 @@ import { fetchOneEvent } from "../../api/events/eventsApi";
 import { createResourceQuery } from "../../hooks/useCustomQuery";
 import { SingleEventResponse } from "../../types/api/event";
 import { fetchErrorMessages } from "../../constants/errorMessages";
+import { formatToKoreanDateAndTime } from "../../utils/dateUtils";
 
 const stages = ["대기열 진입", "입장"]; //["로비", "대기실", "입장 대기", "매표소 입장"];
 const WaitingRoomPage = () => {
@@ -98,7 +99,7 @@ const WaitingRoomPage = () => {
               <div className="text-white">
                 <h1 className="text-2xl font-bold">{eventData.data.title}</h1>
                 <p className="text-sm mt-3">
-                  {eventData.data.eventDates[0].date}
+                  {formatToKoreanDateAndTime(eventData.data.eventDates[0].date)}
                 </p>
                 <p className="text-sm mt-1">장소: {eventData.data.place}</p>
               </div>
@@ -108,7 +109,7 @@ const WaitingRoomPage = () => {
         {/*{/* 상단 진행 상태 */}
         <div className="w-full max-w-4xl p-6">
           {/* 단계별 텍스트 */}
-          <div className="flex justify-between mt-4 text-sm">
+          <div className="flex justify-between mt-10 md:mt-4 text-sm">
             {stages.map((stage, index) => (
               <div
                 key={index}
@@ -127,7 +128,7 @@ const WaitingRoomPage = () => {
         </div>
         {/* 대기실/큐 상태 */}
         <div className="flex flex-col items-center justify-center">
-          <p className="mt-2 text-lg">
+          <p className="mt-2 p-3 md:text-lg">
             {/* {currentStage === 1 &&
                 "대기실에 입장하셨습니다. 잠시 후 입장 대기가 시작됩니다."} */}
             {progress < 90 &&

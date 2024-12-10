@@ -32,10 +32,18 @@ const MyPageUser = () => {
 
   // 지난 공연과 예정된 공연으로 분리
   const pastEvents = reservationData.filter(
-    (reservation) => new Date(reservation.eventDate) < currentTime
+    (reservation) =>
+      new Date(reservation.eventDate) < currentTime &&
+      reservation.orderCanceledAt === null
   );
   const upcomingEvents = reservationData.filter(
-    (reservation) => new Date(reservation.eventDate) >= currentTime
+    (reservation) =>
+      new Date(reservation.eventDate) >= currentTime &&
+      reservation.orderCanceledAt === null
+  );
+
+  const cancelTickets = reservationData.filter(
+    (reservation) => reservation.orderCanceledAt !== null
   );
 
   const renderReservationList = (events: GetOrder[], emptyMessage: string) => (
@@ -93,7 +101,9 @@ const MyPageUser = () => {
               <Button
                 onClick={() => navigate(`/mypage/detail/${order.orderId}`)}
                 className="hidden md:inline-block"
-                disabled={order.orderCanceledAt !== null}
+                variant={`${
+                  order.orderCanceledAt !== null ? "secondary" : "primary"
+                }`}
               >
                 {order.orderCanceledAt !== null
                   ? "취소된 티켓"
@@ -103,7 +113,9 @@ const MyPageUser = () => {
                 onClick={() => navigate(`/mypage/detail/${order.orderId}`)}
                 size="sm"
                 className="mt-3 md:hidden"
-                disabled={order.orderCanceledAt !== null}
+                variant={`${
+                  order.orderCanceledAt !== null ? "secondary" : "primary"
+                }`}
               >
                 {order.orderCanceledAt !== null
                   ? "취소된 티켓"
@@ -128,6 +140,9 @@ const MyPageUser = () => {
           pastEvents,
           "지난 공연 예매 기록이 없습니다."
         );
+      }
+      if (activeTab === "cancel") {
+        return renderReservationList(cancelTickets, "취소된 티켓이 없습니다.");
       }
     } else if (section === "my-profile") {
       if (activeTab === "profile") {
@@ -173,6 +188,17 @@ const MyPageUser = () => {
                   }}
                 >
                   지난 공연
+                </li>
+                <li
+                  className={`cursor-pointer ${
+                    activeTab === "cancel" ? "text-rose-400 font-bold" : ""
+                  } hover:text-rose-500`}
+                  onClick={() => {
+                    setSection("my-tickets");
+                    setActiveTab("cancel");
+                  }}
+                >
+                  취소된 티켓
                 </li>
               </ul>
             </div>
@@ -248,7 +274,7 @@ const MyPageUser = () => {
               {section === "my-tickets" ? (
                 <>
                   <button
-                    className={`px-6 py-3 font-medium ${
+                    className={`px-5 md:px-6 py-3 font-medium ${
                       activeTab === "upcoming"
                         ? "border-b-2 border-rose-400 text-rose-400"
                         : "text-gray-500 hover:text-rose-400"
@@ -258,7 +284,7 @@ const MyPageUser = () => {
                     예정된 공연
                   </button>
                   <button
-                    className={`px-6 py-3 font-medium ${
+                    className={`px-5 md:px-6 py-3 font-medium ${
                       activeTab === "past"
                         ? "border-b-2 border-rose-400 text-rose-400"
                         : "text-gray-500 hover:text-rose-400"
@@ -267,11 +293,21 @@ const MyPageUser = () => {
                   >
                     지난 공연
                   </button>
+                  <button
+                    className={`px-5 md:px-6 py-3 font-medium ${
+                      activeTab === "cancel"
+                        ? "border-b-2 border-rose-400 text-rose-400"
+                        : "text-gray-500 hover:text-rose-400"
+                    }`}
+                    onClick={() => setActiveTab("cancel")}
+                  >
+                    취소된 티켓
+                  </button>
                 </>
               ) : (
                 <>
                   <button
-                    className={`px-6 py-3 font-medium ${
+                    className={`px-5 md:px-6 py-3 font-medium ${
                       activeTab === "profile"
                         ? "border-b-2 border-rose-400 text-rose-400"
                         : "text-gray-500 hover:text-rose-400"
@@ -281,7 +317,7 @@ const MyPageUser = () => {
                     프로필 보기
                   </button>
                   <button
-                    className={`px-6 py-3 font-medium ${
+                    className={`px-5 md:px-6 py-3 font-medium ${
                       activeTab === "money"
                         ? "border-b-2 border-rose-400 text-rose-400"
                         : "text-gray-500 hover:text-rose-400"

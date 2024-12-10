@@ -191,7 +191,7 @@ const MyDetailPage = () => {
           <div className="fixed bottom-0 right-8 md:left-0 md:right-0 pb-4  flex justify-center">
             <Button
               onClick={openCancelModal}
-              className="bg-se-500 text-white px-6 py-3 rounded-lg hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-300"
+              className={`${order.orderCanceledAt !== null ? "hidden" : ""} bg-se-500 text-white px-6 py-3 rounded-lg hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-300`}
             >
               예매 취소
             </Button>
@@ -232,13 +232,15 @@ const MyDetailPage = () => {
         )}
         {isShowModalOpen && (
           <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
-            <div className="bg-white rounded-lg shadow-lg p-8 w-[60vw] h-[60vh] relative flex flex-col">
+            <div className="bg-white rounded-lg shadow-lg p-8 md:w-[60vw] md:h-[60vh] relative flex flex-col">
               <h2 className="text-2xl font-bold mb-4">내 좌석 위치</h2>
-              <MySeatContainer
-                svg={order.eventSvg}
-                seats={seatsData}
-                selectedSeatIds={selectedSeatIds}
-              />
+              <div className="md:max-h-[400px]">
+                <MySeatContainer
+                  svg={order.eventSvg}
+                  seats={seatsData}
+                  selectedSeatIds={selectedSeatIds}
+                />
+              </div>
               <div className="flex justify-end mt-auto">
                 <Button
                   size="sm"
