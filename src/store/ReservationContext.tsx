@@ -9,7 +9,9 @@ import {
   OrderResponseData,
 } from "../types/api/socket";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 import { UserContext } from "./UserContext";
+
 interface ReservationContextType {
   socket: Socket | null;
   isConnected: boolean;
@@ -56,7 +58,7 @@ export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const { userId } = useContext(UserContext);
-  const { socket, isConnected } = useSocketConnection();
+  const { socket, isConnected, tokenError } = useSocketConnection();
   const [eventId, setEventId] = useState<string | null>(null);
   const [eventDateId, setEventDateId] = useState<string | null>(null);
   const [seatsMap, setSeatsMap] = useState<Map<string, Seat>>(new Map());
@@ -71,6 +73,7 @@ export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
   const [currentOrder, setCurrentOrder] = useState<OrderResponseData | null>(
     null
   );
+  const navigate = useNavigate();
 
   const updateSeats = (seats: SeatsSelectedResponse[]) => {
     setSeatsMap((prev) => {
@@ -170,6 +173,12 @@ export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
   useEffect(() => {
     if (!socket) return;
 
+    if (tokenError) {
+      const currentPath = window.location.pathname;
+      const pathParts = currentPath.split("/");
+      navigate(`/waiting/${pathParts[2]}/${pathParts[3]}`);
+    }
+
     socket.on("connect", () => {
       if (socket.id) setCurrentUserId(socket.id);
     });
@@ -207,7 +216,7 @@ export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
       socket.off("roomJoined");
       socket.off("seatsSelected");
     };
-  }, [socket]);
+  }, [socket, tokenError]);
 
   useEffect(() => {
     if (socket && eventId && eventDateId) {

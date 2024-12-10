@@ -8,6 +8,8 @@ import {
 
 export const useSocketConnection = () => {
   const [isConnected, setIsConnected] = useState(false);
+  const [tokenError, setTokenError] = useState<string | null>(null);
+
   const socketRef = useRef<Socket<
     ServerToClientEvents,
     ClientToServerEvents
@@ -25,6 +27,15 @@ export const useSocketConnection = () => {
     socketRef.current.on("connect", () => {
       console.log("Socket connected!");
       setIsConnected(true);
+      setTokenError(null);
+    });
+
+    socketRef.current.on("connect_error", (err) => {
+      console.error("Connection error:", err.message);
+
+      if (err.message === "Authentication error 2") {
+        setTokenError(err.message);
+      }
     });
 
     socketRef.current.on("disconnect", () => {
@@ -37,5 +48,5 @@ export const useSocketConnection = () => {
     };
   }, []);
 
-  return { socket: socketRef.current, isConnected };
+  return { socket: socketRef.current, isConnected, tokenError };
 };
