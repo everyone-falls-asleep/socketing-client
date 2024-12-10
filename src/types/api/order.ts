@@ -29,6 +29,7 @@ export interface GetOrder {
   userEmail: string;
   userProfileImage: string | null;
   userRole: string;
+  eventId: string;
   eventDateId?: string;
   eventDate: string;
   eventTitle: string;
@@ -36,6 +37,7 @@ export interface GetOrder {
   eventPlace: string;
   eventCast: string;
   eventAgeLimit: number | null;
+  eventSvg: string;
   reservations: Reservations[];
 }
 
@@ -56,6 +58,23 @@ interface Reservation {
   seat: Seat;
 }
 
+export interface OrderSeat {
+  id: string;
+  cx: number;
+  cy: number;
+  row: number;
+  number: number;
+  area: Area;
+}
+
+export interface Area {
+  id: string;
+  price: number;
+  label: string;
+  svg: string;
+}
+
 export type NewOrderResponse = ApiResponse<Order>;
 export type GetAllOrderResponse = ApiResponse<GetOrder[]>;
 export type GetOneOrderResponse = ApiResponse<GetOrder>;
+export type OrderSeatResponse = ApiResponse<OrderSeat[]>;

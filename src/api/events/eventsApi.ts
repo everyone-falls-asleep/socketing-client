@@ -5,11 +5,11 @@ import {
   SingleEventResponse,
   NewEvent,
   NewEventResponse,
-  SeatResponse,
   EventDeleteResponse,
   NewAreasResponse,
   CreateAreaRequest,
 } from "../../types/api/event";
+import { OrderSeatResponse } from "../../types/api/order";
 
 const API_URL = baseURL + "events/";
 
@@ -70,8 +70,10 @@ const createNewArea = async ({
   return response.data;
 };
 
-const fetchAllSeats = async (event_id: string): Promise<SeatResponse> => {
-  const response = await api.get<SeatResponse>(API_URL + event_id + "/seats");
+const fetchAllSeats = async (event_id: string): Promise<OrderSeatResponse> => {
+  const response = await api.get<OrderSeatResponse>(
+    API_URL + event_id + "/seats"
+  );
   return response.data;
 };
 

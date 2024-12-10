@@ -9,7 +9,7 @@ import { EventManagement } from "../../types/api/managers";
 import { fetchOneEventForManager } from "../../api/managers/managersApi";
 import { useEffect, useState } from "react";
 import ManagerReservationUpperEvent from "../organisms/reservation/ManagerReservationUpperEvent";
-import ManagerSeatContainer from "../organisms/manager/ManagerSeatContainer";
+import ManagerSeatContainer from "../organisms/seat-container/ManagerSeatContainer";
 import { useManagerContext } from "../../store/ManagerContext";
 
 const ManagerDetailPage = () => {

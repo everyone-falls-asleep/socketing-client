@@ -14,6 +14,9 @@ import { toast } from "react-toastify";
 import { UserContext } from "../../store/UserContext";
 import { useQueryClient } from "@tanstack/react-query";
 import { createResourceQuery } from "../../hooks/useCustomQuery";
+import MySeatContainer from "../organisms/seat-container/MySeatContainer";
+import { fetchAllSeats } from "../../api/events/eventsApi";
+import { OrderSeat } from "../../types/api/order";
 
 const MyDetailPage = () => {
   const { orderId } = useParams<{ orderId: string }>();
@@ -23,6 +26,11 @@ const MyDetailPage = () => {
   const { userId } = useContext(UserContext);
   const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
   const [isShowModalOpen, setIsShowModalOpen] = useState(false);
+  const [seatsData, setSeatsData] = useState<OrderSeat[]>([]);
+  const [selectedSeatIds, setSelectedSeatIds] = useState<string[] | undefined>(
+    []
+  );
+
   const useOneOrder = createResourceQuery<GetOneOrderResponse>(
     `my-order-${userId}`, // 쿼리 키의 기본 이름
     (orderId) => getOneOrder(orderId) // fetchFn으로 getAllOrder 사용
@@ -64,7 +72,14 @@ const MyDetailPage = () => {
   };
   // 모달 열기
   const openCancelModal = () => setIsCancelModalOpen(true);
-  const openShowModal = () => setIsShowModalOpen(true);
+  const openShowModal = async () => {
+    setSelectedSeatIds(
+      order?.reservations.map((reservation) => reservation.seatId)
+    );
+    const seatData = await fetchAllSeats(order.eventId);
+    setSeatsData(seatData.data ?? []);
+    setIsShowModalOpen(true);
+  };
 
   // 모달 닫기
   const closeCancelModal = () => setIsCancelModalOpen(false);
@@ -143,7 +158,11 @@ const MyDetailPage = () => {
                   <div className="flex flex-col flex-1">
                     <div className="flex justify-between items-center mb-2">
                       <div className="font-bold text-gray-700 mb-2">좌석</div>
-                      <Button onClick={openShowModal} variant="dark" size="sm">
+                      <Button
+                        onClick={void openShowModal}
+                        variant="dark"
+                        size="sm"
+                      >
                         좌석 위치 확인
                       </Button>
                     </div>
@@ -213,10 +232,14 @@ const MyDetailPage = () => {
         )}
         {isShowModalOpen && (
           <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
-            <div className="bg-white rounded-lg shadow-lg p-6 w-96">
-              <h2 className="text-xl font-bold">내 좌석 위치</h2>
-              <div className="py-4">여기에 맵 넣어주세용</div>
-              <div className="flex justify-end space-x-4">
+            <div className="bg-white rounded-lg shadow-lg p-8 w-[60vw] h-[60vh] relative flex flex-col">
+              <h2 className="text-2xl font-bold mb-4">내 좌석 위치</h2>
+              <MySeatContainer
+                svg={order.eventSvg}
+                seats={seatsData}
+                selectedSeatIds={selectedSeatIds}
+              />
+              <div className="flex justify-end mt-auto">
                 <Button
                   size="sm"
                   variant="secondary"
