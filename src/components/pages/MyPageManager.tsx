@@ -4,17 +4,17 @@ import Button from "../atoms/buttons/Button";
 import { createResourceQuery } from "../../hooks/useCustomQuery";
 import { fetchErrorMessages } from "../../constants/errorMessages";
 import MyProfile from "../organisms/Form/MyProfile";
-import { fetchAllEvents } from "../../api/events/eventsApi";
-import { EventsResponse } from "../../types/api/event";
 import { formatToKoreanDateAndTime } from "../../utils/dateUtils";
+import { fetchAllEventForManager } from "../../api/managers/managersApi";
+import { AllEventManagementResponse } from "../../types/api/managers";
 
 const MyPageManager = () => {
   const [activeTab, setActiveTab] = useState("ongoing"); // 현재 활성화된 탭 상태
   const navigate = useNavigate();
 
-  const useEvents = createResourceQuery<EventsResponse>(
+  const useEvents = createResourceQuery<AllEventManagementResponse>(
     "created-events-by-manager",
-    fetchAllEvents
+    fetchAllEventForManager
   );
 
   const { data, isLoading, isError } = useEvents();
@@ -28,10 +28,10 @@ const MyPageManager = () => {
 
   // 티켓팅 진행중인 공연과 마감된 공연으로 분리
   const pastEvents = eventData.filter(
-    (event) => new Date(event.eventDates[0].date) < currentTime
+    (event) => new Date(event.eventDates![0].date) < currentTime
   );
   const ongoingEvents = eventData.filter(
-    (event) => new Date(event.eventDates[0].date) >= currentTime
+    (event) => new Date(event.eventDates![0].date) >= currentTime
   );
 
   return (
@@ -163,7 +163,7 @@ const MyPageManager = () => {
                                 일정
                               </span>{" "}
                               {formatToKoreanDateAndTime(
-                                event.eventDates[0]?.date
+                                event.eventDates![0].date
                               )}
                             </p>
                             <p className="text-sm text-gray-500">
@@ -182,7 +182,7 @@ const MyPageManager = () => {
                           <Button
                             onClick={() =>
                               navigate(
-                                `/manager/${event.id}/${event.eventDates[0].id}`
+                                `/manager/${event.id}/${event.eventDates![0].id}`
                               )
                             }
                             className="hidden md:inline-block"
@@ -195,7 +195,7 @@ const MyPageManager = () => {
                           <Button
                             onClick={() =>
                               navigate(
-                                `/manager/${event.id}/${event.eventDates[0].id}`
+                                `/manager/${event.id}/${event.eventDates![0].id}`
                               )
                             }
                             size="sm"
@@ -244,7 +244,7 @@ const MyPageManager = () => {
                                 일정
                               </span>{" "}
                               {formatToKoreanDateAndTime(
-                                event.eventDates[0]?.date
+                                event.eventDates![0]?.date
                               )}
                             </p>
                             <p className="text-sm text-gray-500">
@@ -261,14 +261,22 @@ const MyPageManager = () => {
                             </p>
                           </div>
                           <Button
-                            onClick={() => navigate(`/manager/${event.id}`)}
+                            onClick={() =>
+                              navigate(
+                                `/manager/${event.id}/${event.eventDates![0].id}`
+                              )
+                            }
                             variant="dark"
                             className="hidden md:inline-block"
                           >
                             전체 예매 결과
                           </Button>
                           <Button
-                            onClick={() => navigate(`/manager/${event.id}`)}
+                            onClick={() =>
+                              navigate(
+                                `/manager/${event.id}/${event.eventDates![0].id}`
+                              )
+                            }
                             variant="dark"
                             size="sm"
                             className="mt-3 md:hidden"

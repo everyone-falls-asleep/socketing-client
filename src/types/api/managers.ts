@@ -33,6 +33,13 @@ export interface Seat {
   reservations: Reservation[];
 }
 
+export interface EventDates {
+  id: string;
+  date: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface EventManagement {
   id: string;
   title: string;
@@ -40,13 +47,15 @@ export interface EventManagement {
   place: string;
   cast: string;
   ageLimit: number;
-  svg: string;
+  ticketingStartTime: string;
   createdAt?: string;
   updatedAt?: string;
-  ticketingStartTime: string;
+  svg?: string;
 
   user: User;
-  areas: Area[];
+  areas?: Area[];
+  eventDates?: EventDates[];
 }
 
 export type EventManagementResponse = ApiResponse<EventManagement>;
+export type AllEventManagementResponse = ApiResponse<EventManagement[]>;

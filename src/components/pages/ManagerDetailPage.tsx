@@ -30,10 +30,10 @@ const ManagerDetailPage = () => {
         return;
       }
       setEventData(response.data);
-      const allSeats = response.data.areas.flatMap((area) => area.seats);
-      setSeats(allSeats);
-      setAreas(response.data.areas);
-      setSvg(response.data.svg);
+      const allSeats = response.data.areas?.flatMap((area) => area.seats);
+      setSeats(allSeats!);
+      setAreas(response.data.areas!);
+      setSvg(response.data.svg!);
     } catch (error) {
       console.log("Error : ", error);
     }

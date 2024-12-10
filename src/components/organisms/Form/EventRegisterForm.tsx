@@ -15,8 +15,10 @@ import {
   postSeatErrorMessages,
 } from "../../../constants/errorMessages";
 import { NewAreasResponse } from "../../../types/api/event";
+import { useQueryClient } from "@tanstack/react-query";
 
 const EventRegisterForm = () => {
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
   const {
     setEvent,
@@ -55,11 +57,14 @@ const EventRegisterForm = () => {
     AxiosError<ApiErrorResponse>,
     NewEvent
   >(createNewEvent, {
-    onSuccess: (response: NewEventResponse) => {
+    onSuccess: async (response: NewEventResponse) => {
       if (response.data) {
         setEvent(response.data);
         handleAreaCreation(response.data.id);
       }
+      await queryClient.invalidateQueries({
+        queryKey: ["created-events-by-manager"],
+      }); // orders 쿼리 무효화
     },
     onError: (error: AxiosError<ApiErrorResponse>) => {
       if (error.response) {

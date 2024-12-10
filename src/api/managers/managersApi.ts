@@ -1,5 +1,8 @@
 import axios from "axios";
-import { EventManagementResponse } from "../../types/api/managers";
+import {
+  AllEventManagementResponse,
+  EventManagementResponse,
+} from "../../types/api/managers";
 import { baseURL } from "../../constants/api";
 
 const API_URL = baseURL + "managers/events/";
@@ -17,6 +20,12 @@ const fetchOneEventForManager = async (
   return response.data;
 };
 
+const fetchAllEventForManager =
+  async (): Promise<AllEventManagementResponse> => {
+    const response = await api.get<AllEventManagementResponse>(API_URL);
+    return response.data;
+  };
+
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("authToken");
@@ -33,4 +42,4 @@ api.interceptors.request.use(
   }
 );
 
-export { fetchOneEventForManager };
+export { fetchOneEventForManager, fetchAllEventForManager };
