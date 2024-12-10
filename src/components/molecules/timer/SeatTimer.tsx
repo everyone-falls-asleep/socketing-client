@@ -6,29 +6,27 @@ const SeatTimer = () => {
   const { socket, isConnected, selectedSeats, setSelectedSeats } =
     useContext(ReservationContext);
   const [serverTime, setServerTime] = useState(Date.now());
-  const [timeLeft, setTimeLeft] = useState(1);
+  const [timeLeft, setTimeLeft] = useState(0);
   const [showTimer, setShowTimer] = useState(false);
 
   useEffect(() => {
     if (!socket || !isConnected) return;
 
-    const handleServerTime = (timestamp: string) => {
-      setServerTime(new Date(timestamp).getTime());
+    const handleServerTime = (time: string) => {
+      const newServerTime = new Date(time).getTime();
+      setServerTime(newServerTime);
     };
 
     socket.on("serverTime", handleServerTime);
 
     return () => {
+      console.log("seat timer server timer listen off");
       socket.off("serverTime", handleServerTime);
     };
   }, [socket, isConnected]);
 
   useEffect(() => {
-    if (selectedSeats.length > 0) {
-      setShowTimer(true);
-    } else {
-      setShowTimer(false);
-    }
+    setShowTimer(selectedSeats.length > 0);
   }, [selectedSeats]);
 
   useEffect(() => {
@@ -39,26 +37,17 @@ const SeatTimer = () => {
       return Math.max(0, Math.round((expireTime - serverTime) / 1000));
     };
 
-    const initialTimeLeft = calculateTimeLeft();
-    setTimeLeft(initialTimeLeft);
+    const newTimeLeft = calculateTimeLeft();
+    setTimeLeft(newTimeLeft);
 
-    const timer = setInterval(() => {
-      const newTimeLeft = calculateTimeLeft();
-      console.log(newTimeLeft);
-      setTimeLeft(newTimeLeft);
+    if (newTimeLeft <= 0 && showTimer) {
+      setShowTimer(false);
+      setSelectedSeats([]);
+      toast.error("선택이 취소되었습니다!");
+    }
+  }, [serverTime, selectedSeats, setSelectedSeats, showTimer]);
 
-      if (newTimeLeft <= 0) {
-        setShowTimer(false);
-        setSelectedSeats([]);
-        toast.error("선택이 취소되었습니다!");
-        clearInterval(timer);
-      }
-    }, 1000);
-
-    return () => clearInterval(timer);
-  }, [selectedSeats, serverTime, setSelectedSeats]);
-
-  const percentage = (timeLeft / 10) * 100;
+  const percentage = Math.max(0, (timeLeft / 10) * 100);
 
   return (
     <>
