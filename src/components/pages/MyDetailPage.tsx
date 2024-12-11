@@ -234,11 +234,12 @@ const MyDetailPage = () => {
           <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
             <div className="bg-white rounded-lg shadow-lg p-8 md:w-[60vw] md:h-[60vh] relative flex flex-col">
               <h2 className="text-2xl font-bold mb-4">내 좌석 위치</h2>
-              <div className="md:max-h-[400px]">
+              <div className="md:max-h-[440px]">
                 <MySeatContainer
                   svg={order.eventSvg}
                   seats={seatsData}
                   selectedSeatIds={selectedSeatIds}
+                  reservedByMe={true}
                 />
               </div>
               <div className="flex justify-end mt-auto">

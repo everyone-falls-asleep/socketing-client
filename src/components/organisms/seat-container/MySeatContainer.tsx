@@ -7,12 +7,14 @@ interface SeatContainerProps {
   svg: string;
   seats: OrderSeat[];
   selectedSeatIds: string[] | undefined;
+  reservedByMe: boolean;
 }
 
 const MySeatContainer: React.FC<SeatContainerProps> = ({
   svg,
   seats,
   selectedSeatIds,
+  reservedByMe,
 }) => {
   const areas: Area[] = [];
 
@@ -23,8 +25,19 @@ const MySeatContainer: React.FC<SeatContainerProps> = ({
   });
 
   const renderSeat = (seatData: OrderSeat) => {
-    const reservedBy = selectedSeatIds?.includes(seatData.id);
-    return <MySeatObj seatData={seatData} reservedBy={reservedBy ?? false} />;
+    const reserved = selectedSeatIds?.includes(seatData.id);
+    return (
+      <MySeatObj
+        seatData={seatData}
+        seatStatus={
+          reservedByMe && reserved
+            ? "selected"
+            : reserved
+              ? "reserved"
+              : "available"
+        }
+      />
+    );
   };
 
   return (

@@ -175,11 +175,12 @@ const WaitingRoomPage = () => {
           <h2 className="text-xl font-bold text-center my-3">
             실시간 좌석 예매 현황
           </h2>
-          <div className="bg-black rounded-lg shadow-lg md:w-[40vw] md:h-[40vh] flex justify-center">
+          <div className="bg-black rounded-lg shadow-lg md:w-[50vw] md:h-[50vh] flex justify-center">
             <MySeatContainer
               svg={eventData.data.svg}
               seats={seatData.data}
               selectedSeatIds={selectedSeatIds}
+              reservedByMe={false}
             />
           </div>
         </div>
