@@ -1,7 +1,11 @@
 import React, { createContext, useEffect, useContext, useState } from "react";
 import { Socket } from "socket.io-client";
 import { useQueueConnection } from "../hooks/useQueueConnection";
-import { TokenResponse, UpdatedQueueResponse } from "../types/api/queue";
+import {
+  SeatsInfoResponse,
+  TokenResponse,
+  UpdatedQueueResponse,
+} from "../types/api/queue";
 
 interface QueueContextType {
   socket: Socket | null;
@@ -13,6 +17,7 @@ interface QueueContextType {
   setEventDateId: (id: string) => void;
   myPosition: number | null;
   totalWaiting: number | null;
+  selectedSeatIds: string[];
 }
 
 export const QueueContext = createContext<QueueContextType>(
@@ -35,6 +40,7 @@ export const QueueProvider: React.FC<{ children: React.ReactNode }> = ({
   const [eventDateId, setEventDateId] = useState<string | null>(null);
   const [myPosition, setMyPosition] = useState<number | null>(null);
   const [totalWaiting, setTotalWaiting] = useState<number | null>(null);
+  const [selectedSeatIds, setSelectedSeatIds] = useState<string[]>([]);
 
   useEffect(() => {
     if (!socket || !eventId || !eventDateId) return;
@@ -48,6 +54,11 @@ export const QueueProvider: React.FC<{ children: React.ReactNode }> = ({
     socket.on("updateQueue", (data: UpdatedQueueResponse) => {
       setMyPosition(data.yourPosition);
       setTotalWaiting(data.totalWaiting);
+    });
+
+    socket.on("seatsInfo", (data: SeatsInfoResponse) => {
+      const seatIds = data.seatsInfo.map((item) => item.seat_id);
+      setSelectedSeatIds(seatIds);
     });
 
     return () => {
@@ -67,6 +78,7 @@ export const QueueProvider: React.FC<{ children: React.ReactNode }> = ({
     setEventDateId,
     myPosition,
     totalWaiting,
+    selectedSeatIds,
   };
 
   return (

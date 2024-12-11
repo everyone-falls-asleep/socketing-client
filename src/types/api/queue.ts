@@ -8,9 +8,19 @@ export interface UpdatedQueueResponse {
   yourPosition: number;
   totalWaiting: number;
 }
+
+export interface SeatsInfoResponseData {
+  seat_id: string;
+}
+
+export interface SeatsInfoResponse {
+  seatsInfo: SeatsInfoResponseData[];
+}
+
 export interface ServerToClientEvents {
   tokenIssued: (response: TokenResponse) => void;
   updateQueue: (response: UpdatedQueueResponse) => void;
+  seatsInfo: (response: SeatsInfoResponse) => void;
 }
 
 interface JoinQueueData {

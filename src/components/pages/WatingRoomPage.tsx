@@ -3,11 +3,13 @@ import MainLayout from "../layout/MainLayout";
 import { useParams } from "react-router-dom";
 import { useQueueContext } from "../../store/QueueContext";
 import { useNavigate, useLocation } from "react-router-dom";
-import { fetchOneEvent } from "../../api/events/eventsApi";
+import { fetchOneEvent, fetchAllSeats } from "../../api/events/eventsApi";
 import { createResourceQuery } from "../../hooks/useCustomQuery";
 import { SingleEventResponse } from "../../types/api/event";
 import { fetchErrorMessages } from "../../constants/errorMessages";
 import { formatToKoreanDateAndTime } from "../../utils/dateUtils";
+import MySeatContainer from "../organisms/seat-container/MySeatContainer";
+import { OrderSeatResponse } from "../../types/api/order";
 
 const stages = ["대기열 진입", "입장"]; //["로비", "대기실", "입장 대기", "매표소 입장"];
 const WaitingRoomPage = () => {
@@ -19,6 +21,7 @@ const WaitingRoomPage = () => {
     isTurn,
     myPosition,
     totalWaiting,
+    selectedSeatIds,
   } = useQueueContext();
   const [numberOfTickets, setNumberOfTickets] = useState(1);
   const navigate = useNavigate();
@@ -39,11 +42,22 @@ const WaitingRoomPage = () => {
     fetchOneEvent
   );
 
+  const useSeats = createResourceQuery<OrderSeatResponse>(
+    `fetch-all-seats`,
+    fetchAllSeats
+  );
+
   const {
     data: eventData,
     isLoading: eventLoading,
     isError: eventError,
   } = useEvent(urlEventId ?? "");
+
+  const {
+    data: seatData,
+    isLoading: seatLoading,
+    isError: seatError,
+  } = useSeats(urlEventId ?? "");
 
   useEffect(() => {
     if (urlEventId) setEventId(urlEventId);
@@ -73,6 +87,10 @@ const WaitingRoomPage = () => {
   if (!eventData?.data) return <p>{fetchErrorMessages.noEventData}</p>;
   if (!eventData.data.svg) return <div>{fetchErrorMessages.noSvgData}</div>;
   if (!isConnected) return <p>Connecting to queue...</p>;
+
+  if (seatLoading) return <p>{fetchErrorMessages.isLoading}</p>;
+  if (seatError) return <p>{fetchErrorMessages.general}</p>;
+  if (!seatData?.data) return <p>{fetchErrorMessages.noSeatsData}</p>;
 
   return (
     <MainLayout>
@@ -148,13 +166,14 @@ const WaitingRoomPage = () => {
         </div>
         {/* 좌석 배치도 (SeatMap) */}
         <div className="mt-16 px-8">
-          <h2 className="text-xl font-bold text-center mb-4">Seat Map</h2>
-          <div className="w-full h-64 bg-gray-800 rounded-lg flex items-center justify-center">
-            {/* 이미지 삽입 부분 */}
-            <img
-              src="https://www.mfac.or.kr/web/images/sub/seat_a1_2022.png" // 여기에 실제 좌석 배치도 이미지 경로 삽입
-              alt="Seat Map"
-              className="object-contain h-full w-full"
+          <h2 className="text-xl font-bold text-center mb-4">
+            실시간 좌석 예매 현황
+          </h2>
+          <div className="bg-black rounded-lg shadow-lg p-8 md:w-[60vw] md:h-[60vh] relative flex flex-col">
+            <MySeatContainer
+              svg={eventData.data.svg}
+              seats={seatData.data}
+              selectedSeatIds={selectedSeatIds}
             />
           </div>
         </div>
