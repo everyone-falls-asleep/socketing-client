@@ -43,7 +43,7 @@ const FriendRegisterModal = ({ isOpen, onClose }: FriendRegisterModalProps) => {
       console.log(data.data);
       if (data.data) {
         if (data.data.id === userId) {
-          toast.error("다른 사용자의 이메일을 입력해주세요.");
+          toast.error("다른 사용자의 이름을 입력해주세요.");
         } else {
           addFriend(data.data);
         }
@@ -62,7 +62,7 @@ const FriendRegisterModal = ({ isOpen, onClose }: FriendRegisterModalProps) => {
     if (!data.email) {
       setError("email", {
         type: "manual",
-        message: "이메일을 입력해 주세요",
+        message: "이름을 입력해 주세요",
       });
       return;
     }
@@ -77,24 +77,24 @@ const FriendRegisterModal = ({ isOpen, onClose }: FriendRegisterModalProps) => {
   return (
     <Modal isOpen={isOpen} onClose={handleClose}>
       <div className="space-y-4">
-        <h3 className="text-lg font-bold">함께 할 친구 등록하기</h3>
+        <h3 className="text-lg font-bold pl-2">함께할 친구 등록하기</h3>
         <form
           onSubmit={(e) => void handleSubmit(onSubmit)(e)}
           className="space-y-4"
         >
           <div className="mt-4">
             <div className="flex flex-col w-full">
-              <div className="flex justify-between">
+              <div className="flex justify-between space-x-3">
                 <Input
                   {...register("email", {
-                    required: "이메일을 입력해 주세요",
+                    required: "이름을 입력해 주세요",
                     validate: (value) =>
                       value.trim() !== "" || "빈 문자열은 입력할 수 없습니다",
                   })}
-                  placeholder="친구 이메일을 입력해 주세요"
+                  placeholder="친구 이름을 입력해 주세요"
                 />
                 <Button type="submit" variant="primary" disabled={isSubmitting}>
-                  {isSubmitting ? "조회 중..." : "친구 요청"}
+                  {isSubmitting ? "조회 중..." : "친구 등록"}
                 </Button>
               </div>
               <div>

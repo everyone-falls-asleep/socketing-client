@@ -47,15 +47,29 @@ export interface EventManagement {
   place: string;
   cast: string;
   ageLimit: number;
+  svg: string;
   ticketingStartTime: string;
   createdAt?: string;
   updatedAt?: string;
-  svg?: string;
 
   user: User;
-  areas?: Area[];
-  eventDates?: EventDates[];
+  areas: Area[];
+}
+
+export interface AllEventManagement {
+  id: string;
+  title: string;
+  thumbnail: string;
+  place: string;
+  cast: string;
+  ageLimit: number;
+  ticketingStartTime: string;
+  createdAt?: string;
+  updatedAt?: string;
+
+  user: User;
+  eventDates: EventDates[];
 }
 
 export type EventManagementResponse = ApiResponse<EventManagement>;
-export type AllEventManagementResponse = ApiResponse<EventManagement[]>;
+export type AllEventManagementResponse = ApiResponse<AllEventManagement[]>;

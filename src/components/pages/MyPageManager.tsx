@@ -28,10 +28,10 @@ const MyPageManager = () => {
 
   // 티켓팅 진행중인 공연과 마감된 공연으로 분리
   const pastEvents = eventData.filter(
-    (event) => new Date(event.eventDates![0].date) < currentTime
+    (event) => new Date(event.eventDates[0].date) < currentTime
   );
   const ongoingEvents = eventData.filter(
-    (event) => new Date(event.eventDates![0].date) >= currentTime
+    (event) => new Date(event.eventDates[0].date) >= currentTime
   );
 
   return (
@@ -163,7 +163,7 @@ const MyPageManager = () => {
                                 일정
                               </span>{" "}
                               {formatToKoreanDateAndTime(
-                                event.eventDates![0].date
+                                event.eventDates[0].date
                               )}
                             </p>
                             <p className="text-sm text-gray-500">
@@ -182,7 +182,7 @@ const MyPageManager = () => {
                           <Button
                             onClick={() =>
                               navigate(
-                                `/manager/${event.id}/${event.eventDates![0].id}`
+                                `/manager/${event.id}/${event.eventDates[0].id}`
                               )
                             }
                             className="hidden md:inline-block"
@@ -195,7 +195,7 @@ const MyPageManager = () => {
                           <Button
                             onClick={() =>
                               navigate(
-                                `/manager/${event.id}/${event.eventDates![0].id}`
+                                `/manager/${event.id}/${event.eventDates[0].id}`
                               )
                             }
                             size="sm"
@@ -244,7 +244,7 @@ const MyPageManager = () => {
                                 일정
                               </span>{" "}
                               {formatToKoreanDateAndTime(
-                                event.eventDates![0]?.date
+                                event.eventDates[0].date
                               )}
                             </p>
                             <p className="text-sm text-gray-500">
@@ -263,7 +263,7 @@ const MyPageManager = () => {
                           <Button
                             onClick={() =>
                               navigate(
-                                `/manager/${event.id}/${event.eventDates![0].id}`
+                                `/manager/${event.id}/${event.eventDates[0].id}`
                               )
                             }
                             variant="dark"
@@ -274,7 +274,7 @@ const MyPageManager = () => {
                           <Button
                             onClick={() =>
                               navigate(
-                                `/manager/${event.id}/${event.eventDates![0].id}`
+                                `/manager/${event.id}/${event.eventDates[0].id}`
                               )
                             }
                             variant="dark"

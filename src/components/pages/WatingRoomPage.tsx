@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import MainLayout from "../layout/MainLayout";
 import { useParams } from "react-router-dom";
 import { useQueueContext } from "../../store/QueueContext";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -93,41 +92,47 @@ const WaitingRoomPage = () => {
   if (!seatData?.data) return <p>{fetchErrorMessages.noSeatsData}</p>;
 
   return (
-    <MainLayout>
-      <div className="min-h-screen bg-black text-white flex flex-col items-center">
+    <div className="min-h-screen bg-black text-white flex flex-col items-center">
+      <div className="relative w-full h-36">
+        {/* 배경 이미지 */}
+
         <div
-          className="w-full py-4 h-48"
+          id="background-image"
+          className="absolute inset-0"
           style={{
-            backgroundImage: eventData.data.thumbnail,
+            backgroundImage: `url(${eventData.data.thumbnail})`,
             backgroundSize: "cover",
             backgroundPosition: "center",
+            backgroundRepeat: "no-repeat",
+            opacity: "0.5",
           }}
-        >
-          <div className="bg-black/40">
-            <div className="max-w-4xl mx-auto flex flex-col md:flex-row items-center px-4 h-40">
-              {/* 포스터 이미지 */}
-              <div className="mt-4 md:mt-0 md:mr-4">
-                <img
-                  src={eventData.data.thumbnail}
-                  alt="공연 포스터"
-                  className="h-32 object-contain rounded-lg shadow-md"
-                />
-              </div>
-              {/* 텍스트 정보 */}
-              <div className="text-white">
-                <h1 className="text-2xl font-bold">{eventData.data.title}</h1>
-                <p className="text-sm mt-3">
-                  {formatToKoreanDateAndTime(eventData.data.eventDates[0].date)}
-                </p>
-                <p className="text-sm mt-1">장소: {eventData.data.place}</p>
-              </div>
+        />
+        <div className="absolute inset-0 flex items-center bg-black/40">
+          <div className="flex items-center px-10 md:px-28 max-w-4xl">
+            {/* 포스터 이미지 */}
+            <div className="hidden md:block w-24 mr-4">
+              <img
+                src={eventData.data.thumbnail}
+                alt="공연 포스터"
+                className="h-32 object-contain rounded-lg shadow-md"
+              />
+            </div>
+            {/* 텍스트 정보 */}
+            <div className="text-white">
+              <h1 className="text-2xl font-bold">{eventData.data.title}</h1>
+              <p className="text-sm mt-3">
+                {formatToKoreanDateAndTime(eventData.data.eventDates[0].date)}
+              </p>
+              <p className="text-sm mt-1">장소: {eventData.data.place}</p>
             </div>
           </div>
         </div>
-        {/*{/* 상단 진행 상태 */}
-        <div className="w-full max-w-4xl p-6">
+      </div>
+      {/*{/* 상단 진행 상태 */}
+      <div className="relative w-full max-w-4xl p-6">
+        <div>
           {/* 단계별 텍스트 */}
-          <div className="flex justify-between mt-10 md:mt-0 text-sm">
+          <div className="flex justify-between text-sm">
             {stages.map((stage, index) => (
               <div
                 key={index}
@@ -146,30 +151,31 @@ const WaitingRoomPage = () => {
         </div>
         {/* 대기실/큐 상태 */}
         <div className="flex flex-col items-center justify-center">
-          <p className="md:mt-2 px-5 md:text-lg whitespace-pre-line">
+          <p className="mt-2 px-5 md:text-lg text-center whitespace-pre-line">
             {progress < 90 &&
               `현재 입장 대기 중입니다.
               좌석 선택을 위해 준비해주세요!`}
             {progress > 90 && "곧 입장이 시작됩니다!"}
           </p>
-          <h2 className="mt-4 text-2xl font-bold">
-            나의 대기 순서: {myPosition}
-          </h2>
-          {/* {currentStage === 1 && (
-            <p className="mt-4 text-rose-400 text-xl font-bold">12 MIN</p>
-          )} */}
-          {/* {currentStage === 2 && ( */}
-          <p className="mt-2 text-rose-400 text-xl font-bold">
-            총 대기 인원: {totalWaiting}
-          </p>
-          {/* )} */}
+          {myPosition ? (
+            <h2 className="mt-4 text-2xl font-bold">
+              현재 순서: {myPosition} 번
+            </h2>
+          ) : (
+            <div className="h-6" />
+          )}
+          {totalWaiting && (
+            <p className="mt-2 text-rose-400 text-xl font-bold">
+              {totalWaiting}명이 뒤에 대기 중입니다.
+            </p>
+          )}
         </div>
         {/* 좌석 배치도 (SeatMap) */}
-        <div className="mt-16 px-8">
-          <h2 className="text-xl font-bold text-center mb-4">
+        <div className="mt-2 px-8 flex flex-col items-center">
+          <h2 className="text-xl font-bold text-center my-3">
             실시간 좌석 예매 현황
           </h2>
-          <div className="bg-black rounded-lg shadow-lg p-8 md:w-[60vw] md:h-[60vh] relative flex flex-col">
+          <div className="bg-black rounded-lg shadow-lg md:w-[40vw] md:h-[40vh] flex justify-center">
             <MySeatContainer
               svg={eventData.data.svg}
               seats={seatData.data}
@@ -178,7 +184,7 @@ const WaitingRoomPage = () => {
           </div>
         </div>
       </div>
-    </MainLayout>
+    </div>
   );
 };
 

@@ -274,7 +274,7 @@ const MyPageUser = () => {
               {section === "my-tickets" ? (
                 <>
                   <button
-                    className={`px-5 md:px-6 py-3 font-medium ${
+                    className={`px-3 md:px-6 py-3 font-medium ${
                       activeTab === "upcoming"
                         ? "border-b-2 border-rose-400 text-rose-400"
                         : "text-gray-500 hover:text-rose-400"
@@ -284,7 +284,7 @@ const MyPageUser = () => {
                     예정된 공연
                   </button>
                   <button
-                    className={`px-5 md:px-6 py-3 font-medium ${
+                    className={`px-4 md:px-6 py-3 font-medium ${
                       activeTab === "past"
                         ? "border-b-2 border-rose-400 text-rose-400"
                         : "text-gray-500 hover:text-rose-400"
@@ -294,7 +294,7 @@ const MyPageUser = () => {
                     지난 공연
                   </button>
                   <button
-                    className={`px-5 md:px-6 py-3 font-medium ${
+                    className={`px-4 md:px-6 py-3 font-medium ${
                       activeTab === "cancel"
                         ? "border-b-2 border-rose-400 text-rose-400"
                         : "text-gray-500 hover:text-rose-400"
@@ -331,7 +331,7 @@ const MyPageUser = () => {
             </div>
 
             {/* Tab Content */}
-            <div className="flex flex-col h-[calc(100vh-300px)] px-3 md:px-5 overflow-y-auto">
+            <div className="flex flex-col px-3 md:px-5 overflow-y-auto">
               {renderContent()}
             </div>
           </div>
