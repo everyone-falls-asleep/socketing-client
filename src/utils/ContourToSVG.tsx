@@ -284,34 +284,13 @@ const ContourToSVG: React.FC<ContourToSVGProps> = ({
           <g className="seats">
             {contours
               .filter((c) => c.type === "seat")
-              .map((contour, index, filteredContours) => {
+              .map((contour) => {
                 const isSelected =
                   selectedContours.includes(contour.id) ||
                   selectedContour === contour.id;
 
-                const isRowLabel =
-                  index === 0 ||
-                  (index > 0 &&
-                    contour.row !== filteredContours[index - 1].row);
-
                 return (
                   <g key={contour.id} className="seat">
-                    {/* Row label on the left of the first seat in each row */}
-                    {isRowLabel && (
-                      <text
-                        x={(contour.cx ?? 0) - (contour.r ?? 0) * 2.5} // Position to the left of the first seat
-                        y={contour.cy}
-                        textAnchor="middle"
-                        dominantBaseline="middle"
-                        fill="black"
-                        fontWeight="bold"
-                        fontSize="8"
-                        pointerEvents="none"
-                      >
-                        {`${contour.row}열`}
-                      </text>
-                    )}
-
                     <circle
                       cx={contour.cx}
                       cy={contour.cy}
@@ -344,16 +323,43 @@ const ContourToSVG: React.FC<ContourToSVGProps> = ({
                           dominantBaseline="middle"
                           fill="black"
                           fontWeight="bold"
-                          fontSize={"7"}
+                          fontSize={"5"}
                           pointerEvents="none"
                         >
-                          {contour.number}번
+                          {`${contour.row}-
+                          ${contour.number} `}
                         </text>
                       )}
                   </g>
                 );
               })}
           </g>
+
+          {/* <g className="rows">
+            {contours
+              .filter((c, index, filteredContours) => 
+                c.type === "seat" &&
+                c.row &&
+                (index === 0 ||
+                  (index > 0 && c.row !== filteredContours[index - 1].row))
+              )
+              .map((contour) => (
+                <text
+                  key={`row-label-${contour.row}-${contour.id}`}
+                  x={(contour.cx || 50) - (contour.r || 0) * 2.5} // Default value for invalid cx
+                  y={contour.cy || 50} // Default value for invalid cy
+                  textAnchor="middle"
+                  dominantBaseline="middle"
+                  fill="black"
+                  fontWeight="bold"
+                  fontSize="8"
+                  pointerEvents="none"
+                >
+                  {`${contour.row}열`}
+                </text>
+              ))}
+          </g> */}
+
           <g className="areas">
             {contours.filter((c) => c.type === "area").map(renderAreaContour)}
           </g>
