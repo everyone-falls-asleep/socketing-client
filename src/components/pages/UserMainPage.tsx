@@ -67,7 +67,7 @@ const UserMainPage = () => {
     }))
     .filter((event) => {
       // ticketingStartTime으로부터 5분(300000ms)이 지나지 않은 이벤트만 포함
-      return event.ticketingStartTime > now - 300000;
+      return event.ticketingStartTime > now - 21600000;
     })
     .sort((a, b) => a.ticketingStartTime - b.ticketingStartTime)
     .slice(0, 1);
