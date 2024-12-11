@@ -137,7 +137,7 @@ const ManagerSeatContainer = () => {
         ) // 검토 필요
     );
     const isSelected = !!selectedSeat;
-    const userId = selectedSeat?.reservations[0].order.user.id || "";
+    const userId = selectedSeat?.reservations[0]?.order?.user.id || "";
 
     return (
       <>
