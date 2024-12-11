@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Button from "../atoms/buttons/Button";
 import { createResourceQuery } from "../../hooks/useCustomQuery";
-import { fetchErrorMessages } from "../../constants/errorMessages";
+import { managerPageErrorMessages } from "../../constants/errorMessages";
 import MyProfile from "../organisms/Form/MyProfile";
 import { formatToKoreanDateAndTime } from "../../utils/dateUtils";
 import { fetchAllEventForManager } from "../../api/managers/managersApi";
@@ -19,9 +19,9 @@ const MyPageManager = () => {
 
   const { data, isLoading, isError } = useEvents();
 
-  if (isLoading) return <p>{fetchErrorMessages.isLoading}</p>;
-  if (isError) return <p>{fetchErrorMessages.general}</p>;
-  if (!data?.data) return <p>{fetchErrorMessages.noReservationData}</p>;
+  if (isLoading) return <p>{managerPageErrorMessages.isLoading}</p>;
+  if (isError) return <p>{managerPageErrorMessages.general}</p>;
+  if (!data?.data) return <p>{managerPageErrorMessages.noEventData}</p>;
 
   const eventData = data.data;
   const currentTime = new Date(); // 현재 시간

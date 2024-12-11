@@ -1,7 +1,7 @@
 import { useManagerContext } from "../../../store/ManagerContext";
 
 const ReservationAllInfo = () => {
-  const { seats } = useManagerContext();
+  const { seats, totalSalesAmount } = useManagerContext();
 
   const formatNumber = (num: number) => {
     return num?.toLocaleString() || "0";
@@ -19,7 +19,7 @@ const ReservationAllInfo = () => {
       <p className="text-xl text-center">
         <span className="font-bold">총 매출 금액:</span>
         <div className="pt-2">
-          <span>{formatNumber(100000)}원</span>
+          <span>{formatNumber(totalSalesAmount || 0)}원</span>
         </div>
       </p>
       <p className="text-xl text-center">

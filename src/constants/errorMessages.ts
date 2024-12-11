@@ -60,3 +60,9 @@ export const postReservationErrorMessages = {
   general: "예매에 실패하였습니다. 다시 시도해주세요.",
   reserved: "이미 예매된 좌석입니다.",
 };
+
+export const managerPageErrorMessages = {
+  isLoading: "관리자 페이지를 위한 데이터를 불러오는 중...",
+  general: "접근 권한이 없습니다.",
+  noEventData: "오류 발생: 공연 정보를 불러올 수 없습니다.",
+};
