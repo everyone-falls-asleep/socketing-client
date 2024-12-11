@@ -11,6 +11,7 @@ import { useEffect, useState } from "react";
 import ManagerReservationUpperEvent from "../organisms/reservation/ManagerReservationUpperEvent";
 import ManagerSeatContainer from "../organisms/seat-container/ManagerSeatContainer";
 import { useManagerContext } from "../../store/ManagerContext";
+import { managerPageErrorMessages } from "../../constants/errorMessages";
 
 const ManagerDetailPage = () => {
   const { eventId, eventDateId } = useParams();
@@ -46,7 +47,7 @@ const ManagerDetailPage = () => {
   }, [eventId, eventDateId]);
 
   if (!eventData || !svg) {
-    return <p>데이터를 불러올 수 없습니다.</p>;
+    return <p>{managerPageErrorMessages.isLoading}</p>;
   }
 
   return (
