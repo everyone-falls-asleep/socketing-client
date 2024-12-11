@@ -284,13 +284,34 @@ const ContourToSVG: React.FC<ContourToSVGProps> = ({
           <g className="seats">
             {contours
               .filter((c) => c.type === "seat")
-              .map((contour) => {
+              .map((contour, index, filteredContours) => {
                 const isSelected =
                   selectedContours.includes(contour.id) ||
                   selectedContour === contour.id;
 
+                const isRowLabel =
+                  index === 0 ||
+                  (index > 0 &&
+                    contour.row !== filteredContours[index - 1].row);
+
                 return (
                   <g key={contour.id} className="seat">
+                    {/* Row label on the left of the first seat in each row */}
+                    {isRowLabel && (
+                      <text
+                        x={(contour.cx ?? 0) - (contour.r ?? 0) * 2.5} // Position to the left of the first seat
+                        y={contour.cy}
+                        textAnchor="middle"
+                        dominantBaseline="middle"
+                        fill="black"
+                        fontWeight="bold"
+                        fontSize="8"
+                        pointerEvents="none"
+                      >
+                        {`${contour.row}열`}
+                      </text>
+                    )}
+
                     <circle
                       cx={contour.cx}
                       cy={contour.cy}
@@ -323,11 +344,10 @@ const ContourToSVG: React.FC<ContourToSVGProps> = ({
                           dominantBaseline="middle"
                           fill="black"
                           fontWeight="bold"
-                          fontSize={"5"}
+                          fontSize={"7"}
                           pointerEvents="none"
                         >
-                          {`${contour.row}-
-                          ${contour.number} `}
+                          {contour.number}번
                         </text>
                       )}
                   </g>
