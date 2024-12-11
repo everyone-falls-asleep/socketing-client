@@ -71,7 +71,9 @@ const JoinModal: React.FC<JoinModalProps> = ({
     onError: (error: AxiosError<ApiErrorResponse>) => {
       if (error.response) {
         const code = error.response.data.code;
-        if (code === 5) {
+        if (code === 1) {
+          toast.error(registerErrorMessages.duplicateUser);
+        } else if (code === 5) {
           setError("email", {
             type: "manual",
             message: registerErrorMessages.validation.emailInvalid,
