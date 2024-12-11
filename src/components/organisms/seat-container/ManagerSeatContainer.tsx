@@ -180,7 +180,7 @@ const ManagerSeatContainer = () => {
             </p>
             <p className="font-bold text-gray-700">
               {/* 구역 표시를 추가하고 싶으면 주석 해제 */}
-              {/* <span className="text-black">1</span>구역{" "} */}
+              <span className="text-black">{selectedSeat?.label}</span>구역{" "}
               <span className="text-black">{selectedSeat?.row}</span>열{" "}
               <span className="text-black">{selectedSeat?.number}</span>번{" "}
             </p>

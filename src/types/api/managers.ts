@@ -31,6 +31,8 @@ export interface Seat {
   row: number;
   number: number;
   reservations: Reservation[];
+  label?: string;
+  price?: number;
 }
 
 export interface EventDates {
@@ -51,7 +53,7 @@ export interface EventManagement {
   createdAt?: string;
   updatedAt?: string;
   svg?: string;
-
+  totalSales?: number;
   user: User;
   areas?: Area[];
   eventDates?: EventDates[];

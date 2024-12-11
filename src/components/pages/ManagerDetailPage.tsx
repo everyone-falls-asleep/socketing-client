@@ -15,7 +15,8 @@ import { useManagerContext } from "../../store/ManagerContext";
 const ManagerDetailPage = () => {
   const { eventId, eventDateId } = useParams();
   const [eventData, setEventData] = useState<EventManagement | null>(null);
-  const { setSeats, setAreas, svg, setSvg } = useManagerContext();
+  const { setSeats, setAreas, svg, setSvg, setTotalSalesAmount } =
+    useManagerContext();
 
   // if (!eventId || !eventDateId) {
   //   return <p>{fetchErrorMessages.general}</p>
@@ -34,6 +35,7 @@ const ManagerDetailPage = () => {
       setSeats(allSeats!);
       setAreas(response.data.areas!);
       setSvg(response.data.svg!);
+      setTotalSalesAmount(response.data.totalSales || 0);
     } catch (error) {
       console.log("Error : ", error);
     }

@@ -13,6 +13,8 @@ interface ManagerContextType {
   setSelectedSeat: (selectedSeat: Seat | null) => void;
   selectedUser: User | null;
   setSelectedUser: (selectedUser: User | null) => void;
+  totalSalesAmount: number | null;
+  setTotalSalesAmount: (totalSalesAmount: number | null) => void;
 }
 
 export const ManagerContext = createContext<ManagerContextType>(
@@ -35,6 +37,7 @@ export const ManagerProvider: React.FC<{ children: React.ReactNode }> = ({
   const [svg, setSvg] = useState<string>("");
   const [selectedSeat, setSelectedSeat] = useState<Seat | null>(null);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [totalSalesAmount, setTotalSalesAmount] = useState<number | null>(null);
 
   const value = {
     seats,
@@ -47,6 +50,8 @@ export const ManagerProvider: React.FC<{ children: React.ReactNode }> = ({
     setSelectedSeat,
     selectedUser,
     setSelectedUser,
+    totalSalesAmount,
+    setTotalSalesAmount,
   };
 
   return (
