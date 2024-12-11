@@ -15,7 +15,7 @@ const ManagerSeatContainer = () => {
     null
   );
 
-  const { seats, selectedSeat, selectedUser } = useManagerContext();
+  const { seats } = useManagerContext();
 
   // 두 터치 포인트 사이의 거리를 계산하는 함수
   const getTouchDistance = (
@@ -171,28 +171,6 @@ const ManagerSeatContainer = () => {
         >
           <ManagerSvgWrapper renderSeat={renderSeat} />
         </div>
-        {selectedSeat && (
-          <div className="absolute right-0 opacity-80 border p-3 text-gray-950 bg-white rounded-lg space-y-2">
-            <p className="text-center font-bold text-lg">좌석 예매 정보</p>
-            <p>
-              <span className="font-bold">ID:</span>{" "}
-              {selectedUser?.email.split("@")[0]}
-            </p>
-            <p className="font-bold text-gray-700">
-              {/* 구역 표시를 추가하고 싶으면 주석 해제 */}
-              <span className="text-black">{selectedSeat?.label}</span>구역{" "}
-              <span className="text-black">{selectedSeat?.row}</span>열{" "}
-              <span className="text-black">{selectedSeat?.number}</span>번{" "}
-            </p>
-            {/* 주석 처리된 예매 시간 표시 */}
-            {/* <p className="flex flex-col">
-              <span className="font-bold">예매 시간:</span>
-              <div className="pl-6">
-                <span> 2024.12.15 11:30</span>
-              </div>
-            </p> */}
-          </div>
-        )}
       </div>
 
       {/* Zoom Controls - 데스크톱에서만 표시 */}

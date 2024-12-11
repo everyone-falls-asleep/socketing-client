@@ -12,6 +12,7 @@ import ManagerReservationUpperEvent from "../organisms/reservation/ManagerReserv
 import ManagerSeatContainer from "../organisms/seat-container/ManagerSeatContainer";
 import { useManagerContext } from "../../store/ManagerContext";
 import { managerPageErrorMessages } from "../../constants/errorMessages";
+import SeatUserInfo from "../molecules/seat-user-info/SeatUserInfo";
 
 const ManagerDetailPage = () => {
   const { eventId, eventDateId } = useParams();
@@ -33,9 +34,9 @@ const ManagerDetailPage = () => {
       }
       setEventData(response.data);
       const allSeats = response.data.areas?.flatMap((area) => area.seats);
-      setSeats(allSeats!);
-      setAreas(response.data.areas!);
-      setSvg(response.data.svg!);
+      setSeats(allSeats);
+      setAreas(response.data.areas);
+      setSvg(response.data.svg);
       setTotalSalesAmount(response.data.totalSales || 0);
     } catch (error) {
       console.log("Error : ", error);
@@ -56,10 +57,7 @@ const ManagerDetailPage = () => {
         topContent={<ManagerReservationUpperEvent {...eventData} />}
         centerContent={<ManagerSeatContainer />}
         rightTopContent={<ReservationAllInfo />}
-        rightBottomContent={
-          // <ReservationCalendarSideBar dateData={eventData.eventDates} />
-          <></>
-        }
+        rightBottomContent={<SeatUserInfo />}
       />
     </MainLayout>
   );
