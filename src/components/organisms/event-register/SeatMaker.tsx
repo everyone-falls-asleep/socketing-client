@@ -3,6 +3,7 @@ import { Point } from "../../../types/components/common";
 import ContourToSVG from "../../../utils/ContourToSVG";
 import { useEventCreate } from "../../../store/EventCreateContext";
 import { Contour } from "../../../types/components/common";
+import ImageMinimap from "./ImageMinimap";
 
 interface SeatMakerProps {
   isDateSidebarOpen: boolean;
@@ -14,6 +15,7 @@ const SeatMaker: React.FC<SeatMakerProps> = ({ isDateSidebarOpen = false }) => {
   const [startPoint, setStartPoint] = useState<Point>({ x: 0, y: 0 });
   const [translate, setTranslate] = useState<Point>({ x: 0, y: 0 });
   const [scale, setScale] = useState<number>(1);
+  const [showLegend, setShowLegend] = useState(false);
   const {
     editMode,
     setEditMode,
@@ -253,6 +255,18 @@ const SeatMaker: React.FC<SeatMakerProps> = ({ isDateSidebarOpen = false }) => {
           -
         </button>
       </div>
+      <button
+        className="absolute top-0 right-0 rounded-md p-2 shadow-lg flex items-center justify-center text-sm border bg-white opacity-70"
+        onClick={() => setShowLegend((prev) => !prev)}
+      >
+        {showLegend ? "▲" : "미니 맵 ▼"}
+      </button>
+
+      {showLegend && (
+        <div className="absolute top-10 right-0 max-w-[200px] bg-white rounded-lg shadow-lg opacity-80">
+          <ImageMinimap></ImageMinimap>
+        </div>
+      )}
     </div>
   );
 };

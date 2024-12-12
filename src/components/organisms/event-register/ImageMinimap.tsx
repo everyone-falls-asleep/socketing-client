@@ -7,7 +7,7 @@ const ImageMinimap: React.FC = () => {
   return (
     <div className="bg-gray-100 shadow p-1">
       {imageUrl ? (
-        <div className="w-full h-[220px] flex items-center justify-center">
+        <div className="w-full flex items-center justify-center">
           <img
             className="max-w-full object-contain"
             src={imageUrl}

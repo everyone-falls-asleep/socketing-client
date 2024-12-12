@@ -5,7 +5,6 @@ import SeatControlPanel from "../organisms/event-register/SeatControlPanel";
 import { EventCreateProvider } from "../../store/EventCreateContext";
 import FourSectionLayout from "../layout/FourSectionLayout";
 import OverallControlPanel from "../organisms/event-register/OverallControlPanel";
-import ImageMinimap from "../organisms/event-register/ImageMinimap";
 
 const RegisterEventPage: React.FC = () => {
   const [isLeftSidebarOpen, setIsLeftSidebarOpen] = useState<boolean>(true);
@@ -16,7 +15,7 @@ const RegisterEventPage: React.FC = () => {
         topContent={<EventRegisterForm />}
         leftSidebarContent={<SeatControlPanel />}
         centerContent={<SeatMaker isDateSidebarOpen={isLeftSidebarOpen} />}
-        rightTopContent={<ImageMinimap />}
+        rightTopContent={<></>}
         rightBottomContent={<OverallControlPanel />}
         isLeftSidebarOpen={isLeftSidebarOpen}
         toggleSidebar={() => setIsLeftSidebarOpen(!isLeftSidebarOpen)}
