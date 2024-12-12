@@ -315,7 +315,38 @@ const ContourToSVG: React.FC<ContourToSVGProps> = ({
                     {contour.row &&
                       contour.row > 0 &&
                       contour.number &&
-                      contour.number > 0 && (
+                      contour.number === 1 &&
+                      contour.cx && (
+                        <text
+                          x={contour.cx}
+                          y={contour.cy}
+                          textAnchor="middle"
+                          dominantBaseline="middle"
+                          pointerEvents="none"
+                        >
+                          <tspan
+                            x={contour.cx - 18}
+                            fill="blue"
+                            fontSize="8"
+                            fontWeight="bold"
+                          >
+                            {`${contour.row}열`}
+                          </tspan>
+                          <tspan
+                            x={contour.cx}
+                            fill="black"
+                            fontSize="7"
+                            fontWeight="bold"
+                          >
+                            {`${contour.number}번`}
+                          </tspan>
+                        </text>
+                      )}
+
+                    {contour.row &&
+                      contour.row > 0 &&
+                      contour.number &&
+                      contour.number > 1 && (
                         <text
                           x={contour.cx}
                           y={contour.cy}
@@ -323,42 +354,17 @@ const ContourToSVG: React.FC<ContourToSVGProps> = ({
                           dominantBaseline="middle"
                           fill="black"
                           fontWeight="bold"
-                          fontSize={"5"}
+                          fontSize={"7"}
                           pointerEvents="none"
                         >
-                          {`${contour.row}-
-                          ${contour.number} `}
+                          {`
+                          ${contour.number}번`}
                         </text>
                       )}
                   </g>
                 );
               })}
           </g>
-
-          {/* <g className="rows">
-            {contours
-              .filter((c, index, filteredContours) => 
-                c.type === "seat" &&
-                c.row &&
-                (index === 0 ||
-                  (index > 0 && c.row !== filteredContours[index - 1].row))
-              )
-              .map((contour) => (
-                <text
-                  key={`row-label-${contour.row}-${contour.id}`}
-                  x={(contour.cx || 50) - (contour.r || 0) * 2.5} // Default value for invalid cx
-                  y={contour.cy || 50} // Default value for invalid cy
-                  textAnchor="middle"
-                  dominantBaseline="middle"
-                  fill="black"
-                  fontWeight="bold"
-                  fontSize="8"
-                  pointerEvents="none"
-                >
-                  {`${contour.row}열`}
-                </text>
-              ))}
-          </g> */}
 
           <g className="areas">
             {contours.filter((c) => c.type === "area").map(renderAreaContour)}
