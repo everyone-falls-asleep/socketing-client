@@ -112,10 +112,11 @@ const FriendRegisterModal = ({ isOpen, onClose }: FriendRegisterModalProps) => {
             {eventFriends.map((eventFriend, index) => (
               <div
                 key={index}
-                className="text-sm text-gray-700 flex flex-col md:flex-row space-x-2 md:space-x-2 space-y-2 md:space-y-0 justify-between items-center"
+                className="text-sm text-gray-700 flex flex-row space-x-2 md:space-x-2 space-y-2 md:space-y-0 justify-between items-center"
               >
-                <div>
-                  {eventFriend.nickname} ({eventFriend.email})
+                <div className="flex flex-col md:flex-row">
+                  <div>{eventFriend.nickname} </div>
+                  <div>({eventFriend.email})</div>
                   {/* <div>승낙 상태: {eventFriend.status}</div> */}
                 </div>
                 <div className="flex gap-1">

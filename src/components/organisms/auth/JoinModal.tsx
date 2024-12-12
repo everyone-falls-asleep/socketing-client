@@ -105,7 +105,7 @@ const JoinModal: React.FC<JoinModalProps> = ({
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
-      <div className="mx-auto w-full sm:max-w-[25rem] md:max-w-[30rem] lg:max-w-[35rem] xl:max-w-[40rem] px-4">
+      <div className="mx-auto w-full sm:max-w-[25rem] md:max-w-[30rem] lg:max-w-[35rem] xl:max-w-[40rem] p-2">
         <SubTitle className="text-center">회원가입</SubTitle>
         <div className="login-form-container mt-5">
           <form onSubmit={(e) => void handleSubmit(onSubmit)(e)}>

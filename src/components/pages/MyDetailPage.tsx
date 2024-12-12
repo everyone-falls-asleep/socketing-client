@@ -101,19 +101,21 @@ const MyDetailPage = () => {
         <div className="p-5 md:p-10 overflow-y-auto max-h-[calc(100%-64px)]">
           <div className="max-w-3xl mx-auto bg-white rounded-lg shadow-lg">
             {/* Header Section with Event Image */}
-            <div className="relative h-48 ">
-              <img
-                src={order.eventThumbnail}
-                alt={order.eventTitle}
-                className="w-full h-full object-cover rounded-t-lg  opacity-50"
-              />
-              <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/20">
-                <p className="!text-white text-2xl md:text-4xl font-bold mb-2">
-                  {order.eventTitle}
-                </p>
-                <Font className="text-white/90 font-bold text-lg md:text-xl">
-                  {order.eventCast}
-                </Font>
+            <div className="h-36 md:h-[180px]">
+              <div className="w-full h-full flex space-x-5 bg-rose-100 p-3  md:p-4 rounded-t-lg">
+                <img
+                  src={order.eventThumbnail}
+                  alt={order.eventTitle}
+                  className="hidden md:block max-w-32 h-full object-cover rounded"
+                />
+                <div className="flex flex-col justify-end">
+                  <p className="text-gray-800 text-xl md:text-3xl font-bold mb-2">
+                    {order.eventTitle}
+                  </p>
+                  <Font className="text-gray-700 font-bold mb-1 md:my-2 text-lg md:text-xl">
+                    {order.eventCast}
+                  </Font>
+                </div>
               </div>
             </div>
 
@@ -200,7 +202,7 @@ const MyDetailPage = () => {
         {/* 모달 */}
         {isCancelModalOpen && (
           <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
-            <div className="bg-white rounded-lg shadow-lg p-6 w-96">
+            <div className="bg-white rounded-lg shadow-lg mx-8 md:mx-auto p-6 w-96">
               <h2 className="text-xl font-bold mb-4">예매 취소</h2>
               <p className="text-gray-600 mb-6">
                 정말 예매를 취소하시겠습니까?
@@ -234,7 +236,7 @@ const MyDetailPage = () => {
           <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
             <div className="bg-white rounded-lg shadow-lg p-8 md:w-[60vw] md:h-[60vh] relative flex flex-col">
               <h2 className="text-2xl font-bold mb-4">내 좌석 위치</h2>
-              <div className="md:max-h-[440px]">
+              <div className="md:max-h-[43vh]">
                 <MySeatContainer
                   svg={order.eventSvg}
                   seats={seatsData}

@@ -236,102 +236,103 @@ const MyPageUser = () => {
 
         {/* Main Content */}
         <main className="flex-1">
-          <div className="max-w-4xl mx-auto p-8">
-            <h1 className="hidden lg:inline-block text-2xl font-bold uppercase text-gray-800 mb-3">
-              {section === "my-profile" ? "My Profile" : "My Tickets"}
-            </h1>
-            {/* 모바일 Tabs */}
-            <p className="lg:hidden flex justify-around md:justify-start md:gap-6 md:px-2 text-2xl font-bold uppercase text-gray-800 mb-3">
-              <span
-                className={`cursor-pointer ${
-                  section === "my-tickets" ? "text-rose-500 font-bold" : ""
-                }`}
-                onClick={() => {
-                  setSection("my-tickets");
-                  setActiveTab("upcoming");
-                }}
-              >
-                My Ticket
-              </span>{" "}
-              <span className="text-rose-500">
-                {section !== "my-profile" ? "◀" : "▶"}{" "}
-              </span>
-              <span
-                className={`cursor-pointer ${
-                  section === "my-profile" ? "text-rose-500 font-bold" : ""
-                }`}
-                onClick={() => {
-                  setSection("my-profile");
-                  setActiveTab("profile");
-                }}
-              >
-                My Profile
-              </span>
-            </p>
+          <div className="max-w-4xl mx-auto p-8 ">
+            <div>
+              <h1 className="hidden lg:inline-block text-2xl font-bold uppercase text-gray-800 mb-3">
+                {section === "my-profile" ? "My Profile" : "My Tickets"}
+              </h1>
+              {/* 모바일 Tabs */}
+              <p className="lg:hidden flex justify-around md:justify-start md:gap-6 md:px-2 text-2xl font-bold uppercase text-gray-800 mb-3">
+                <span
+                  className={`cursor-pointer ${
+                    section === "my-tickets" ? "text-rose-500 font-bold" : ""
+                  }`}
+                  onClick={() => {
+                    setSection("my-tickets");
+                    setActiveTab("upcoming");
+                  }}
+                >
+                  My Ticket
+                </span>{" "}
+                <span className="text-rose-500">
+                  {section !== "my-profile" ? "◀" : "▶"}{" "}
+                </span>
+                <span
+                  className={`cursor-pointer ${
+                    section === "my-profile" ? "text-rose-500 font-bold" : ""
+                  }`}
+                  onClick={() => {
+                    setSection("my-profile");
+                    setActiveTab("profile");
+                  }}
+                >
+                  My Profile
+                </span>
+              </p>
 
-            {/* Tabs */}
-            <div className="flex border-b mb-6">
-              {section === "my-tickets" ? (
-                <>
-                  <button
-                    className={`px-3 md:px-6 py-3 font-medium ${
-                      activeTab === "upcoming"
-                        ? "border-b-2 border-rose-400 text-rose-400"
-                        : "text-gray-500 hover:text-rose-400"
-                    }`}
-                    onClick={() => setActiveTab("upcoming")}
-                  >
-                    예정된 공연
-                  </button>
-                  <button
-                    className={`px-4 md:px-6 py-3 font-medium ${
-                      activeTab === "past"
-                        ? "border-b-2 border-rose-400 text-rose-400"
-                        : "text-gray-500 hover:text-rose-400"
-                    }`}
-                    onClick={() => setActiveTab("past")}
-                  >
-                    지난 공연
-                  </button>
-                  <button
-                    className={`px-4 md:px-6 py-3 font-medium ${
-                      activeTab === "cancel"
-                        ? "border-b-2 border-rose-400 text-rose-400"
-                        : "text-gray-500 hover:text-rose-400"
-                    }`}
-                    onClick={() => setActiveTab("cancel")}
-                  >
-                    취소된 티켓
-                  </button>
-                </>
-              ) : (
-                <>
-                  <button
-                    className={`px-5 md:px-6 py-3 font-medium ${
-                      activeTab === "profile"
-                        ? "border-b-2 border-rose-400 text-rose-400"
-                        : "text-gray-500 hover:text-rose-400"
-                    }`}
-                    onClick={() => setActiveTab("profile")}
-                  >
-                    프로필 보기
-                  </button>
-                  <button
-                    className={`px-5 md:px-6 py-3 font-medium ${
-                      activeTab === "money"
-                        ? "border-b-2 border-rose-400 text-rose-400"
-                        : "text-gray-500 hover:text-rose-400"
-                    }`}
-                    onClick={() => setActiveTab("money")}
-                  >
-                    나의 보유 금액
-                  </button>
-                </>
-              )}
+              {/* Tabs */}
+              <div className="flex border-b mb-6">
+                {section === "my-tickets" ? (
+                  <>
+                    <button
+                      className={`px-3 md:px-6 py-3 font-medium ${
+                        activeTab === "upcoming"
+                          ? "border-b-2 border-rose-400 text-rose-400"
+                          : "text-gray-500 hover:text-rose-400"
+                      }`}
+                      onClick={() => setActiveTab("upcoming")}
+                    >
+                      예정된 공연
+                    </button>
+                    <button
+                      className={`px-4 md:px-6 py-3 font-medium ${
+                        activeTab === "past"
+                          ? "border-b-2 border-rose-400 text-rose-400"
+                          : "text-gray-500 hover:text-rose-400"
+                      }`}
+                      onClick={() => setActiveTab("past")}
+                    >
+                      지난 공연
+                    </button>
+                    <button
+                      className={`px-4 md:px-6 py-3 font-medium ${
+                        activeTab === "cancel"
+                          ? "border-b-2 border-rose-400 text-rose-400"
+                          : "text-gray-500 hover:text-rose-400"
+                      }`}
+                      onClick={() => setActiveTab("cancel")}
+                    >
+                      취소된 티켓
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <button
+                      className={`px-5 md:px-6 py-3 font-medium ${
+                        activeTab === "profile"
+                          ? "border-b-2 border-rose-400 text-rose-400"
+                          : "text-gray-500 hover:text-rose-400"
+                      }`}
+                      onClick={() => setActiveTab("profile")}
+                    >
+                      프로필 보기
+                    </button>
+                    <button
+                      className={`px-5 md:px-6 py-3 font-medium ${
+                        activeTab === "money"
+                          ? "border-b-2 border-rose-400 text-rose-400"
+                          : "text-gray-500 hover:text-rose-400"
+                      }`}
+                      onClick={() => setActiveTab("money")}
+                    >
+                      나의 보유 금액
+                    </button>
+                  </>
+                )}
+              </div>
             </div>
-
             {/* Tab Content */}
-            <div className="flex flex-col px-3 md:px-5 overflow-y-auto">
+            <div className="flex flex-col px-3 md:px-5 h-[calc(100vh-259px)] overflow-y-auto">
               {renderContent()}
             </div>
           </div>

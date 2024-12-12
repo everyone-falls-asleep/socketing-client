@@ -11,9 +11,12 @@ const EventDetailAboutTab = () => {
   return (
     <>
       <div id="event-content-title" className="tab-content-title-container">
-        <h2 className="tab-content-title">공연 소개</h2>
+        <h2 className="tab-content-title md:ml-10">공연 소개</h2>
       </div>
-      <div id="event-about" className="content-container overflow-y-auto">
+      <div
+        id="event-about"
+        className="content-container md:pl-20 overflow-y-auto"
+      >
         <div
           key={event.id}
           className="event-details px-2 md:p-2 flex flex-col md:flex-row justify-start md:gap-10"

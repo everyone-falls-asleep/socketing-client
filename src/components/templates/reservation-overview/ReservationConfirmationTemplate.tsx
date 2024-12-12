@@ -16,19 +16,21 @@ const ReservationConfirmationTemplate = ({ data }: ReservationConfirmProps) => {
       <div className="max-w-3xl mx-auto md:p-10 ">
         <div className="bg-white rounded-md shadow-lg overflow-hidden">
           {/* Header Section with Event Image */}
-          <div className="relative h-48 ">
-            <img
-              src={data.eventThumbnail}
-              alt={data.eventTitle}
-              className="w-full h-full object-cover rounded-t-lg opacity-50"
-            />
-            <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/20">
-              <p className="!text-white text-2xl md:text-4xl font-bold mb-2">
-                {data.eventTitle}
-              </p>
-              <Font className="text-white/90 font-bold text-lg md:text-xl">
-                {data.eventCast}
-              </Font>
+          <div className="h-36 md:h-[180px]">
+            <div className="w-full h-full flex space-x-5 bg-rose-100 p-3  md:p-4 rounded-t-lg">
+              <img
+                src={data.eventThumbnail}
+                alt={data.eventTitle}
+                className="hidden md:block max-w-32 h-full object-cover rounded"
+              />
+              <div className="flex flex-col justify-end">
+                <p className="text-gray-800 text-xl md:text-3xl font-bold mb-2">
+                  {data.eventTitle}
+                </p>
+                <Font className="text-gray-700 font-bold mb-1 md:my-2 text-lg md:text-xl">
+                  {data.eventCast}
+                </Font>
+              </div>
             </div>
           </div>
 

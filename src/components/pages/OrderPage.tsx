@@ -1,6 +1,6 @@
 import Button from "../atoms/buttons/Button";
 import MainLayout from "../layout/MainLayout";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
 import {
@@ -90,28 +90,30 @@ const OrderPage = () => {
       toast.error("결제 처리 중 오류가 발생했습니다.");
     }
   };
-  const delay = (ms: number) =>
-    new Promise((resolve) => setTimeout(resolve, ms));
+  useEffect(() => {
+    const fetchUserPoints = async () => {
+      try {
+        if (!userId) {
+          toast.error("사용자 정보를 가져올 수 없습니다.");
+          return;
+        }
+        const response = await getUserPoints(userId);
+        if (response.code === 0 && response.data) {
+          setUserPoints(response.data.point ?? 0); // undefined일 경우 0으로 설정
+        } else {
+          toast.error("금액을 불러오지 못했습니다.");
+        }
+      } catch (error) {
+        console.error("금액 조회 중 오류 발생:", error);
+        toast.error("금액 조회 중 문제가 발생했습니다.");
+      }
+    };
+
+    void fetchUserPoints();
+  }, []);
+
   if (!userId) return;
 
-  const fetchUserPoints = async () => {
-    try {
-      if (!userId) {
-        toast.error("사용자 정보를 가져올 수 없습니다.");
-        return;
-      }
-      await delay(500);
-      const response = await getUserPoints(userId);
-      if (response.code === 0 && response.data) {
-        setUserPoints(response.data.point ?? 0); // undefined일 경우 0으로 설정
-      } else {
-        toast.error("금액을 불러오지 못했습니다");
-      }
-    } catch (error) {
-      console.error("금액 조회 중 오류 발생:", error);
-      toast.error("금액 조회 중 문제가 발생했습니다.");
-    }
-  };
   if (!orderData) return <p>예매 정보가 없습니다</p>;
   const seats = orderData.seats;
 
@@ -215,26 +217,12 @@ const OrderPage = () => {
                     name="paymentMethod"
                     onChange={() => setPaymentMethod("socket_pay")}
                   />
-                  <label htmlFor="socket_pay">보유 금액</label>
-                  <p className="font-bold text-gray-800 mt-4 flex items-baseline justify-between space-x-5">
-                    <Button
-                      size="sm"
-                      variant="dark"
-                      onClick={() => {
-                        fetchUserPoints().catch((error) => {
-                          console.error("조회 중 오류 발생:", error);
-                          toast.error("조회 중 문제가 발생했습니다.");
-                        });
-                      }}
-                    >
-                      보유 금액 조회
-                    </Button>{" "}
-                    <span>
-                      {userPoints === -1
-                        ? "조회를 눌러주세요"
-                        : `${userPoints.toLocaleString()} 원`}
-                    </span>
-                  </p>
+                  <label htmlFor="socket_pay" className="pr-24 md:pr-10">
+                    보유 금액
+                  </label>
+                  <span className="font-bold">
+                    {userPoints.toLocaleString()} 원
+                  </span>
                 </div>
               </div>
 
