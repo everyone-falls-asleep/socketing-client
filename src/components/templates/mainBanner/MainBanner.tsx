@@ -37,7 +37,7 @@ const MainBanner = ({ event }: MainBannerProps) => {
     <>
       <div className="w-full bg-black text-white text-center pb-2 text-3xl">
         <h1 className="text-[24px] font-bold border-t-2 border-b-2 p-1">
-          곧 티켓팅이 시작됩니다!
+          곧 티켓팅이 시작됩니다!🎉
         </h1>
       </div>
       <div className="relative w-full h-[24rem] overflow-hidden bg-gray-100 flex items-center justify-center">
