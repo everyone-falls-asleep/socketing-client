@@ -9,6 +9,7 @@ import { fetchErrorMessages } from "../../constants/errorMessages";
 import { formatToKoreanDateAndTime } from "../../utils/dateUtils";
 import MySeatContainer from "../organisms/seat-container/MySeatContainer";
 import { OrderSeatResponse } from "../../types/api/order";
+import LoadingPage from "./LoadingPage";
 
 const stages = ["대기열 진입", "입장"]; //["로비", "대기실", "입장 대기", "매표소 입장"];
 const WaitingRoomPage = () => {
@@ -86,13 +87,13 @@ const WaitingRoomPage = () => {
     }
   }, [myPosition]);
 
-  if (eventLoading) return <p>{fetchErrorMessages.isLoading}</p>;
+  if (eventLoading) return <LoadingPage />;
   if (eventError) return <p>{fetchErrorMessages.general}</p>;
   if (!eventData?.data) return <p>{fetchErrorMessages.noEventData}</p>;
   if (!eventData.data.svg) return <div>{fetchErrorMessages.noSvgData}</div>;
-  if (!isConnected) return <p>Connecting to queue...</p>;
+  if (!isConnected) return <LoadingPage />;
 
-  if (seatLoading) return <p>{fetchErrorMessages.isLoading}</p>;
+  if (seatLoading) return <LoadingPage />;
   if (seatError) return <p>{fetchErrorMessages.general}</p>;
   if (!seatData?.data) return <p>{fetchErrorMessages.noSeatsData}</p>;
 

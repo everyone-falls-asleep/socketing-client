@@ -9,6 +9,7 @@ import { formatToKoreanDateAndTime } from "../../utils/dateUtils";
 import TicketButton from "../atoms/buttons/TiketButton";
 import { useCurrentTime } from "../../hooks/useCurrentTime";
 import { useNavigate } from "react-router-dom";
+import LoadingPage from "./LoadingPage";
 
 const UserMainPage = () => {
   const navigate = useNavigate();
@@ -20,7 +21,7 @@ const UserMainPage = () => {
 
   const { data, isLoading, isError } = useEvents();
 
-  if (isLoading) return <p>{fetchErrorMessages.isLoading}</p>;
+  if (isLoading) return <LoadingPage />;
   if (isError) return <p>{fetchErrorMessages.general}</p>;
   if (!data?.data) return <p>{fetchErrorMessages.noEventData}</p>;
 

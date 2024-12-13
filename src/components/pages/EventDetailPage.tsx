@@ -14,6 +14,7 @@ import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
 import { EventFriendProvider } from "../../store/EventFriendContext";
+import LoadingPage from "./LoadingPage";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -49,7 +50,7 @@ const EventDetailPage = () => {
     }
   }, [data, setEvent, setFilteredEvent]);
 
-  if (isLoading) return <p>{fetchErrorMessages.isLoading}</p>;
+  if (isLoading) return <LoadingPage />;
   if (isError) return <p>{fetchErrorMessages.general}</p>;
   if (!data?.data) return <p>{fetchErrorMessages.noEventData}</p>;
 

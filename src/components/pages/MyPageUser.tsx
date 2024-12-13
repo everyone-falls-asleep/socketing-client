@@ -10,6 +10,7 @@ import { getAllOrder } from "../../api/orders/ordersApi";
 import { GetAllOrderResponse, GetOrder } from "../../types/api/order";
 import { UserContext } from "../../store/UserContext";
 import MyMoney from "../organisms/Form/MyMoney";
+import LoadingPage from "./LoadingPage";
 
 const MyPageUser = () => {
   const [section, setSection] = useState("my-tickets");
@@ -23,7 +24,7 @@ const MyPageUser = () => {
   );
   const { data, isLoading, isError } = useOrders("");
 
-  if (isLoading) return <p>{fetchErrorMessages.isLoading}</p>;
+  if (isLoading) return <LoadingPage />;
   if (isError) return <p>{fetchErrorMessages.general}</p>;
   if (!data?.data) return <p>{fetchErrorMessages.noReservationData}</p>;
 

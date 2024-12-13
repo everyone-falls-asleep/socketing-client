@@ -11,6 +11,7 @@ import { createResourceQuery } from "../../hooks/useCustomQuery";
 import { SingleEventResponse } from "../../types/api/event";
 import { fetchErrorMessages } from "../../constants/errorMessages";
 import ReservationSeatInfo from "../organisms/reservation/ReservationSeatInfo";
+import LoadingPage from "./LoadingPage";
 
 const ReservationPage: React.FC = () => {
   const { eventId: urlEventId, eventDateId: urlEventDateId } = useParams();
@@ -44,11 +45,11 @@ const ReservationPage: React.FC = () => {
   }, [urlEventId, urlEventDateId, setEventId, setEventDateId]);
 
   // Loading States
-  if (eventLoading) return <p>{fetchErrorMessages.isLoading}</p>;
+  if (eventLoading) return <LoadingPage />;
   if (eventError) return <p>{fetchErrorMessages.general}</p>;
   if (!eventData?.data) return <p>{fetchErrorMessages.noEventData}</p>;
   if (!eventData.data.svg) return <div>{fetchErrorMessages.noSvgData}</div>;
-  if (!isConnected) return <p>Connecting to server...</p>;
+  if (!isConnected) return <LoadingPage />;
 
   return (
     <MainLayout>

@@ -7,6 +7,7 @@ import MyProfile from "../organisms/Form/MyProfile";
 import { formatToKoreanDateAndTime } from "../../utils/dateUtils";
 import { fetchAllEventForManager } from "../../api/managers/managersApi";
 import { AllEventManagementResponse } from "../../types/api/managers";
+import LoadingPage from "./LoadingPage";
 
 const MyPageManager = () => {
   const [activeTab, setActiveTab] = useState("ongoing"); // 현재 활성화된 탭 상태
@@ -19,7 +20,7 @@ const MyPageManager = () => {
 
   const { data, isLoading, isError } = useEvents();
 
-  if (isLoading) return <p>{managerPageErrorMessages.isLoading}</p>;
+  if (isLoading) return <LoadingPage />;
   if (isError) return <p>{managerPageErrorMessages.general}</p>;
   if (!data?.data) return <p>{managerPageErrorMessages.noEventData}</p>;
 

@@ -17,6 +17,7 @@ import { createResourceQuery } from "../../hooks/useCustomQuery";
 import MySeatContainer from "../organisms/seat-container/MySeatContainer";
 import { fetchAllSeats } from "../../api/events/eventsApi";
 import { OrderSeat } from "../../types/api/order";
+import LoadingPage from "./LoadingPage";
 
 const MyDetailPage = () => {
   const { orderId } = useParams<{ orderId: string }>();
@@ -38,7 +39,7 @@ const MyDetailPage = () => {
   const { data, isLoading, isError } = useOneOrder(orderId);
 
   const order = data?.data;
-  if (isLoading) return <p>{fetchErrorMessages.isLoading}</p>;
+  if (isLoading) return <LoadingPage />;
   if (isError) return <p>{fetchErrorMessages.general}</p>;
   if (!order) return <p>{fetchErrorMessages.noReservationData}</p>;
 

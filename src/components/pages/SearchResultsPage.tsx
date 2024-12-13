@@ -9,6 +9,7 @@ import { fetchErrorMessages } from "../../constants/errorMessages";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
+import LoadingPage from "./LoadingPage";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -24,7 +25,7 @@ const SearchResultsPage = () => {
 
   const { data, isLoading, isError } = useEvents();
 
-  if (isLoading) return <p>{fetchErrorMessages.isLoading}</p>;
+  if (isLoading) return <LoadingPage />;
   if (isError) return <p>{fetchErrorMessages.general}</p>;
   if (!data?.data) return <p>{fetchErrorMessages.noEventData}</p>;
 
