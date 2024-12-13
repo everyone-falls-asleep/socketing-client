@@ -28,6 +28,7 @@ const WaitingRoomPage = () => {
 
   // const [currentStage, setCurrentStage] = useState(1); // 현재 단계
   const [progress, setProgress] = useState(0); // 진행률 (0% ~ 100%)
+  const [initNum, setInitNum] = useState(0);
 
   useEffect(() => {
     const state = location.state as { numberOfTickets?: number };
@@ -76,10 +77,14 @@ const WaitingRoomPage = () => {
   }, [isTurn]);
 
   useEffect(() => {
-    if (myPosition && totalWaiting) {
-      setProgress(((totalWaiting - (myPosition - 1)) / totalWaiting) * 100);
+    if (myPosition) {
+      if (initNum === 0) {
+        setInitNum(myPosition);
+      }
+
+      setProgress(initNum > 0 ? 100 - ((myPosition - 1) / initNum) * 100 : 0);
     }
-  }, [myPosition, totalWaiting]);
+  }, [myPosition]);
 
   if (eventLoading) return <p>{fetchErrorMessages.isLoading}</p>;
   if (eventError) return <p>{fetchErrorMessages.general}</p>;
@@ -166,7 +171,7 @@ const WaitingRoomPage = () => {
           )}
           {totalWaiting && (
             <p className="mt-2 text-rose-400 text-xl font-bold">
-              {totalWaiting}명이 뒤에 대기 중입니다.
+              총 {totalWaiting}명이 대기 중입니다.
             </p>
           )}
         </div>
