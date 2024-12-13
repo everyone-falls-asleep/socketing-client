@@ -10,6 +10,7 @@ import { formatToKoreanDateAndTime } from "../../utils/dateUtils";
 import MySeatContainer from "../organisms/seat-container/MySeatContainer";
 import { OrderSeatResponse } from "../../types/api/order";
 import LoadingPage from "./LoadingPage";
+import ErrorPage from "./ErrorPage";
 
 const stages = ["대기열 진입", "입장"]; //["로비", "대기실", "입장 대기", "매표소 입장"];
 const WaitingRoomPage = () => {
@@ -88,14 +89,18 @@ const WaitingRoomPage = () => {
   }, [myPosition]);
 
   if (eventLoading) return <LoadingPage />;
-  if (eventError) return <p>{fetchErrorMessages.general}</p>;
-  if (!eventData?.data) return <p>{fetchErrorMessages.noEventData}</p>;
-  if (!eventData.data.svg) return <div>{fetchErrorMessages.noSvgData}</div>;
+  if (eventError)
+    return <ErrorPage errorMessage={fetchErrorMessages.general} />;
+  if (!eventData?.data)
+    return <ErrorPage errorMessage={fetchErrorMessages.noEventData} />;
+  if (!eventData.data.svg)
+    return <ErrorPage errorMessage={fetchErrorMessages.noSvgData} />;
   if (!isConnected) return <LoadingPage />;
 
   if (seatLoading) return <LoadingPage />;
-  if (seatError) return <p>{fetchErrorMessages.general}</p>;
-  if (!seatData?.data) return <p>{fetchErrorMessages.noSeatsData}</p>;
+  if (seatError) return <ErrorPage errorMessage={fetchErrorMessages.general} />;
+  if (!seatData?.data)
+    return <ErrorPage errorMessage={fetchErrorMessages.noSeatsData} />;
 
   return (
     <div className="min-h-screen bg-black text-white flex flex-col items-center">
@@ -158,9 +163,7 @@ const WaitingRoomPage = () => {
         {/* 대기실/큐 상태 */}
         <div className="flex flex-col items-center justify-center">
           <p className="mt-2 px-5 md:text-lg text-center whitespace-pre-line">
-            {progress < 90 &&
-              `현재 입장 대기 중입니다.
-              좌석 선택을 위해 준비해주세요!`}
+            {progress < 90 && "현재 입장 대기 중입니다."}
             {progress > 90 && "곧 입장이 시작됩니다!"}
           </p>
           {myPosition ? (
@@ -181,7 +184,7 @@ const WaitingRoomPage = () => {
           <h2 className="text-xl font-bold text-center my-3">
             실시간 좌석 예매 현황
           </h2>
-          <div className="bg-black rounded-lg shadow-lg md:w-[50vw] md:h-[50vh] flex justify-center">
+          <div className="bg-black rounded-lg shadow-lg md:w-[45vw] md:h-[45vh] flex justify-center">
             <MySeatContainer
               svg={eventData.data.svg}
               seats={seatData.data}

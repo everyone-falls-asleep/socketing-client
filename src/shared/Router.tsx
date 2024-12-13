@@ -15,6 +15,7 @@ import { WrappedManagerDetailPage } from "../components/wrappers/WrappedManagerD
 import MyDetailPage from "../components/pages/MyDetailPage";
 import MyPageManager from "../components/pages/MyPageManager";
 import OrderPage from "../components/pages/OrderPage";
+import ErrorPage from "../components/pages/ErrorPage";
 
 const Router = () => {
   return (
@@ -33,6 +34,7 @@ const Router = () => {
         />
 
         <Route path="order" element={<OrderPage />} />
+        <Route path="error" element={<ErrorPage />} />
         <Route
           path="search-results/:searchTerm"
           element={<SearchResultsPage />}

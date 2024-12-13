@@ -2,12 +2,13 @@ import ReservationOverviewTemplate from "../templates/reservation-overview/Reser
 import { useLocation } from "react-router-dom";
 import MainLayout from "../layout/MainLayout";
 import { UpdatedPayment } from "../../types/api/payment";
+import ErrorPage from "./ErrorPage";
 
 const ReservationConfirmationPage = () => {
   const location = useLocation();
   const state = location.state as { paymentData: UpdatedPayment };
   const paymentData = state.paymentData;
-  if (!paymentData) return <p>결제 정보가 없습니다</p>;
+  if (!paymentData) return <ErrorPage errorMessage={"결제 정보가 없습니다"} />;
 
   return (
     <MainLayout>

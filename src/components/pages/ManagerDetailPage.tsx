@@ -11,8 +11,9 @@ import { useEffect, useState } from "react";
 import ManagerReservationUpperEvent from "../organisms/reservation/ManagerReservationUpperEvent";
 import ManagerSeatContainer from "../organisms/seat-container/ManagerSeatContainer";
 import { useManagerContext } from "../../store/ManagerContext";
+import { managerPageErrorMessages } from "../../constants/errorMessages";
 import SeatUserInfo from "../molecules/seat-user-info/SeatUserInfo";
-import LoadingPage from "./LoadingPage";
+import ErrorPage from "./ErrorPage";
 
 const ManagerDetailPage = () => {
   const { eventId, eventDateId } = useParams();
@@ -48,7 +49,7 @@ const ManagerDetailPage = () => {
   }, [eventId, eventDateId]);
 
   if (!eventData || !svg) {
-    return <LoadingPage />;
+    return <ErrorPage errorMessage={managerPageErrorMessages.noEventData} />;
   }
 
   return (

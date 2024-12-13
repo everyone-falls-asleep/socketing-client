@@ -10,6 +10,7 @@ import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
 import LoadingPage from "./LoadingPage";
+import ErrorPage from "./ErrorPage";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -26,8 +27,9 @@ const SearchResultsPage = () => {
   const { data, isLoading, isError } = useEvents();
 
   if (isLoading) return <LoadingPage />;
-  if (isError) return <p>{fetchErrorMessages.general}</p>;
-  if (!data?.data) return <p>{fetchErrorMessages.noEventData}</p>;
+  if (isError) return <ErrorPage errorMessage={fetchErrorMessages.general} />;
+  if (!data?.data)
+    return <ErrorPage errorMessage={fetchErrorMessages.noEventData} />;
 
   // 검색 필터링 함수
   const filterEvents = data.data.filter((event: Event) => {

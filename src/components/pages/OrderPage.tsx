@@ -14,6 +14,7 @@ import { useReservationContext } from "../../store/ReservationContext";
 import { UserContext } from "../../store/UserContext";
 import { useQueryClient } from "@tanstack/react-query";
 import PaymentTimer from "../molecules/timer/PaymentTimer";
+import ErrorPage from "./ErrorPage";
 
 const OrderPage = () => {
   const navigate = useNavigate();
@@ -112,9 +113,9 @@ const OrderPage = () => {
     void fetchUserPoints();
   }, []);
 
-  if (!userId) return;
+  if (!userId) return <ErrorPage />;
 
-  if (!orderData) return <p>예매 정보가 없습니다</p>;
+  if (!orderData) return <ErrorPage errorMessage={"예매 정보가 없습니다"} />;
   const seats = orderData.seats;
 
   return (

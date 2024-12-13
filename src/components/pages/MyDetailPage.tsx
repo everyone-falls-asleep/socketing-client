@@ -18,6 +18,7 @@ import MySeatContainer from "../organisms/seat-container/MySeatContainer";
 import { fetchAllSeats } from "../../api/events/eventsApi";
 import { OrderSeat } from "../../types/api/order";
 import LoadingPage from "./LoadingPage";
+import ErrorPage from "./ErrorPage";
 
 const MyDetailPage = () => {
   const { orderId } = useParams<{ orderId: string }>();
@@ -40,8 +41,9 @@ const MyDetailPage = () => {
 
   const order = data?.data;
   if (isLoading) return <LoadingPage />;
-  if (isError) return <p>{fetchErrorMessages.general}</p>;
-  if (!order) return <p>{fetchErrorMessages.noReservationData}</p>;
+  if (isError) return <ErrorPage errorMessage={fetchErrorMessages.general} />;
+  if (!order)
+    return <ErrorPage errorMessage={fetchErrorMessages.noReservationData} />;
 
   const handleCancelOrder = async () => {
     try {

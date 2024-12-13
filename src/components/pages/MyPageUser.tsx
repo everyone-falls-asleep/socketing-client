@@ -11,6 +11,7 @@ import { GetAllOrderResponse, GetOrder } from "../../types/api/order";
 import { UserContext } from "../../store/UserContext";
 import MyMoney from "../organisms/Form/MyMoney";
 import LoadingPage from "./LoadingPage";
+import ErrorPage from "./ErrorPage";
 
 const MyPageUser = () => {
   const [section, setSection] = useState("my-tickets");
@@ -25,8 +26,9 @@ const MyPageUser = () => {
   const { data, isLoading, isError } = useOrders("");
 
   if (isLoading) return <LoadingPage />;
-  if (isError) return <p>{fetchErrorMessages.general}</p>;
-  if (!data?.data) return <p>{fetchErrorMessages.noReservationData}</p>;
+  if (isError) return <ErrorPage errorMessage={fetchErrorMessages.general} />;
+  if (!data?.data)
+    return <ErrorPage errorMessage={fetchErrorMessages.noReservationData} />;
 
   const reservationData = data.data;
   const currentTime = new Date(); // 현재 시간
