@@ -222,29 +222,13 @@ const EventRegisterForm = () => {
           </div>
 
           <div className="flex flex-col items-start">
-            <label className="font-bold mb-1">포스터 이미지</label>
-            <Controller
-              control={control}
-              name="thumbnail"
-              rules={{ required: "포스터 업로드는 필수 항목입니다." }}
-              render={({ field }) => (
-                <input
-                  type="file"
-                  accept="image/jpeg,.jpg,.png"
-                  className="w-full"
-                  onChange={(event) => {
-                    const files = event.target.files;
-                    if (files && files[0]) {
-                      const file = files[0];
-                      const reader = new FileReader();
-                      reader.onload = () => {
-                        field.onChange(reader.result); // Base64 문자열 전달
-                      };
-                      reader.readAsDataURL(file);
-                    }
-                  }}
-                />
-              )}
+            <label className="font-bold mb-1">포스터 URL</label>
+            <Input
+              className=""
+              type="text"
+              {...register("thumbnail", {
+                required: "포스터 URL은 필수 항목입니다.",
+              })}
             />
             {errors.thumbnail && (
               <span className="text-red-500">{errors.thumbnail.message}</span>
