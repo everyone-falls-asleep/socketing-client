@@ -67,7 +67,7 @@ const JoinForm = () => {
       } catch (error) {
         console.error("자동 로그인 실패:", error);
         toast.error("자동 로그인에 실패했습니다. 로그인 페이지로 이동합니다.");
-        navigate("/login");
+        void navigate("/login");
       }
     },
 

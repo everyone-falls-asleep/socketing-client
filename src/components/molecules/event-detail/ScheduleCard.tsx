@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import Button from "../../atoms/buttons/Button";
 import {
   formatDateToKoreanDate,
@@ -39,7 +39,7 @@ const ScheduleCard = ({
 
   const handleDefaultReservationClick = () => {
     if (!checkLogin()) return;
-    navigate(`/waiting/${eventId}/${eventDateId}`);
+    void navigate(`/waiting/${eventId}/${eventDateId}`);
   };
 
   const handleAdjacentReservationClick = () => {
@@ -55,7 +55,7 @@ const ScheduleCard = ({
       toast.error("티켓팅이 아직 시작되지 않았습니다.");
       return;
     }
-    navigate(`/waiting/${eventId}/${eventDateId}`, {
+    void navigate(`/waiting/${eventId}/${eventDateId}`, {
       state: { numberOfTickets: eventFriends.length + 1 },
     });
   };

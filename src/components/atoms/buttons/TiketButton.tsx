@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import { CustomEventsProps } from "../../../types/api/event";
 import { useCurrentTime } from "../../../hooks/useCurrentTime";
 import { getTimeLeft } from "../../../utils/countdownTimer";
@@ -28,7 +28,7 @@ const TicketButton = ({ event, className }: TicketButtonProps) => {
             ? "bg-gray-200 hover:bg-gray-300"
             : "bg-rose-500 hover:bg-rose-600"
         }`}
-        onClick={() => navigate(`/event/${event.id}`)}
+        onClick={() => void navigate(`/event/${event.id}`)}
         disabled={isNotStarted}
       >
         {isNotStarted ? (

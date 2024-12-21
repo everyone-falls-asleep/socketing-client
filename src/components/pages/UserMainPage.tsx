@@ -93,12 +93,12 @@ const UserMainPage = () => {
     hover:shadow-md  
     active:bg-gray-100 
     transition-all duration-300 cursor-pointer"
-                  onClick={() => navigate(`/event/${event.id}`)}
+                  onClick={() => void navigate(`/event/${event.id}`)}
                   role="button"
                   tabIndex={0}
                   onKeyDown={(e) => {
                     if (e.key === "Enter" || e.key === " ") {
-                      navigate(`/event/${event.id}`);
+                      void navigate(`/event/${event.id}`);
                     }
                   }}
                 >

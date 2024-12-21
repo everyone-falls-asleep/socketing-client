@@ -95,7 +95,7 @@ const MyDetailPage = () => {
     await queryClient.invalidateQueries({
       queryKey: [`my-orders-${userId}`],
     }); // orders 쿼리 무효화
-    navigate("/mypage"); // 마이페이지로 이동
+    void navigate("/mypage"); // 마이페이지로 이동
   };
 
   return (

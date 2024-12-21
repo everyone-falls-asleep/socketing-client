@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useEventDetail } from "../../../store/EventDetailContext";
 import { deleteEvent } from "../../../api/events/eventsApi";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 
 const EventDetailHeader = () => {
   const navigate = useNavigate();
@@ -27,7 +27,7 @@ const EventDetailHeader = () => {
       await deleteEvent(event.id);
       // 캐시 무효화 처리해줄지 고민
       toast.success("공연 삭제가 완료되었습니다.");
-      navigate("/");
+      void navigate("/");
     } catch (error) {
       console.log("삭제 실패: ", error);
       toast.error("공연 삭제에 실패했습니다.");

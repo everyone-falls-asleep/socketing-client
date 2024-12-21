@@ -84,7 +84,7 @@ const EventRegisterForm = () => {
   >(createNewArea, {
     onSuccess: () => {
       toast.success("공연과 좌석이 성공적으로 등록되었습니다.");
-      navigate("/");
+      void navigate("/");
     },
     onError: (error: AxiosError<ApiErrorResponse>) => {
       if (error.response?.data) {

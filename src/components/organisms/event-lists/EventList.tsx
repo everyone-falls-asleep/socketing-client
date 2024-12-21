@@ -11,7 +11,7 @@ const EventList = ({ events }: EventListProps) => {
   const navigate = useNavigate();
 
   const onClickHandler = () => {
-    navigate(`/reservation/`);
+    void navigate(`/reservation/`);
   };
   return (
     <Grid orientation="vertical">

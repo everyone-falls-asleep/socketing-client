@@ -67,7 +67,7 @@ const WaitingRoomPage = () => {
   }, [urlEventId, urlEventDateId, setEventId, setEventDateId]);
 
   const enterReservationPage = () => {
-    navigate(`/reservation/${urlEventId}/${urlEventDateId}`, {
+    void navigate(`/reservation/${urlEventId}/${urlEventDateId}`, {
       state: { numberOfTickets },
     });
   };

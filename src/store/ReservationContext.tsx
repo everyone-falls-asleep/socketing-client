@@ -176,7 +176,7 @@ export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
     if (tokenError) {
       const currentPath = window.location.pathname;
       const pathParts = currentPath.split("/");
-      navigate(`/waiting/${pathParts[2]}/${pathParts[3]}`);
+      void navigate(`/waiting/${pathParts[2]}/${pathParts[3]}`);
     }
 
     socket.on("connect", () => {

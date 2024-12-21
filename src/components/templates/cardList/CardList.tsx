@@ -11,7 +11,7 @@ const CardList = ({ events }: CardListProps) => {
   const navigate = useNavigate();
 
   const onClickHandler = (id: string) => {
-    navigate(`/event/${id}`);
+    void navigate(`/event/${id}`);
   };
 
   return (

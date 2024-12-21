@@ -45,7 +45,7 @@ const PaymentTimer = () => {
       setShowTimer(false);
       setCurrentOrder(null);
       toast.error("결제 시간이 초과되었습니다!");
-      navigate(`/event/${eventId}`);
+      void navigate(`/event/${eventId}`);
     }
   }, [serverTime, currentOrder, setCurrentOrder, showTimer]);
 

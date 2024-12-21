@@ -32,7 +32,7 @@ const ReservationSeatInfo = (eventData: Event) => {
           exitRoom();
         }
         setCurrentOrder(response.data);
-        navigate(`reservation/${eventId}/${eventDateId}/order`, {
+        void navigate(`reservation/${eventId}/${eventDateId}/order`, {
           state: { orderData: response.data, eventData },
         });
       });

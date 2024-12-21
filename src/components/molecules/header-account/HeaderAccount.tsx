@@ -10,14 +10,14 @@ const HeaderAccount = ({ className }: HTMLAttributes<HTMLDivElement>) => {
     <HeaderItem className={`${className} p-3 justify-end align-items gap-2`}>
       <Button
         onClick={() => {
-          navigate("/login");
+          void navigate("/login");
         }}
       >
         로그인
       </Button>
       <Button
         onClick={() => {
-          navigate("/join");
+          void navigate("/join");
         }}
       >
         회원가입
