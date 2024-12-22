@@ -1,4 +1,9 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import {
+  BrowserRouter,
+  BrowserRouterProps,
+  Route,
+  Routes,
+} from "react-router-dom";
 // import MainPage from "../components/pages/MainPage";
 import BaseMainPage from "../components/pages/MainPage";
 import LoginPage from "../components/pages/LoginPage";
@@ -17,9 +22,25 @@ import MyPageManager from "../components/pages/MyPageManager";
 import OrderPage from "../components/pages/OrderPage";
 import ErrorPage from "../components/pages/ErrorPage";
 
+interface CustomBrowserRouterProps extends BrowserRouterProps {
+  future?: {
+    v7_relativeSplatPath?: boolean;
+    v7_startTransition?: boolean;
+  };
+}
+
+const CustomBrowserRouter: React.FC<CustomBrowserRouterProps> = (props) => (
+  <BrowserRouter {...props} />
+);
+
 const Router = () => {
   return (
-    <BrowserRouter>
+    <CustomBrowserRouter
+      future={{
+        v7_relativeSplatPath: true,
+        v7_startTransition: true,
+      }}
+    >
       <Routes>
         <Route path="/" element={<BaseMainPage />} />
         <Route path="login" element={<LoginPage />} />
@@ -39,10 +60,12 @@ const Router = () => {
           path="search-results/:searchTerm"
           element={<SearchResultsPage />}
         />
+
         <Route
           path="waiting/:eventId/:eventDateId"
           element={<WrappedWaitingRoomPage />}
         />
+
         <Route
           path="reservation-confirmation"
           element={<ReservationConfirmationPage />}
@@ -51,14 +74,18 @@ const Router = () => {
           path="reservation-info"
           element={<ReservationConfirmationPage />}
         />
-        <Route path="manager" element={<MyPageManager />} />
-        <Route
-          path="manager/:eventId/:eventDateId"
-          element={<WrappedManagerDetailPage />}
-        />
+
+        <Route path="manager">
+          <Route
+            path=":eventId/:eventDateId"
+            element={<WrappedManagerDetailPage />}
+          />
+          <Route index element={<MyPageManager />} />
+        </Route>
+
         <Route path="mypage/detail/:orderId" element={<MyDetailPage />} />
       </Routes>
-    </BrowserRouter>
+    </CustomBrowserRouter>
   );
 };
 

@@ -6,7 +6,7 @@ const HeaderLogo = ({ className }: HTMLAttributes<HTMLDivElement>) => {
   return (
     <HeaderItem className={`${className} justify-start align-items`}>
       <Link
-        to="/"
+        to="../"
         onClick={(e) => {
           e.preventDefault(); // 기본 동작 방지
           window.location.href = "/";

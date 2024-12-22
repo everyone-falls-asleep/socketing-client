@@ -12,7 +12,7 @@ const ErrorPage: React.FC<ErrorPageProps> = ({ errorMessage }) => {
         ⚠️ {errorMessage || "페이지를 찾을 수 없습니다."} ⚠️
       </p>
       <Link
-        to="/"
+        to="../"
         className="px-6 py-3 bg-rose-500 text-white font-semibold rounded-lg shadow-md hover:bg-rose-600"
       >
         홈으로 돌아가기
