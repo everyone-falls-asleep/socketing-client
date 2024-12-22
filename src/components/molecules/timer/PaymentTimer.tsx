@@ -1,7 +1,7 @@
 import { useEffect, useContext, useState } from "react";
 import { ReservationContext } from "../../../store/ReservationContext";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 
 const PaymentTimer = () => {
   const { socket, isConnected, currentOrder, setCurrentOrder, eventId } =

@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useParams } from "react-router";
 import CardList from "../templates/cardList/CardList";
 import MainLayout from "../layout/MainLayout";
 import { Event } from "../../types/api/event";

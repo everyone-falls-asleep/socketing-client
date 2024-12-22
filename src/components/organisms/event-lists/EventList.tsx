@@ -1,6 +1,6 @@
 import EventCard from "../../molecules/event-card/EventCard";
 import Grid from "../../layout/Grid";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import { Event } from "../../../types/api/event";
 
 export interface EventListProps {

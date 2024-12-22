@@ -1,5 +1,5 @@
 import { useForm, Controller } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import { CreateAreaRequest, NewEvent } from "../../../types/api/event";
 import Input from "../../atoms/inputs/Input";
 import Button from "../../atoms/buttons/Button";

@@ -4,7 +4,7 @@ import EventDetailTemplate from "../templates/event-detail/EventDetailTemplate";
 import { createResourceQuery } from "../../hooks/useCustomQuery";
 import { SingleEventResponse } from "../../types/api/event";
 import { fetchOneEvent } from "../../api/events/eventsApi";
-import { useParams } from "react-router-dom";
+import { useParams } from "react-router";
 import { useEventDetail } from "../../store/EventDetailContext";
 import { fetchErrorMessages } from "../../constants/errorMessages";
 import EventDetailHeader from "../organisms/event-detail/EventDetailHeader";

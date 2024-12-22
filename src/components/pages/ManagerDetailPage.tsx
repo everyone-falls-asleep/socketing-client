@@ -1,6 +1,6 @@
 // import { fetchReservationsByEvent } from "../../api/reservations/reservationsApi";
 // import { fetchErrorMessages } from "../../constants/errorMessages";
-import { useParams } from "react-router-dom";
+import { useParams } from "react-router";
 // import ReservationCalendarSideBar from "../organisms/reservation/ReservationCalendarSideBar";
 import ReservationLayout from "../layout/ReservationLayout";
 import ReservationAllInfo from "../organisms/reservation/ReservationAllInfo";

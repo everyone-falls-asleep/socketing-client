@@ -1,9 +1,5 @@
-import {
-  BrowserRouter,
-  BrowserRouterProps,
-  Route,
-  Routes,
-} from "react-router-dom";
+import { BrowserRouter, BrowserRouterProps } from "react-router-dom";
+import { Route, Routes } from "react-router";
 // import MainPage from "../components/pages/MainPage";
 import BaseMainPage from "../components/pages/MainPage";
 import LoginPage from "../components/pages/LoginPage";

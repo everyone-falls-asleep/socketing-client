@@ -9,7 +9,7 @@ import {
   OrderResponseData,
 } from "../types/api/socket";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import { UserContext } from "./UserContext";
 
 interface ReservationContextType {

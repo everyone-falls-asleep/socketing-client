@@ -1,5 +1,5 @@
 import { useContext, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import MainLayout from "../layout/MainLayout";
 import Button from "../atoms/buttons/Button";
 import { createResourceQuery } from "../../hooks/useCustomQuery";

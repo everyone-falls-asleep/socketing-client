@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import Button from "../../atoms/buttons/Button";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import LoginModal from "../../organisms/auth/LoginModal";
 import JoinModal from "../../organisms/auth/JoinModal";
 import HeaderLogo from "../../molecules/header-logo/HeaderLogo";

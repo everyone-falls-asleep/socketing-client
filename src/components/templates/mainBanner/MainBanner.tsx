@@ -1,5 +1,5 @@
 import { CustomEventsProps } from "../../../types/api/event";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import { toast } from "react-toastify";
 import { useCurrentTime } from "../../../hooks/useCurrentTime";
 import { getTimeLeft } from "../../../utils/countdownTimer";

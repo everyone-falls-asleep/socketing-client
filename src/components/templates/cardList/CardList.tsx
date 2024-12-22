@@ -1,5 +1,5 @@
 import { CustomEventsProps } from "../../../types/api/event";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import Button from "../../atoms/buttons/Button";
 import { formatToKoreanDateAndTime } from "../../../utils/dateUtils";
 

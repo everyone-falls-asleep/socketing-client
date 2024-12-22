@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from "react";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router";
 import ReservationLayout from "../layout/ReservationLayout";
 import MainLayout from "../layout/MainLayout";
 import ReservationUpperEvent from "../organisms/reservation/ReservationUpperEvent";

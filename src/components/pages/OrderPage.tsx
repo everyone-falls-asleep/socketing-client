@@ -1,7 +1,7 @@
 import Button from "../atoms/buttons/Button";
 import MainLayout from "../layout/MainLayout";
 import { useContext, useEffect, useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router";
 import { toast } from "react-toastify";
 import {
   ApprovedOrderResponse,

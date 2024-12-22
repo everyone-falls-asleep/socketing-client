@@ -1,5 +1,5 @@
 import ReservationOverviewTemplate from "../templates/reservation-overview/ReservationConfirmationTemplate";
-import { useLocation } from "react-router-dom";
+import { useLocation } from "react-router";
 import MainLayout from "../layout/MainLayout";
 import { UpdatedPayment } from "../../types/api/payment";
 import ErrorPage from "./ErrorPage";

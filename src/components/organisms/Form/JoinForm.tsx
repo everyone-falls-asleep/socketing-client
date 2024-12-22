@@ -21,7 +21,7 @@ import { registerErrorMessages } from "../../../constants/errorMessages";
 import { toast } from "react-toastify";
 
 import { useAuth } from "../../../hooks/useAuth";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 
 const JoinForm = () => {
   const { saveAuthInfo } = useAuth();

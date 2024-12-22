@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router";
 import MainLayout from "../layout/MainLayout";
 import { GetOneOrderResponse } from "../../types/api/order";
 import Font from "../atoms/fonts/Font";

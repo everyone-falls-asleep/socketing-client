@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { ReservationContext } from "../../../store/ReservationContext";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import Button from "../../atoms/buttons/Button";
 import { OrderResponse } from "../../../types/api/socket";
 import { Event } from "../../../types/api/event";

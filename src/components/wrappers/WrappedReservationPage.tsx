@@ -1,6 +1,6 @@
 import ReservationPage from "../pages/ReservationPage";
 import { ReservationProvider } from "../../store/ReservationContext";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router";
 import OrderPage from "../pages/OrderPage";
 
 export const WrappedReservationPage = () => (

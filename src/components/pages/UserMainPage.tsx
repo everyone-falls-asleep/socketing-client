@@ -8,7 +8,7 @@ import dayjs from "dayjs";
 import { formatToKoreanDateAndTime } from "../../utils/dateUtils";
 import TicketButton from "../atoms/buttons/TiketButton";
 import { useCurrentTime } from "../../hooks/useCurrentTime";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import LoadingPage from "./LoadingPage";
 import ErrorPage from "./ErrorPage";
 
